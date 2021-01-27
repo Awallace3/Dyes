@@ -3,9 +3,11 @@ import os
 import itertools
 import glob
 
+# requires obabel installed...
+    # brew install obabel
 
 
-
+""" 
 def permutationDictOG (BB_lst, ED_lst, EA_lst ):
 
 
@@ -20,11 +22,10 @@ def permutationDictOG (BB_lst, ED_lst, EA_lst ):
 
 
     #print(g)
-    """ 
     testing with lists...
     backbone_lst = [ [[0, 0, 0, 0], [0,0,0,0]] ,[[1,1,1,1], [1,1,1,1]], [[2,2,2,2], [2,2,2,2]],[[3,3,3,3],[3,3,3,3]] ]               # 3
     electron_acceptor_lst = [ [[4,4,4,4], [4,4,4,4]] ]      # 4
-    electron_donor_lst = [ [[5,5,5,5], [5,5,5,5]],[[6,6,6,6], [6,6,6,6]] ]         # 6 """
+    electron_donor_lst = [ [[5,5,5,5], [5,5,5,5]],[[6,6,6,6], [6,6,6,6]] ]         # 6
 
     backbone_lst = [ a, b, c ]
     electron_acceptor_lst = [ d, e]
@@ -50,9 +51,11 @@ def permutationDictOG (BB_lst, ED_lst, EA_lst ):
     first_molecule = geom_dict['geom1'][0]
     print(first_molecule)
 
+""" 
+
 def collectLocalStructures (subdirectories):
     localStructuresDict = {}
-
+    number_locals = 0
     
     for num, i in enumerate(subdirectories):
         os.chdir(i)
@@ -63,9 +66,10 @@ def collectLocalStructures (subdirectories):
                 smiles = f.read()
                 localStructuresDict['local{0}'.format(num+1)].append(smiles)
         os.chdir("..")
-    print(localStructuresDict)
+        number_locals += 1
+    #print(localStructuresDict)
     
-    return localStructuresDict
+    return localStructuresDict, number_locals
 
 def permutationDict(localStructuresDict):
 
@@ -79,22 +83,35 @@ def permutationDict(localStructuresDict):
     
     return post_perm
 
-def generateMolecules (smiles_tuple_list): 
-    
+def generateMolecules (smiles_tuple_list, number_locals): 
+
+    #print(number_locals)
+    #print(smiles_tuple_list)
+    for num, i in enumerate(smiles_tuple_list):
+        first, second, third = i
+        line = first + "." + second + "." + third
+        print(line)
+        print(num)
+        file = open('results/smiles{0}.smi'.format(num+1), 'w+')
+        file.write(line)
+        file.close()
+        #with open('smiles{0}.smi'.format(num+1)):
+        #    f.write(line)
+        #*y = i
+        #print(y)
 
     return
 
 def main():
-
+    print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
-    localStructuresDict = collectLocalStructures(three_types)
+    localStructuresDict, number_locals = collectLocalStructures(three_types)
     #print(localStructuresDict)                
 
     smiles_tuple_list = permutationDict(localStructuresDict)
 
-    generateMolecules(smiles_tuple_list)
+    generateMolecules(smiles_tuple_list, number_locals)
 
     #out_files = glob.glob(".out")
-
 main()
