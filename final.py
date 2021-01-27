@@ -97,7 +97,7 @@ def generateMolecules (smiles_tuple_list, number_locals):
         print(line)
         print(num)
         line = line.replace("BBA", "9")
-        line = line.replace("BBR", "8")
+        line = line.replace("BBD", "8")
         file = open('results/smiles{0}.smi'.format(num+1), 'w+')
         file.write(line)
         file.close()
