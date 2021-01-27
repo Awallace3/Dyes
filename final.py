@@ -2,7 +2,7 @@ import numpy as np
 import os
 import itertools
 import glob
-
+import subprocess
 # requires obabel installed...
     # brew install obabel
 
@@ -95,6 +95,8 @@ def generateMolecules (smiles_tuple_list, number_locals):
         file = open('results/smiles{0}.smi'.format(num+1), 'w+')
         file.write(line)
         file.close()
+        cmd = "obabel -ismi smiles{0}.smi -oxyz output.xyz --gen3D".format(num+1)
+        subprocess.call(cmd, shell=True)
         #with open('smiles{0}.smi'.format(num+1)):
         #    f.write(line)
         #*y = i
