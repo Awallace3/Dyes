@@ -73,23 +73,16 @@ def permutationDict(localStructuresDict):
 
     for key, value in localStructuresDict.items():
         pre_perm = pre_perm + [value]
- #       #pre_perm.append(value)
-  #      print(key, '-', value)
-   #     for i in value:
 
-#            with open(i) as f:
- #               smiles = f.read()
+    post_perm = list(itertools.product(*pre_perm))
+    #print(post_perm)        
+    
+    return post_perm
 
-#
-    post_perm = list(itertools.product(*))
-    print(pre_perm)        
+def generateMolecules (smiles_tuple_list): 
+    
 
-    #post_perm = list(itertools.product(*pre_perm))
-    #print(post_perm)
-    
-    
-    
-    return 
+    return
 
 def main():
 
@@ -98,7 +91,9 @@ def main():
     localStructuresDict = collectLocalStructures(three_types)
     #print(localStructuresDict)                
 
-    permutationDict(localStructuresDict)
+    smiles_tuple_list = permutationDict(localStructuresDict)
+
+    generateMolecules(smiles_tuple_list)
 
     #out_files = glob.glob(".out")
 
