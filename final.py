@@ -5,53 +5,7 @@ import glob
 import subprocess
 # requires obabel installed...
     # brew install obabel
-
-
-""" 
-def permutationDictOG (BB_lst, ED_lst, EA_lst ):
-
-
-    a = np.zeros((1,4))
-    b = np.zeros((2,4))
-    c = np.zeros((3,4))
-    d = np.zeros((4,4))
-    e = np.zeros((5,4))
-    f = np.zeros((6,4))
-    g = np.zeros((7,4))
-
-
-
-    #print(g)
-    testing with lists...
-    backbone_lst = [ [[0, 0, 0, 0], [0,0,0,0]] ,[[1,1,1,1], [1,1,1,1]], [[2,2,2,2], [2,2,2,2]],[[3,3,3,3],[3,3,3,3]] ]               # 3
-    electron_acceptor_lst = [ [[4,4,4,4], [4,4,4,4]] ]      # 4
-    electron_donor_lst = [ [[5,5,5,5], [5,5,5,5]],[[6,6,6,6], [6,6,6,6]] ]         # 6
-
-    backbone_lst = [ a, b, c ]
-    electron_acceptor_lst = [ d, e]
-    electron_donor_lst = [f, g]
-
-    s = [backbone_lst] + [electron_acceptor_lst] + [electron_donor_lst]
-
-    k = list(itertools.product(*s)) # produces permutation, but may want configurations instead
-    permutation_num = len(k) 
-
-    print(permutation_num) 
-
-    geom_dict = {}
-
-    for num, i in enumerate(k):
-        # if you want each array still seperated uncomment line 34...
-        #geom_dict['geom{0}'.format(num+1)] = [i]
-        # if you want to arrays concatenated use the lines 36,37, and 38...
-        first, second, third = i
-        combined = np.concatenate((first, second, third))
-        geom_dict['geom{0}'.format(num+1)] = [combined]
-        
-    first_molecule = geom_dict['geom1'][0]
-    print(first_molecule)
-
-""" 
+    # conda install -c openbabel openbabel
 
 def collectLocalStructures (subdirectories):
     localStructuresDict = {}
@@ -69,7 +23,7 @@ def collectLocalStructures (subdirectories):
         number_locals += 1
     #print(localStructuresDict)
     
-    return localStructuresDict, number_locals
+    return localStructuresDict
 
 def permutationDict(localStructuresDict):
 
@@ -83,10 +37,13 @@ def permutationDict(localStructuresDict):
     
     return post_perm
 
-def generateMolecules (smiles_tuple_list, number_locals): 
+def generateMolecules (smiles_tuple_list): 
 
     #print(number_locals)
     #print(smiles_tuple_list)
+    xyzDict = {}
+
+
     for num, i in enumerate(smiles_tuple_list):
         first, second, third = i
         first = first.replace("1", "7")
@@ -94,33 +51,56 @@ def generateMolecules (smiles_tuple_list, number_locals):
         second = second.replace("1", "5")
         second = second.replace("2", "4")
         line = first + "." + second + "." + third
-        print(line)
-        print(num)
+        #print(line)
+        #print(num)
         line = line.replace("BBA", "9")
         line = line.replace("BBD", "8")
         file = open('results/smiles{0}.smi'.format(num+1), 'w+')
         file.write(line)
         file.close()
         
-        cmd = "obabel -ismi results/smiles{0}.smi -oxyz output.xyz --gen3D".format(num+1)
+        #cmd = "obabel -ismi results/smiles{0}.smi -oxyz output.xyz --gen3D".format(num+1)
+        cmd = "obabel -ismi results/smiles{0}.smi -oxyz --gen3D".format(num+1)
+        carts = subprocess.check_output(cmd, shell=True)
         subprocess.call(cmd, shell=True)
-        #with open('smiles{0}.smi'.format(num+1)):
-        #    f.write(line)
-        #*y = i
-        #print(y)
+        carts = str(carts)
+        carts = carts.rstrip()
+        
+        carts = carts.splitlines()
+        
+        for n, i in enumerate(carts):
+            carts[n] = i.split('\\n')
 
+        carts_cleaned = []
+        for n, i in enumerate(carts[0]):
+            if n > 1:
+                carts_cleaned.append(i)
+            #print(i)
+        del carts_cleaned[-1]
+        xyzDict["geom{0}".format(num+1)] = carts_cleaned
+        print('loop')
+    print(xyzDict)
+    return xyzDict
+
+def writeFiles (xyzDict):
+    for key, value in xyzDict.items():
+        file = open("inputs/" + key, 'w+')
+        for line in value:
+            file.write(line)
+            file.write("\n")
+        file.close()
     return
+
 
 def main():
     print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
-    localStructuresDict, number_locals = collectLocalStructures(three_types)
-    #print(localStructuresDict)                
+    localStructuresDict = collectLocalStructures(three_types) # p
 
     smiles_tuple_list = permutationDict(localStructuresDict)
 
-    generateMolecules(smiles_tuple_list, number_locals)
+    xyzDict = generateMolecules(smiles_tuple_list)
 
-    #out_files = glob.glob(".out")
+    writeFiles(xyzDict)
 main()
