@@ -82,15 +82,64 @@ def generateMolecules (smiles_tuple_list):
     print(xyzDict)
     return xyzDict
 
-def writeFiles (xyzDict):
+def writeInputFiles (xyzDict):
+    os.chdir("inputs")
     for key, value in xyzDict.items():
-        file = open("inputs/" + key, 'w+')
+        os.mkdir(key)
+        file = open( key + "/" + key, 'w+')
         for line in value:
             file.write(line)
             file.write("\n")
         file.close()
     return
 
+def make_opt_files():
+    """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
+
+    data = ""
+
+    with open('tmp.txt') as fp:
+        data = fp.read()
+
+    # Reading data from file2
+    charges = "0 1"
+
+    new_dir = "mexc"
+    os.mkdir(new_dir)
+
+    with open(new_dir + '/mexc.com', 'w') as fp:
+        fp.write("%mem=1600mb\n")
+        fp.write("%nprocs=4\n")
+        fp.write("#N TD(NStates=25) B3lYP/6-311G(d,p)\n")
+        fp.write("\n")
+        fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
+        fp.write("\n")
+        fp.write(charges + "\n")
+        fp.write(data)
+        fp.write("\n")
+
+    with open(new_dir + '/mexc.pbs', 'w') as fp:
+        fp.write("#!/bin/sh\n")
+        fp.write("#PBS -N mexc\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
+        fp.write("mem=15gb\n")
+        fp.write(
+            "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
+        fp.write(
+            "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
+        fp.write(
+            """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
+        fp.write("then\n")
+        fp.write(
+            "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
+        fp.write(
+            """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
+        fp.write(
+            "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
+        fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
+        fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
+        fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
+        fp.write(
+            "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mexc.com mexc.out\n\nrm -r $scrdir\n")
 
 def main():
     print("\n\tstart\n")
@@ -102,5 +151,6 @@ def main():
 
     xyzDict = generateMolecules(smiles_tuple_list)
 
-    writeFiles(xyzDict)
+    writeInputFiles(xyzDict)
+    
 main()
