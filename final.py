@@ -18,6 +18,7 @@ def collectLocalStructures (subdirectories):
         for j in localSmiles:
             with open(j) as f:
                 smiles = f.read()
+                smiles = smiles.rstrip()
                 localStructuresDict['local{0}'.format(num+1)].append(smiles)
         os.chdir("..")
         number_locals += 1
@@ -33,7 +34,7 @@ def permutationDict(localStructuresDict):
         pre_perm = pre_perm + [value]
 
     post_perm = list(itertools.product(*pre_perm))
-    #print(post_perm)        
+    print(post_perm)        
     
     return post_perm
 
@@ -53,8 +54,10 @@ def generateMolecules (smiles_tuple_list):
         line = first + "." + second + "." + third
         #print(line)
         #print(num)
+        print("line{0}:".format(num), line)
         line = line.replace("BBA", "9")
         line = line.replace("BBD", "8")
+        print("line{0}:".format(num), line)
         file = open('results/smiles{0}.smi'.format(num+1), 'w+')
         file.write(line)
         file.close()
@@ -72,14 +75,20 @@ def generateMolecules (smiles_tuple_list):
             carts[n] = i.split('\\n')
 
         carts_cleaned = []
+        invalid = True
         for n, i in enumerate(carts[0]):
             if n > 1:
                 carts_cleaned.append(i)
+                invalid = False
             #print(i)
+        if invalid:
+            print("invalid line{0}".format(num), line)
+            invalid = True
+            continue
         del carts_cleaned[-1]
         xyzDict["geom{0}".format(num+1)] = carts_cleaned
         print('loop')
-    print(xyzDict)
+    #print(xyzDict)
     return xyzDict
 
 def writeInputFiles (xyzDict):
