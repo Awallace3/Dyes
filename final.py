@@ -91,6 +91,7 @@ def generateMolecules (smiles_tuple_list):
     #print(xyzDict)
     return xyzDict
 
+"""
 def writeInputFiles (xyzDict):
     os.chdir("inputs")
     for key, value in xyzDict.items():
@@ -100,6 +101,26 @@ def writeInputFiles (xyzDict):
             file.write(line)
             file.write("\n")
         file.close()
+    return
+"""
+
+def writeInputFiles (xyzDict):
+    os.chdir("inputs")
+    for key, value in xyzDict.items():
+        os.mkdir(key)
+        file = open( key + "/" + key+".com", 'w+')
+        file.write("#N B3LYP/6-311G(d,p) OPT  \n")
+        file.write("\n")
+        file.write("Name\n\n")
+        file.write("0 1\n")
+        for line in value:
+            file.write(line)
+            file.write("\n")
+        file.close()
+        file = open( key + "/" + key+".pbs", 'w+')
+        file.write("")
+        file.close()
+        
     return
 
 def make_opt_files():
