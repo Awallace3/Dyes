@@ -38,15 +38,53 @@ def permutationDict(localStructuresDict):
     
     return post_perm
 
-def generateMolecules (smiles_tuple_list): 
+def smilesRingCleanUp(f, s, t):
+    combinedString = ''
+    current_val = 0
+    lst1 = []
+    claimed = []
+    double = []
 
+    for n, ch in enumerate(f):
+        if ch.isnumeric():
+            #print(ch)
+            lst1.append([int(ch), n, 1])
+    for n, ch in enumerate(s):
+        if ch.isnumeric():
+            #print(ch)
+            lst1.append([int(ch), n, 2])
+    for n, ch in enumerate(t):
+        if ch.isnumeric():
+            #print(ch)
+            lst1.append([int(ch), n, 3])
+    
+    for i in range(len(lst1)):
+        if st1[i][0] not in claimed:
+            claimed.append(st1[i][0])
+            double.append(st1[i][0])
+        else:
+            if st1[i][0] in double:
+                continue
+
+    
+    print(lst1)
+    print(claimed)
+
+    return combinedString
+
+
+def generateMolecules (smiles_tuple_list): 
+    
     #print(number_locals)
     #print(smiles_tuple_list)
     xyzDict = {}
 
 
     for num, i in enumerate(smiles_tuple_list):
+        #if num > 1:
+        #    return xyzDict
         first, second, third = i
+        #combinedString = smilesRingCleanUp(first, second, third)
         first = first.replace("1", "7")
         first = first.replace("2", "6")
         second = second.replace("1", "5")
