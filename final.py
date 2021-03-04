@@ -154,6 +154,9 @@ def writeInputFiles (xyzDict):
         for line in value:
             file.write(line)
             file.write("\n")
+#   file.write(#"name of electron donor:" + 1ed.smi + name\n)
+#   file.write(#"name of backbone: " + 1ea.smi + name\n)
+#   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
         file.close()
         file = open( key + "/" + "mex" + ".pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
