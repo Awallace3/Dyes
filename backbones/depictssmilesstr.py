@@ -1,6 +1,7 @@
 from rdkit import Chem
+from rdkit import AllChem
 from rdkit.Chem.Draw import IPythonConsole
-from rdkit.Chem import Draw
+from rdkit.Chem import MolDrawing, Drawingoptions
 IPythonConsole.ipython_useSVG=False  #< set this to False if you want PNGs instead of SVGs
 
 #def mol_with_atom_index(mol):
