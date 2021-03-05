@@ -107,16 +107,16 @@ def generateMolecules (smiles_tuple_list):
         #    return xyzDict
         #print(i)
         first, second, third = i
-        #print(first, second, third)
+        print(first, second, third)
         line, name, formalName = smilesRingCleanUp(first, second, third)
 
         exists = os.path.isdir("inputs/" + name)
         if exists:
-            #print("directory already exists for inputs/%s\n" % name)
+            print("directory already exists for inputs/%s or called %s\n" % (name, formalName))
             continue
         else:
-            
-            print(name)
+            print("making a new directory for %s or called %s\n" % (name, formalName))
+            #print(name)
             
 
         #first = first.replace("1", "7")
@@ -160,6 +160,7 @@ def generateMolecules (smiles_tuple_list):
         del carts_cleaned[-1]
         xyzDict["{0}".format(name+";;;"+formalName)] = carts_cleaned
         monitor_jobs.append(name)
+        print(monitor_jobs)
         print('loop')
     #print(xyzDict)
     #print(name+";;;"+formalName)
@@ -206,7 +207,7 @@ def writeInputFiles (xyzDict):
         file = open( name + "/mex.pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
         file.write("\n")
-        file.write("#PBS -N " + "mex")
+        file.write("#PBS -N " + "mex_o")
         file.write("\n")
         file.write("#PBS -S /bin/sh")
         file.write("\n")
@@ -248,11 +249,10 @@ def writeInputFiles (xyzDict):
         file.write("cd $PBS_O_WORKDIR")
         file.write("\n")
         file.write("/usr/local/apps/bin/g09setup mex.com mex.out")
-
-
-
-
         file.close()
+        
+        #subprocess.call('qsub mex.pbs')
+        
         """
         file = open( key + "/" + "mex" + ".pbs", 'w+') # pbs for maple
         file.write("#!/bin/sh")
@@ -319,14 +319,15 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     print(cluster_list)
     complete = []
     resubmissions = []
-    for i in range(len(cluster_list)):
+    for i in range(len(monitor_jobs)):
         complete.append(0)
         resubmissions.append(2)
     calculations_complete = False
 
     for i in range(number_delays):
         # time.sleep(min_delay)
-        for num, j in enumerate(cluster_list):
+        for num, j in enumerate(monitor_jobs):
+            print(j)
             os.chdir(j)
             delay = i
             if complete[num] < 1:
@@ -347,7 +348,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     print('{0} entered mexc checkpoint 2'.format(num+1))
                     complete[num] = 2
             mexc_check = []
-            os.chdir('../..')
+            os.chdir('..')
         stage = 0
         for k in range(len(complete)):
             stage += complete[k]
@@ -375,7 +376,7 @@ def main():
     
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
 
-    resubmit_delay_min = 60 * 12
+    resubmit_delay_min = 0.01
     resubmit_max_attempts = 40
 
     # geometry optimization options
@@ -392,12 +393,12 @@ def main():
     cluster='seq' 
 
     writeInputFiles(xyzDict)
-    """
+    print(monitor_jobs)
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster
                            )
-    """
+    
 
 main()
