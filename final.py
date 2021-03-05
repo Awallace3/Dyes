@@ -3,6 +3,10 @@ import os
 import itertools
 import glob
 import subprocess
+import time
+import sys
+import subprocess
+from src import error_mexc_v8
 # requires obabel installed...
     # brew install obabel
     # conda install -c openbabel openbabel
@@ -284,53 +288,64 @@ def writeInputFiles (xyzDict):
           
     return
 
-def make_opt_files():
-    """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
+def jobResubmit(monitor_jobs, min_delay, number_delays,
+                method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                cluster
+                ):
+    """
+    Modified from ice_analog_spectra_generator repo
+    """
+    min_delay = min_delay * 60
+    cluster_list = glob.glob("inputs/*")
+    print(cluster_list)
+    complete = []
+    resubmissions = []
+    for i in range(len(cluster_list)):
+        complete.append(0)
+        resubmissions.append(2)
+    calculations_complete = False
 
-    data = ""
+    for i in range(number_delays):
+        # time.sleep(min_delay)
+        for num, j in enumerate(cluster_list):
+            os.chdir(j)
+            delay = i
+            if complete[num] < 1:
+                action, resubmissions = error_mexc_v8.main(
+                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                    resubmissions, delay, cluster
+                )
+                print(resubmissions)
+            mexc_check = glob.glob("mexc")
+            # print(mexc_check)
+            if len(mexc_check) > 0:
+                print('{0} entered mexc checkpoint 1'.format(num+1))
+                complete[num] = 1
+                mexc_check_out = glob.glob("mexc/mexc.o*")
 
-    with open('tmp.txt') as fp:
-        data = fp.read()
+                if complete[num] != 2 and len(mexc_check_out) > 1:
+                    print('{0} entered mexc checkpoint 2'.format(num+1))
+                    complete[num] = 2
+            mexc_check = []
+            os.chdir('../..')
+        stage = 0
+        for k in range(len(complete)):
+            stage += complete[k]
+            if stage == len(complete)*2:
+                calculations_complete = True
 
-    # Reading data from file2
-    charges = "0 1"
+        if calculations_complete == True:
+            print(complete)
+            print('\nCalculatinos are complete.')
+            print('Took %.2f hours' % (i*min_delay / 60))
+            return complete
+        print('Completion List\n', complete, '\n')
+        print('delay %d' % (i))
+        time.sleep(min_delay)
+    return complete
 
-    new_dir = "mexc"
-    os.mkdir(new_dir)
-
-    with open(new_dir + '/mexc.com', 'w') as fp:
-        fp.write("%mem=1600mb\n")
-        fp.write("%nprocs=4\n")
-        fp.write("#N TD(NStates=25) B3lYP/6-311G(d,p)\n")
-        fp.write("\n")
-        fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-        fp.write("\n")
-        fp.write(charges + "\n")
-        fp.write(data)
-        fp.write("\n")
-
-    with open(new_dir + '/mexc.pbs', 'w') as fp:
-        fp.write("#!/bin/sh\n")
-        fp.write("#PBS -N mexc\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
-        fp.write("mem=15gb\n")
-        fp.write(
-            "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
-        fp.write(
-            "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-        fp.write(
-            """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
-        fp.write("then\n")
-        fp.write(
-            "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
-        fp.write(
-            """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
-        fp.write(
-            "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
-        fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
-        fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
-        fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
-        fp.write(
-            "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mexc.com mexc.out\n\nrm -r $scrdir\n")
 
 def main():
     print("\n\tstart\n")
@@ -342,6 +357,29 @@ def main():
 
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
 
+    resubmit_delay_min = 60 * 12
+    resubmit_max_attempts = 40
+
+    # geometry optimization options
+    method_opt = "B3LYP"
+    basis_set_opt = "6-311G(d,p)"
+    mem_com_opt = "1600"  # mb
+    mem_pbs_opt = "10"  # gb
+
+    # TD-DFT options
+    method_mexc = "B3lYP"
+    basis_set_mexc = "6-311G(d,p)"
+    mem_com_mexc = "1600"  # mb
+    mem_pbs_mexc = "10"  # gb"
+    cluster='seq' 
+
     writeInputFiles(xyzDict)
-    
+    """
+    complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
+                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           cluster
+                           )
+    """
+
 main()
