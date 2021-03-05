@@ -788,8 +788,17 @@ if __name__ == "__main__":
     embed_chiral = not args.ignore_chiral
 
     # read atoms and coordinates. Try to find the charge
-    atoms, charge, xyz_coordinates = read_xyz_file(filename)
 
+
+    ### This where we insert xyz_coordinates
+    # charge = 0
+    # atoms = 
+    # xyz_coordinates =[]
+    atoms, charge, xyz_coordinates = read_xyz_file(filename)
+    print("xyz_coords below:")
+    print(xyz_coordinates)
+    print(atoms)
+    print(charge)
     # huckel uses extended Huckel bond orders to locate bonds (requires RDKit 2019.9.1 or later)
     # otherwise van der Waals radii are used
     use_huckel = args.use_huckel

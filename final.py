@@ -3,6 +3,10 @@ import os
 import itertools
 import glob
 import subprocess
+import time
+import sys
+import subprocess
+from src import error_mexc_v8
 # requires obabel installed...
     # brew install obabel
     # conda install -c openbabel openbabel
@@ -18,13 +22,17 @@ def collectLocalStructures (subdirectories):
         for j in localSmiles:
             with open(j) as f:
                 smiles = f.read()
-                smiles = smiles.rstrip()
-                print(j[:-4])
-                localStructuresDict['local{0}'.format(num+1)].append((smiles, j[:-4]))
+                smiles = smiles.split("\n")
+                #print(smiles)
+                smiles[0] = smiles[0].rstrip()
+                #smiles = smiles.rstrip()
+
+                #print(j[:-4])
+                localStructuresDict['local{0}'.format(num+1)].append((smiles[0], j[:-4], smiles[1]))
 
         os.chdir("..")
         number_locals += 1
-    print(localStructuresDict)
+    #print(localStructuresDict)
     
     return localStructuresDict
 
@@ -36,7 +44,7 @@ def permutationDict(localStructuresDict):
         pre_perm = pre_perm + [value]
 
     post_perm = list(itertools.product(*pre_perm))
-    print(post_perm[0])        
+    #print(post_perm[0])        
     
     return post_perm
 
@@ -46,17 +54,18 @@ def smilesRingCleanUp(f, s, t):
     lst1 = []
     claimed = []
     double = []
-    smi1, na1 = f
-    smi2, na2 = s
-    smi3, na3 = t
+    smi1, na1, form1 = f
+    smi2, na2, form2 = s
+    smi3, na3, form3 = t
     name = na1 + "_" + na2 + "_" + na3
+    formalName = form1 +"::"+form2+"::"+form3
     print(name)
     smi1 = smi1.replace("1", "7")
     smi1 = smi1.replace("2", "6")
     smi2 = smi2.replace("1", "5")
     smi2 = smi2.replace("2", "4")
     line = smi1 + "." + smi2 + "." + smi3
-    print(line)
+    #print("line:", line)
     """
     for n, ch in enumerate(f):
         if ch.isnumeric():
@@ -80,10 +89,10 @@ def smilesRingCleanUp(f, s, t):
                 continue
 
     """
-    print(lst1)
-    print(claimed)
+    #print(lst1)
+    #print(claimed)
 
-    return line, name
+    return line, name, formalName
 
 
 def generateMolecules (smiles_tuple_list): 
@@ -96,16 +105,19 @@ def generateMolecules (smiles_tuple_list):
     for num, i in enumerate(smiles_tuple_list):
         #if num > 1:
         #    return xyzDict
-        print(i)
+        #print(i)
         first, second, third = i
         print(first, second, third)
-        line, name = smilesRingCleanUp(first, second, third)
-        exists = os.path.isdir("inputs/" + name)
-        print(exists)
-        if exists:
-            print("directory already exists for inputs/%s\n" % name)
-            continue
+        line, name, formalName = smilesRingCleanUp(first, second, third)
 
+        exists = os.path.isdir("inputs/" + name)
+        if exists:
+            print("directory already exists for inputs/%s or called %s\n" % (name, formalName))
+            continue
+        else:
+            print("making a new directory for %s or called %s\n" % (name, formalName))
+            #print(name)
+            
 
         #first = first.replace("1", "7")
         #first = first.replace("2", "6")
@@ -146,10 +158,12 @@ def generateMolecules (smiles_tuple_list):
             invalid = True
             continue
         del carts_cleaned[-1]
-        xyzDict["{0}".format(name)] = carts_cleaned
+        xyzDict["{0}".format(name+";;;"+formalName)] = carts_cleaned
         monitor_jobs.append(name)
+        print(monitor_jobs)
         print('loop')
     #print(xyzDict)
+    #print(name+";;;"+formalName)
     return xyzDict, monitor_jobs
 
 """
@@ -168,11 +182,20 @@ def writeInputFiles (xyzDict):
 def writeInputFiles (xyzDict):
     os.chdir("inputs")
     for key, value in xyzDict.items():
-        os.mkdir(key)
-        file = open( key + "/mex.com", 'w+')
+        nameSplit = key.split(";;;")
+        name = nameSplit[0]
+        formalName = nameSplit[1]
+        print(nameSplit)
+        os.mkdir(name)
+        subprocess.call("touch " + name + "/" + formalName, shell=True)
+        #file = open(name + "/" + formalName, "w+")
+        #file.write(' ')
+        #file.close()
+
+        file = open( name + "/mex.com", 'w+')
         file.write("#N B3LYP/6-311G(d,p) OPT  \n")
         file.write("\n")
-        file.write("{0}\n\n".format(key))
+        file.write("{0}\n\n".format(formalName))
         file.write("0 1\n")
         for line in value:
             file.write(line)
@@ -181,10 +204,10 @@ def writeInputFiles (xyzDict):
 #   file.write(#"name of backbone: " + 1ea.smi + name\n)
 #   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
         file.close()
-        file = open( key + "/mex.pbs", 'w+')   #pbs for sequoia
+        file = open( name + "/mex.pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
         file.write("\n")
-        file.write("#PBS -N " + "mex")
+        file.write("#PBS -N " + "mex_o")
         file.write("\n")
         file.write("#PBS -S /bin/sh")
         file.write("\n")
@@ -226,11 +249,10 @@ def writeInputFiles (xyzDict):
         file.write("cd $PBS_O_WORKDIR")
         file.write("\n")
         file.write("/usr/local/apps/bin/g09setup mex.com mex.out")
-
-
-
-
         file.close()
+        
+        #subprocess.call('qsub mex.pbs')
+        
         """
         file = open( key + "/" + "mex" + ".pbs", 'w+') # pbs for maple
         file.write("#!/bin/sh")
@@ -284,53 +306,65 @@ def writeInputFiles (xyzDict):
           
     return
 
-def make_opt_files():
-    """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
+def jobResubmit(monitor_jobs, min_delay, number_delays,
+                method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                cluster
+                ):
+    """
+    Modified from ice_analog_spectra_generator repo
+    """
+    min_delay = min_delay * 60
+    cluster_list = glob.glob("inputs/*")
+    print(cluster_list)
+    complete = []
+    resubmissions = []
+    for i in range(len(monitor_jobs)):
+        complete.append(0)
+        resubmissions.append(2)
+    calculations_complete = False
 
-    data = ""
+    for i in range(number_delays):
+        # time.sleep(min_delay)
+        for num, j in enumerate(monitor_jobs):
+            print(j)
+            os.chdir(j)
+            delay = i
+            if complete[num] < 1:
+                action, resubmissions = error_mexc_v8.main(
+                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                    resubmissions, delay, cluster
+                )
+                print(resubmissions)
+            mexc_check = glob.glob("mexc")
+            # print(mexc_check)
+            if len(mexc_check) > 0:
+                print('{0} entered mexc checkpoint 1'.format(num+1))
+                complete[num] = 1
+                mexc_check_out = glob.glob("mexc/mexc.o*")
 
-    with open('tmp.txt') as fp:
-        data = fp.read()
+                if complete[num] != 2 and len(mexc_check_out) > 1:
+                    print('{0} entered mexc checkpoint 2'.format(num+1))
+                    complete[num] = 2
+            mexc_check = []
+            os.chdir('..')
+        stage = 0
+        for k in range(len(complete)):
+            stage += complete[k]
+            if stage == len(complete)*2:
+                calculations_complete = True
 
-    # Reading data from file2
-    charges = "0 1"
+        if calculations_complete == True:
+            print(complete)
+            print('\nCalculatinos are complete.')
+            print('Took %.2f hours' % (i*min_delay / 60))
+            return complete
+        print('Completion List\n', complete, '\n')
+        print('delay %d' % (i))
+        time.sleep(min_delay)
+    return complete
 
-    new_dir = "mexc"
-    os.mkdir(new_dir)
-
-    with open(new_dir + '/mexc.com', 'w') as fp:
-        fp.write("%mem=1600mb\n")
-        fp.write("%nprocs=4\n")
-        fp.write("#N TD(NStates=25) B3lYP/6-311G(d,p)\n")
-        fp.write("\n")
-        fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-        fp.write("\n")
-        fp.write(charges + "\n")
-        fp.write(data)
-        fp.write("\n")
-
-    with open(new_dir + '/mexc.pbs', 'w') as fp:
-        fp.write("#!/bin/sh\n")
-        fp.write("#PBS -N mexc\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
-        fp.write("mem=15gb\n")
-        fp.write(
-            "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
-        fp.write(
-            "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-        fp.write(
-            """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
-        fp.write("then\n")
-        fp.write(
-            "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
-        fp.write(
-            """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
-        fp.write(
-            "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
-        fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
-        fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
-        fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
-        fp.write(
-            "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mexc.com mexc.out\n\nrm -r $scrdir\n")
 
 def main():
     print("\n\tstart\n")
@@ -339,9 +373,32 @@ def main():
     localStructuresDict = collectLocalStructures(three_types) # p
 
     smiles_tuple_list = permutationDict(localStructuresDict)
-
+    
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
 
+    resubmit_delay_min = 0.01
+    resubmit_max_attempts = 40
+
+    # geometry optimization options
+    method_opt = "B3LYP"
+    basis_set_opt = "6-311G(d,p)"
+    mem_com_opt = "1600"  # mb
+    mem_pbs_opt = "10"  # gb
+
+    # TD-DFT options
+    method_mexc = "B3lYP"
+    basis_set_mexc = "6-311G(d,p)"
+    mem_com_mexc = "1600"  # mb
+    mem_pbs_mexc = "10"  # gb"
+    cluster='seq' 
+
     writeInputFiles(xyzDict)
+    print(monitor_jobs)
+    complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
+                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           cluster
+                           )
     
+
 main()
