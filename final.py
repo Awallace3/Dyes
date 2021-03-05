@@ -19,10 +19,12 @@ def collectLocalStructures (subdirectories):
             with open(j) as f:
                 smiles = f.read()
                 smiles = smiles.rstrip()
-                localStructuresDict['local{0}'.format(num+1)].append(smiles)
+                print(j[:-4])
+                localStructuresDict['local{0}'.format(num+1)].append((smiles, j[:-4]))
+
         os.chdir("..")
         number_locals += 1
-    #print(localStructuresDict)
+    print(localStructuresDict)
     
     return localStructuresDict
 
@@ -34,7 +36,7 @@ def permutationDict(localStructuresDict):
         pre_perm = pre_perm + [value]
 
     post_perm = list(itertools.product(*pre_perm))
-    print(post_perm)        
+    print(post_perm[0])        
     
     return post_perm
 
@@ -44,7 +46,18 @@ def smilesRingCleanUp(f, s, t):
     lst1 = []
     claimed = []
     double = []
-
+    smi1, na1 = f
+    smi2, na2 = s
+    smi3, na3 = t
+    name = na1 + "_" + na2 + "_" + na3
+    print(name)
+    smi1 = smi1.replace("1", "7")
+    smi1 = smi1.replace("2", "6")
+    smi2 = smi2.replace("1", "5")
+    smi2 = smi2.replace("2", "4")
+    line = smi1 + "." + smi2 + "." + smi3
+    print(line)
+    """
     for n, ch in enumerate(f):
         if ch.isnumeric():
             #print(ch)
@@ -66,11 +79,11 @@ def smilesRingCleanUp(f, s, t):
             if st1[i][0] in double:
                 continue
 
-    
+    """
     print(lst1)
     print(claimed)
 
-    return combinedString
+    return line, name
 
 
 def generateMolecules (smiles_tuple_list): 
@@ -78,30 +91,39 @@ def generateMolecules (smiles_tuple_list):
     #print(number_locals)
     #print(smiles_tuple_list)
     xyzDict = {}
-
+    monitor_jobs = []
 
     for num, i in enumerate(smiles_tuple_list):
         #if num > 1:
         #    return xyzDict
+        print(i)
         first, second, third = i
-        #combinedString = smilesRingCleanUp(first, second, third)
-        first = first.replace("1", "7")
-        first = first.replace("2", "6")
-        second = second.replace("1", "5")
-        second = second.replace("2", "4")
-        line = first + "." + second + "." + third
+        print(first, second, third)
+        line, name = smilesRingCleanUp(first, second, third)
+        exists = os.path.isdir("inputs/" + name)
+        print(exists)
+        if exists:
+            print("directory already exists for inputs/%s\n" % name)
+            continue
+
+
+        #first = first.replace("1", "7")
+        #first = first.replace("2", "6")
+        #second = second.replace("1", "5")
+        #second = second.replace("2", "4")
+        #line = first + "." + second + "." + third
         #print(line)
         #print(num)
         print("line{0}:".format(num), line)
         line = line.replace("BBA", "9")
         line = line.replace("BBD", "8")
         print("line{0}:".format(num), line)
-        file = open('results/smiles{0}.smi'.format(num+1), 'w+')
+        file = open('results/{0}.smi'.format(name), 'w+')
         file.write(line)
         file.close()
         
         #cmd = "obabel -ismi results/smiles{0}.smi -oxyz output.xyz --gen3D".format(num+1)
-        cmd = "obabel -ismi results/smiles{0}.smi -oxyz --gen3D".format(num+1)
+        cmd = "obabel -ismi results/{0}.smi -oxyz --gen3D".format(name)
         carts = subprocess.check_output(cmd, shell=True)
         subprocess.call(cmd, shell=True)
         carts = str(carts)
@@ -124,10 +146,11 @@ def generateMolecules (smiles_tuple_list):
             invalid = True
             continue
         del carts_cleaned[-1]
-        xyzDict["geom{0}".format(num+1)] = carts_cleaned
+        xyzDict["{0}".format(name)] = carts_cleaned
+        monitor_jobs.append(name)
         print('loop')
     #print(xyzDict)
-    return xyzDict
+    return xyzDict, monitor_jobs
 
 """
 def writeInputFiles (xyzDict):
@@ -146,16 +169,16 @@ def writeInputFiles (xyzDict):
     os.chdir("inputs")
     for key, value in xyzDict.items():
         os.mkdir(key)
-        file = open( key + "/" + "mex"+".com", 'w+')
+        file = open( key + "/mex.com", 'w+')
         file.write("#N B3LYP/6-311G(d,p) OPT  \n")
         file.write("\n")
-        file.write("Name\n\n")
+        file.write("{0}\n\n".format(key))
         file.write("0 1\n")
         for line in value:
             file.write(line)
             file.write("\n")
         file.close()
-        file = open( key + "/" + "mex" + ".pbs", 'w+')   #pbs for sequoia
+        file = open( key + "/mex.pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
         file.write("\n")
         file.write("#PBS -N " + "mex")
@@ -199,7 +222,7 @@ def writeInputFiles (xyzDict):
         file.write("\n")
         file.write("cd $PBS_O_WORKDIR")
         file.write("\n")
-        file.write("/usr/local/apps/bin/g09setup " + "mex" + '.com ' + "mex" + '.out ')
+        file.write("/usr/local/apps/bin/g09setup mex.com mex.out")
 
 
 
@@ -314,7 +337,7 @@ def main():
 
     smiles_tuple_list = permutationDict(localStructuresDict)
 
-    xyzDict = generateMolecules(smiles_tuple_list)
+    xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
 
     writeInputFiles(xyzDict)
     
