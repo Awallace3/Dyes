@@ -192,6 +192,14 @@ def writeInputFiles (xyzDict):
         #file.write(' ')
         #file.close()
 
+        """
+        Add image depictions
+        value in this loop is going to be each molecules cartesian coordinates
+        """
+        cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
+        carts = subprocess.check_output(cmd, shell=True)
+        
+
         file = open( name + "/mex.com", 'w+')
         file.write("#N B3LYP/6-311G(d,p) OPT  \n")
         file.write("\n")
@@ -376,7 +384,7 @@ def main():
     
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
 
-    resubmit_delay_min = 0.01
+    resubmit_delay_min = 0.01 # 60 * 12
     resubmit_max_attempts = 40
 
     # geometry optimization options
