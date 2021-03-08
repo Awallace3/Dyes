@@ -196,8 +196,8 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         Add image depictions
         value in this loop is going to be each molecules cartesian coordinates
         """
-        cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
-        carts = subprocess.check_output(cmd, shell=True)
+        #cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
+        #carts = subprocess.check_output(cmd, shell=True)
         
 
         file = open( name + "/mex.com", 'w+')
@@ -259,8 +259,10 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         file.write("\n")
         file.write("/usr/local/apps/bin/g09setup mex.com mex.out")
         file.close()
-        
-        #subprocess.call('qsub mex.pbs')
+        os.chdir(name)
+        print(os.getcwd())
+        os.system('qsub mex.pbs')
+        os.chdir('..')
         
         """
         file = open( key + "/" + "mex" + ".pbs", 'w+') # pbs for maple
