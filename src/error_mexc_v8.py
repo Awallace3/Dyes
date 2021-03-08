@@ -355,8 +355,46 @@ def make_mexc(method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc, cluster):
             fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
             fp.write(
                 "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mexc.com mexc.out\n\nrm -r $scrdir\n")
+        new_dir = "mo"
+        os.mkdir(new_dir)
+        with open(new_dir + '/mo.com', 'w') as fp:
+            fp.write("%mem={0}mb\n".format(mem_com_mexc))
+            fp.write("%nprocs=4\n")
+            fp.write("#N TD(NStates=25) {0}".format(
+                method_mexc) + "/{0}\n".format(basis_set_mexc))
+            fp.write("\n")
+            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
+            fp.write("\n")
+            fp.write(charges + "\n")
+            fp.write(data)
+            fp.write("\n")
+
+        with open(new_dir + '/mo.pbs', 'w') as fp:
+            fp.write("#!/bin/sh\n")
+            fp.write(
+                "#PBS -N mo_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
+            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
+            fp.write(
+                "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
+            fp.write(
+                "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
+            fp.write(
+                """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
+            fp.write("then\n")
+            fp.write(
+                "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
+            fp.write(
+                """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
+            fp.write(
+                "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
+            fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
+            fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
+            fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
+            fp.write(
+                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mo.com mo.out\n\nrm -r $scrdir\n")
+ 
     elif cluster == 'seq':
-        with open('mex.com', 'w') as fp:
+        with open(new_dir + '/mexc.com', 'w') as fp:
             #fp.write("%mem={0}mb\n".format(mem_com_opt))
             #fp.write("%nprocs=4\n")
             fp.write("#N {0}".format(method_mexc) +
@@ -368,15 +406,41 @@ def make_mexc(method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc, cluster):
             fp.write(data)
             fp.write("\n")
 
-        with open('mex.pbs', 'w') as fp:
+        with open(new_dir, '/mexc.pbs', 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
+            fp.write("#PBS -N mexc_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
             fp.write("mem={0}gb\n".format(mem_pbs_mexc))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write("export g16root=/usr/local/apps/\n. $g16root/g16/bsd/g16.profile\n\n")
             fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
             fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
             fp.write("/usr/local/apps/bin/g16setup mex.com mex.pbs")
+
+        new_dir = "mo"
+        os.mkdir(new_dir)
+        
+        with open(new_dir, '/mo.com', 'w') as fp:
+                #fp.write("%mem={0}mb\n".format(mem_com_opt))
+                #fp.write("%nprocs=4\n")
+                fp.write("#N {0}".format(method_mexc) +
+                        "/{0} OPT FREQ\n".format(basis_set_mexc))
+                fp.write("\n")
+                fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
+                fp.write("\n")
+                fp.write(charges + "\n")
+                fp.write(data)
+                fp.write("\n")
+
+        with open(new_dir, '/mo.pbs', 'w') as fp:
+            fp.write("#!/bin/sh\n")
+            fp.write("#PBS -N mo_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
+            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
+            fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
+            fp.write("export g16root=/usr/local/apps/\n. $g16root/g16/bsd/g16.profile\n\n")
+            fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
+            fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
+            fp.write("/usr/local/apps/bin/g16setup mo.com mo.pbs")
+       
 
 def clean_energies(hf_1, hf_2, zero_point):
     zero_point = zero_point[30:].replace(" (Hartree/Particle)", "")
