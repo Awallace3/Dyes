@@ -179,7 +179,7 @@ def writeInputFiles (xyzDict):
     return
 """
 
-def writeInputFiles (xyzDict):
+def writeInputFiles (xyzDict, method_opt, basis_set_opt):
     os.chdir("inputs")
     for key, value in xyzDict.items():
         nameSplit = key.split(";;;")
@@ -201,7 +201,8 @@ def writeInputFiles (xyzDict):
         
 
         file = open( name + "/mex.com", 'w+')
-        file.write("#N B3LYP/6-311G(d,p) OPT  \n")
+        file.write("")
+        file.write("#N %s/%s OPT \n" % (method_opt, basis_set_opt))
         file.write("\n")
         file.write("{0}\n\n".format(formalName))
         file.write("0 1\n")
@@ -400,7 +401,7 @@ def main():
     mem_pbs_mexc = "10"  # gb"
     cluster='seq' 
 
-    writeInputFiles(xyzDict)
+    writeInputFiles(xyzDict, method_opt, basis_set_opt)
     print(monitor_jobs)
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
