@@ -441,9 +441,9 @@ def make_mexc(method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc, cluster):
             fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
             fp.write("/usr/local/apps/bin/g16setup mo.com mo.pbs")
        
-       new_dir = "freq"
-       os.mkdir(new_dir)
-       with open(new_dir, '/mex.com', 'w') as fp:
+        new_dir = "freq"
+        os.mkdir(new_dir)
+        with open(new_dir, '/mex.com', 'w') as fp:
             #fp.write("%mem={0}mb\n".format(mem_com_opt))
             #fp.write("%nprocs=4\n")
             fp.write("#N {0}".format(method_mexc) +
