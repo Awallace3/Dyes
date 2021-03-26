@@ -209,6 +209,7 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         for line in value:
             file.write(line)
             file.write("\n")
+        file.write("\n")
 #   file.write(#"name of electron donor:" + 1ed.smi + name\n)
 #   file.write(#"name of backbone: " + 1ea.smi + name\n)
 #   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
@@ -341,13 +342,6 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
             print(j)
             os.chdir(j)
             delay = i
-            if complete[num] < 1:
-                action, resubmissions = error_mexc_v8.main(
-                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                    resubmissions, delay, cluster
-                )
-                print(resubmissions)
             mexc_check = glob.glob("mexc")
             # print(mexc_check)
             if len(mexc_check) > 0:
@@ -358,6 +352,14 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 if complete[num] != 2 and len(mexc_check_out) > 1:
                     print('{0} entered mexc checkpoint 2'.format(num+1))
                     complete[num] = 2
+            if complete[num] < 1:
+                action, resubmissions = error_mexc_v8.main(
+                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                    resubmissions, delay, cluster
+                )
+                print(resubmissions)
+            
             mexc_check = []
             os.chdir('..')
         stage = 0
@@ -368,7 +370,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
         if calculations_complete == True:
             print(complete)
-            print('\nCalculatinos are complete.')
+            print('\nCalculations are complete.')
             print('Took %.2f hours' % (i*min_delay / 60))
             return complete
         print('Completion List\n', complete, '\n')
