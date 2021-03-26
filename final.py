@@ -179,7 +179,7 @@ def writeInputFiles (xyzDict):
     return
 """
 
-def writeInputFiles (xyzDict):
+def writeInputFiles (xyzDict, method_opt, basis_set_opt):
     os.chdir("inputs")
     for key, value in xyzDict.items():
         nameSplit = key.split(";;;")
@@ -196,13 +196,13 @@ def writeInputFiles (xyzDict):
         Add image depictions
         value in this loop is going to be each molecules cartesian coordinates
         """
-        cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
-        carts = subprocess.check_output(cmd, shell=True)
+        #cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
+        #carts = subprocess.check_output(cmd, shell=True)
         
 
         file = open( name + "/mex.com", 'w+')
-        file.write("%mem=8gb \n")
-        file.write("#N B3LYP/6-311G(d,p) OPT  \n")
+        file.write("")
+        file.write("#N %s/%s OPT \n" % (method_opt, basis_set_opt))
         file.write("\n")
         file.write("{0}\n\n".format(formalName))
         file.write("0 1\n")
@@ -260,8 +260,10 @@ def writeInputFiles (xyzDict):
         file.write("\n")
         file.write("/usr/local/apps/bin/g09setup " +" mex.com mex.out")
         file.close()
-        
-        #subprocess.call('qsub mex.pbs')
+        os.chdir(name)
+        print(os.getcwd())
+        os.system('qsub mex.pbs')
+        os.chdir('..')
         
         """
         file = open( key + "/" + "mex" + ".pbs", 'w+') # pbs for maple
@@ -340,13 +342,6 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
             print(j)
             os.chdir(j)
             delay = i
-            if complete[num] < 1:
-                action, resubmissions = error_mexc_v8.main(
-                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                    resubmissions, delay, cluster
-                )
-                print(resubmissions)
             mexc_check = glob.glob("mexc")
             # print(mexc_check)
             if len(mexc_check) > 0:
@@ -357,6 +352,14 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 if complete[num] != 2 and len(mexc_check_out) > 1:
                     print('{0} entered mexc checkpoint 2'.format(num+1))
                     complete[num] = 2
+            if complete[num] < 1:
+                action, resubmissions = error_mexc_v8.main(
+                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                    resubmissions, delay, cluster
+                )
+                print(resubmissions)
+            
             mexc_check = []
             os.chdir('..')
         stage = 0
@@ -367,7 +370,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
         if calculations_complete == True:
             print(complete)
-            print('\nCalculatinos are complete.')
+            print('\nCalculations are complete.')
             print('Took %.2f hours' % (i*min_delay / 60))
             return complete
         print('Completion List\n', complete, '\n')
@@ -402,7 +405,7 @@ def main():
     mem_pbs_mexc = "10"  # gb"
     cluster='seq' 
 
-    writeInputFiles(xyzDict)
+    writeInputFiles(xyzDict, method_opt, basis_set_opt)
     print(monitor_jobs)
     '''
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
