@@ -201,6 +201,7 @@ def writeInputFiles (xyzDict):
         
 
         file = open( name + "/mex.com", 'w+')
+        file.write("%mem=8gb \n")
         file.write("#N B3LYP/6-311G(d,p) OPT  \n")
         file.write("\n")
         file.write("{0}\n\n".format(formalName))
@@ -208,6 +209,7 @@ def writeInputFiles (xyzDict):
         for line in value:
             file.write(line)
             file.write("\n")
+        file.write(" " + "\n")
 #   file.write(#"name of electron donor:" + 1ed.smi + name\n)
 #   file.write(#"name of backbone: " + 1ea.smi + name\n)
 #   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
@@ -215,7 +217,7 @@ def writeInputFiles (xyzDict):
         file = open( name + "/mex.pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
         file.write("\n")
-        file.write("#PBS -N " + "mex_o")
+        file.write("#PBS -N " + str(name))
         file.write("\n")
         file.write("#PBS -S /bin/sh")
         file.write("\n")
@@ -256,7 +258,7 @@ def writeInputFiles (xyzDict):
         file.write("\n")
         file.write("cd $PBS_O_WORKDIR")
         file.write("\n")
-        file.write("/usr/local/apps/bin/g09setup mex.com mex.out")
+        file.write("/usr/local/apps/bin/g09setup " +" mex.com mex.out")
         file.close()
         
         #subprocess.call('qsub mex.pbs')
@@ -402,11 +404,13 @@ def main():
 
     writeInputFiles(xyzDict)
     print(monitor_jobs)
+    '''
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster
                            )
+    '''
     
 
 main()

@@ -2,3 +2,4 @@ inputs/
 results/
 src/ice_manager.py
 *.png
+src/__pycache__/*
