@@ -6,7 +6,7 @@ import subprocess
 import time
 import sys
 import subprocess
-from src import error_mexc_v8
+from src import error_mexc_dyes_v1
 # requires obabel installed...
     # brew install obabel
     # conda install -c openbabel openbabel
@@ -353,7 +353,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     print('{0} entered mexc checkpoint 2'.format(num+1))
                     complete[num] = 2
             if complete[num] < 1:
-                action, resubmissions = error_mexc_v8.main(
+                action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster

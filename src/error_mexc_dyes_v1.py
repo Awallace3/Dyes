@@ -10,6 +10,83 @@ import pandas as pd
 import glob
 import subprocess
 
+
+def gaussianInputFiles(output_num, method_opt, 
+                    basis_set_opt, mem_com_opt, 
+                    mem_pbs_opt, cluster, 
+                    baseName='mex', procedure='OPT' 
+                    ):
+    
+    output_num = str(output_num)
+    if output_num == '0':
+        output_num = ''
+    
+    data = ""
+
+    with open('tmp.txt') as fp:
+        data = fp.read()
+
+    # Reading data from file2
+    charges = "0 1"
+
+    if cluster == "map":
+        with open('{0}.com'.format(baseName), 'w') as fp:
+            fp.write("%mem={0}mb\n".format(mem_com_opt))
+            fp.write("%nprocs=4\n")
+            fp.write("#N {0}".format(method_opt) +
+                    "/{0} {0}\n".format(basis_set_opt, procedure))
+            fp.write("\n")
+            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
+            fp.write("\n")
+            fp.write(charges + "\n")
+            fp.write(data)
+            fp.write("\n")
+
+        with open('{0}.pbs'.format(baseName), 'w') as fp:
+            fp.write("#!/bin/sh\n")
+            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
+            fp.write("mem={0}gb\n".format(mem_pbs_opt))
+            fp.write(
+                "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
+            fp.write(
+                "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
+            fp.write(
+                """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
+            fp.write("then\n")
+            fp.write(
+                "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
+            fp.write(
+                """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
+            fp.write(
+                "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
+            fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
+            fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
+            fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
+            fp.write("cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out".format(baseName, baseName) +
+                    str(output_num) + "\n\nrm -r $scrdir\n")
+    elif cluster == 'seq':
+        with open('{0}.com'.format(baseName), 'w') as fp:
+
+            fp.write("#N {0}".format(method_opt) +"/{0} {0}\n".format(basis_set_opt, procedure))
+            fp.write("\n")
+            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
+            fp.write("\n")
+            fp.write(charges + "\n")
+            fp.write(data)
+            fp.write("\n")
+
+        with open('{0}.pbs'.format(baseName), 'w') as fp:
+            fp.write("#!/bin/sh\n")
+            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
+            fp.write("mem={0}gb\n".format(mem_pbs_opt))
+            fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
+            fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
+            fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
+            fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
+            fp.write("/usr/local/apps/bin/g09setup %s.com %s.out%s" % (baseName, baseName, output_num))
+
+
+
 # from ice_analogs, but modified input files
 def Convert(string):
     li = list(string.split(" "))
@@ -284,6 +361,12 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
             fp.write("cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mex.com mex.out" +
                     str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == 'seq':
+        gaussianInputFiles(output_num, method_opt, 
+                    basis_set_opt, mem_com_opt, 
+                    mem_pbs_opt, cluster, 
+                    baseName='mex', procedure='OPT' 
+                    )
+        """
         with open('mex.com', 'w') as fp:
             #fp.write("%mem={0}mb\n".format(mem_com_opt))
             #fp.write("%nprocs=4\n")
@@ -301,11 +384,11 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
             fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
-            fp.write("export g16root=/usr/local/apps/\n. $g16root/g16/bsd/g16.profile\n\n")
+            fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
             fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
             fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
-            fp.write("/usr/local/apps/bin/g16setup mex.com mex.pbs")
-
+            fp.write("/usr/local/apps/bin/g09setup mex.com mex.pbs")
+    """
 def make_mexc(method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc, cluster):
     """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
 
@@ -542,83 +625,81 @@ def main(index,
                 if word_error in line:
                     error = True
         cmd = "qsub mex.pbs"
-        try:
-            if error == True:
-                find_geom(lines, error=True, filename=filename,
-                          imaginary=imaginary)
-                make_input_files_no_constraints(
-                    output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
-                os.system("qsub mex.pbs")
-                failure = subprocess.call(cmd, shell=True)
-                resubmissions[index] += 1
-                return False, resubmissions
+        if error == True:
+            find_geom(lines, error=True, filename=filename,
+                        imaginary=imaginary)
+            make_input_files_no_constraints(
+                output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
+            os.system("qsub mex.pbs")
+            failure = subprocess.call(cmd, shell=True)
+            resubmissions[index] += 1
+            return False, resubmissions
 
-            elif imaginary == True:
-                find_geom(lines, error=False, filename=filename,
-                          imaginary=imaginary)
-                add_imaginary(freq_clean, freq_lst_len, filename)
+        elif imaginary == True:
+            find_geom(lines, error=False, filename=filename,
+                        imaginary=imaginary)
+            add_imaginary(freq_clean, freq_lst_len, filename)
 
-                make_input_files_no_constraints(
-                    output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
-                os.system("qsub mex.pbs")
-                failure = subprocess.call(cmd, shell=True)
-                print('imaginary frequency handling...')
-                resubmissions[index] += 1
-                return False, resubmissions
+            make_input_files_no_constraints(
+                output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
+            os.system("qsub mex.pbs")
+            failure = subprocess.call(cmd, shell=True)
+            print('imaginary frequency handling...')
+            resubmissions[index] += 1
+            return False, resubmissions
+        else:
+            cmd = "qsub mexc.pbs"
+            find_geom(lines, error=False, filename=filename,
+                        imaginary=imaginary)
+            freq, hf_1, hf_2, zero_point = freq_hf_zero(
+                lines, filename=filename)
+            # print("\n")
+            # print(freq)
+
+            # print(hf_1)
+            # print(hf_2)
+            # print(zero_point)
+            sum_energy = clean_energies(hf_1, hf_2, zero_point)
+            print('Total energy {0}: '.format(index+1), sum_energy)
+            make_mexc(method_mexc, basis_set_mexc,
+                        mem_com_mexc, mem_pbs_mexc, cluster)
+            os.chdir("mexc")
+            os.system("qsub mexc.pbs")
+            os.chdir("../mo")
+            os.system("qsub mo.pbs")
+            os.chdir("../freq")
+            os.system("qsub mex.pbs")
+            # os.path.abspath(os.getcwd())
+            failure = subprocess.call(cmd, shell=True)
+            resubmissions[index] += 1
+            os.chdir("..")
+            os.remove("tmp.txt")
+
+            os.chdir("../..")
+            if "results" not in glob.glob("results"):
+                os.mkdir("results")
+            os.chdir("results")
+            if "energies" not in glob.glob("energies"):
+                os.mkdir("energies")
+            os.chdir("energies")
+
+            # os.chdir("../../results/energies")
+            print(os.getcwd())
+            f = open("energy{0}.txt".format(index+1), 'w')
+            f.write(str(sum_energy))
+            f.close()
+            if "energy_all.csv" not in glob.glob("energy_all.csv"):
+                ft = open("energy_all.csv", "w")
+                ft.write("%d,%.14f\n" % (index+1, sum_energy))
+                ft.close()
             else:
-                cmd = "qsub mexc.pbs"
-                find_geom(lines, error=False, filename=filename,
-                          imaginary=imaginary)
-                freq, hf_1, hf_2, zero_point = freq_hf_zero(
-                    lines, filename=filename)
-                # print("\n")
-                # print(freq)
 
-                # print(hf_1)
-                # print(hf_2)
-                # print(zero_point)
-                sum_energy = clean_energies(hf_1, hf_2, zero_point)
-                print('Total energy {0}: '.format(index+1), sum_energy)
-                make_mexc(method_mexc, basis_set_mexc,
-                          mem_com_mexc, mem_pbs_mexc, cluster)
-                os.chdir("mexc")
-                os.system("qsub mexc.pbs")
-                os.chdir("../mo")
-                os.system("qsub mo.pbs")
-                os.chdir("../freq")
-                os.system("qsub mex.pbs")
-                # os.path.abspath(os.getcwd())
-                failure = subprocess.call(cmd, shell=True)
-                resubmissions[index] += 1
-                os.chdir("..")
-                os.remove("tmp.txt")
-
-                os.chdir("../..")
-                if "results" not in glob.glob("results"):
-                    os.mkdir("results")
-                os.chdir("results")
-                if "energies" not in glob.glob("energies"):
-                    os.mkdir("energies")
-                os.chdir("energies")
-
-                # os.chdir("../../results/energies")
-                print(os.getcwd())
-                f = open("energy{0}.txt".format(index+1), 'w')
-                f.write(str(sum_energy))
-                f.close()
-                if "energy_all.csv" not in glob.glob("energy_all.csv"):
-                    ft = open("energy_all.csv", "w")
-                    ft.write("%d,%.14f\n" % (index+1, sum_energy))
-                    ft.close()
-                else:
-
-                    ft = open("energy_all.csv", "a")
-                    ft.write("%d,%.14f\n" % (index+1, sum_energy))
-                    ft.close()
-                return False, resubmissions
-        except:
-            print('Calculation still running')
-            return True, resubmissions
+                ft = open("energy_all.csv", "a")
+                ft.write("%d,%.14f\n" % (index+1, sum_energy))
+                ft.close()
+            return False, resubmissions
+        print('Calculation still running')
+        return True, resubmissions
     else:
         print('No output files detected for geom%d' % (index+1))
         return True, resubmissions
