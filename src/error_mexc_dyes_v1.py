@@ -9,7 +9,7 @@ import pandas as pd
 # import re
 import glob
 import subprocess
-
+from src import xyz2mol
 
 def gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
@@ -65,10 +65,10 @@ def gaussianInputFiles(output_num, method_opt,
                     str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == 'seq':
         with open('%s/%s.com' % (baseName, baseName), 'w') as fp:
-
-            fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure) )
+            fp.write('%mem=8gb\n')
+            fp.write("#N %s/%s %s\n" % (method_opt, basis_set_opt, procedure) )
             fp.write("\n")
-            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
+            fp.write("Name \n")
             fp.write("\n")
             fp.write(charges + "\n")
             fp.write(data)
@@ -114,11 +114,12 @@ def clean_many_txt():
     """ This will replace the numerical forms of the elements as their letters numbered in order """
 
     f = open('tmp.txt', 'r')
-    a = ['6.0 ', '8.0 ', '1.0 ', '7.0 ', '16.0 ']
+    a = ['16.0 ', '6.0 ', '8.0 ', '1.0 ', '7.0 ' ]
     table = {
         '6.0 ': 'C', '8.0 ': 'O', '1.0 ': 'H', '7.0 ': 'N', '16.0 ': 'S'
     }
 
+    xyzToMolLst = []
     lst = []
     cnt2 = 0
     for line in f:
@@ -126,14 +127,22 @@ def clean_many_txt():
         for word in a:
             if word in line:
                 convert_wrd = table[word]
+                line2 = line.replace(word, convert_wrd + " ")
                 line = line.replace(word, convert_wrd + str(cnt2) + " ")
+                
 
         lst.append(line)
+        xyzToMolLst.append(line2)
     f.close()
     f = open('tmp.txt', 'w')
+    length = 0
     for line in lst:
         f.write(line)
+        length += 1
     f.close()
+
+    xyzToSmiles(length, xyzToMolLst)
+
 
 
 def i_freq_check(filename):
@@ -344,10 +353,27 @@ def find_geom(lines, error, filename, imaginary):
     out_file = "tmp.txt"
     np.savetxt(out_file, new_geom,
                fmt="%s")
+    
     if not imaginary:
         clean_many_txt()
     elif error:
         clean_many_txt()
+    
+def xyzToSmiles(length, xyz):
+    with open('molecule.xyz', 'w') as fp:
+        fp.write('%s\ncharge=0=\n' % length)
+        for n, i in enumerate(xyz):
+            if n == len(xyz) -1:
+                fp.write(i[:-2])
+            else:
+                fp.write(i)
+    cmd = 'python3 ../../src/xyz2mol.py ./molecule.xyz'
+
+    val = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    os.remove('molecule.xyz')
+    with open('molecule.smi', 'w') as fp:
+        fp.write(val.rstrip())
+
 
 def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster):
     """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
@@ -552,7 +578,7 @@ def main(index,
             make_exc_mo_freq(method_mexc, basis_set_mexc, 
                             mem_com_mexc, mem_pbs_mexc, cluster)
             
-            os.remove("tmp.txt")
+            #os.remove("tmp.txt")
             
             return False, resubmissions
         print('Calculation still running')

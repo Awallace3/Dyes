@@ -795,10 +795,10 @@ if __name__ == "__main__":
     # atoms = 
     # xyz_coordinates =[]
     atoms, charge, xyz_coordinates = read_xyz_file(filename)
-    print("xyz_coords below:")
-    print(xyz_coordinates)
-    print(atoms)
-    print(charge)
+    #print("xyz_coords below:")
+    #print(xyz_coordinates)
+    #print(atoms)
+    #print(charge)
     # huckel uses extended Huckel bond orders to locate bonds (requires RDKit 2019.9.1 or later)
     # otherwise van der Waals radii are used
     use_huckel = args.use_huckel
@@ -819,7 +819,7 @@ if __name__ == "__main__":
     for mol in mols:
         if args.output_format == "sdf":
             txt = Chem.MolToMolBlock(mol)
-            print(txt)
+            #print(txt)
 
         else:
             # Canonical hack
