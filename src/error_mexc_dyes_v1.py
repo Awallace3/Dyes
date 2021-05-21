@@ -30,11 +30,10 @@ def gaussianInputFiles(output_num, method_opt,
     charges = "0 1"
 
     if cluster == "map":
-        with open('{0}.com'.format(baseName), 'w') as fp:
+        with open('%s/%s.com' % (baseName, baseName), 'w') as fp:
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
-            fp.write("#N {0}".format(method_opt) +
-                    "/{0} {0}\n".format(basis_set_opt, procedure))
+            fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure) )
             fp.write("\n")
             fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
             fp.write("\n")
@@ -42,7 +41,7 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write(data)
             fp.write("\n")
 
-        with open('{0}.pbs'.format(baseName), 'w') as fp:
+        with open('%s/%s.pbs' % (baseName, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
             fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
@@ -65,9 +64,9 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write("cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out".format(baseName, baseName) +
                     str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == 'seq':
-        with open('{0}.com'.format(baseName), 'w') as fp:
+        with open('%s/%s.com' % (baseName, baseName), 'w') as fp:
 
-            fp.write("#N {0}".format(method_opt) +"/{0} {0}\n".format(basis_set_opt, procedure))
+            fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure) )
             fp.write("\n")
             fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
             fp.write("\n")
@@ -75,7 +74,7 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write(data)
             fp.write("\n")
 
-        with open('{0}.pbs'.format(baseName), 'w') as fp:
+        with open('%s/%s.pbs' % (baseName, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
             fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
@@ -92,6 +91,19 @@ def Convert(string):
     li = list(string.split(" "))
     return li
 
+def cleanLine(line):
+    aList = []
+    cropped_line = line.rstrip()
+    for i in range(2,10):
+        k = ' ' * i
+        cropped_line = cropped_line.replace(k, " ")
+    cropped_line = cropped_line.split(" ")
+    for i in cropped_line:
+        if i == '':
+            continue
+        else: 
+            aList.append(float(i))
+    return aList
 
 def conv_num(string):
     li = list(string.split(" "))
@@ -148,13 +160,10 @@ def i_freq_check(filename):
                         pass
             if len(freq_lst_len) > 1:
                 break
-
-        # print(freq_clean)
     try:
         freq_lst_len = [freq_lst_len[0]+5, freq_lst_len[1]-2]
     except:
         pass
-    # print(freq_lst_len)
 
     return imaginary, freq_clean, freq_lst_len
 
@@ -185,9 +194,7 @@ def add_imaginary(freq_clean, freq_lst_len, filename):
     carts = genfromtxt('tmp.txt')
     carts_no_atom = carts[:, 1:4]
     imag_values = np.array(imag_values)
-    # print(imag_values)
-    # print('\n')
-    # print(carts_no_atom, '\n')
+
     for i in range(len(imag_values[0, :]) // 3):
         carts_no_atom = np.add(carts_no_atom, imag_values[:, i: i+4])
     # print(carts_no_atom)
@@ -200,7 +207,6 @@ def add_imaginary(freq_clean, freq_lst_len, filename):
                fmt="%s")
 
     clean_many_txt()
-
 
 def freq_hf_zero(lines, filename):
     frequency = "Frequencies --"
@@ -218,14 +224,15 @@ def freq_hf_zero(lines, filename):
 
             if HF in line:
                 start = 'HF='
-                # end = '\RMSD='
-                # a = re.search(r'\b(HF=)\b', line)
                 index = line.index(start)
-
                 HFs.append(line[index:])
 
             if zero_point in line:
                 zeros.append(line)
+    print("hf", HFs, 'freqs', freqs, 'zeros', zeros)
+    if len(freqs) == 0 and len(zeros) == 0:
+        freqs.append("0")
+        zeros.append(" (Hartree/Particle)0")
     if len(HFs) == 1:
         return freqs[0], HFs[0], 0, zeros[0]
     else:
@@ -233,8 +240,30 @@ def freq_hf_zero(lines, filename):
 
 
 def find_geom(lines, error, filename, imaginary):
-
+    print("Opening..." + filename)
+    found = False
+    geom_size = 0
+    geom_list = []
+    with open(filename) as search:
+        for num, line in enumerate(search, 1):
+            if " Charge =  0 Multiplicity = 1" in line:
+                geom_size = num + 1
+                found = True
+            elif found == True and num < geom_size + 200:
+                #print(line, end="")
+                geom_list.append(line)
+            elif found == True and line == ' \n':
+                #geom_size = num - geom_size
+                break
+    clean_geom_size = []
+    for i in geom_list:
+        if not " \n" == i:
+            clean_geom_size.append(i)
+        elif i == ' \n':
+            break
+    geom_size = len(clean_geom_size)
     if error == True:
+        print("Error == True")
         pop_2 = "Population analysis using the SCF Density."
         pops = []
         pop_2_test = False
@@ -245,7 +274,7 @@ def find_geom(lines, error, filename, imaginary):
                 if len(pops) == 2:
                     pop_2_test = True
         if pop_2_test == True:
-
+            print(pop_2_test, "occuring")
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
@@ -256,19 +285,20 @@ def find_geom(lines, error, filename, imaginary):
                 for num, line in enumerate(search, 1):
                     if geom_end_pops in line:
                         orientation.append(num - 1)
+            print("if")
         else:
-
+            print('else')
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
                         standards.append(num + 5)
-
+                        
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_end in line:
                         orientation.append(num - 2)
-
     else:
+        print("No error")
 
         with open(filename) as search:
             for num, line in enumerate(search, 1):
@@ -279,50 +309,51 @@ def find_geom(lines, error, filename, imaginary):
             for num, line in enumerate(search, 1):
                 if geom_end in line:
                     orientation.append(num - 2)
+    if len(orientation) < 6:
+        orien = len(orientation)
+    else:
+        orien = 5
+    if len(standards) < 6:
+        stand = len(standards)
+    else:
+        stand = 5
+    for i in range(-1, -orien, -1):
+        for j in range(-1, -stand, -1):
+            length = orientation[i] - standards[j]
+            if length == geom_size:
+                orien = i
+                stand = j
+                break
+    if stand == 5:
+        stand = -1
+    del lines[standards[stand] - 1 + length:]
+    del lines[:standards[stand] - 1]
 
-    length = orientation[-1] - standards[-1]
+    cleaned_lines = []
+    for i in range(len(lines)):
+        clean = cleanLine(lines[i])
+        cleaned_lines.append(clean)
 
-    del lines[standards[-1] - 1 + length:]
-    del lines[:standards[-1] - 1]
-
-    for i in range(1, 10, 1):
-        k = "  " * i
-        lines = [item.replace(k, " ") for item in lines]
-
-    start_ls = []
-    for i in lines:
-        # i = i.strip()
-        i = i.rstrip()
-        k = Convert(i)
-        start_ls.append(k)
-
-    start_array = np.array(start_ls)
+    start_array = np.array(cleaned_lines)
     new_geom = np.zeros(((int(len(start_array[:, 3]))), 4))
-
-    new_geom[:, 0] = start_array[:, 5]
-    new_geom[:, 1] = start_array[:, 9]
-    new_geom[:, 2] = start_array[:, 11]
-    new_geom[:, 3] = start_array[:, 13]
-
-    # print(new_geom)
+    new_geom[:, 0] = start_array[:, 1]
+    new_geom[:, 1] = start_array[:, 3]
+    new_geom[:, 2] = start_array[:, 4]
+    new_geom[:, 3] = start_array[:, 5]
 
     out_file = "tmp.txt"
-
     np.savetxt(out_file, new_geom,
                fmt="%s")
     if not imaginary:
         clean_many_txt()
-
+    elif error:
+        clean_many_txt()
 
 def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster):
     """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
-
     data = ""
-
     with open('tmp.txt') as fp:
         data = fp.read()
-
-    # Reading data from file2
     charges = "0 1"
 
     if cluster == "map":
@@ -366,189 +397,59 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
                     mem_pbs_opt, cluster, 
                     baseName='mex', procedure='OPT' 
                     )
-        """
-        with open('mex.com', 'w') as fp:
-            #fp.write("%mem={0}mb\n".format(mem_com_opt))
-            #fp.write("%nprocs=4\n")
-            fp.write("#N {0}".format(method_opt) +
-                    "/{0} OPT\n".format(basis_set_opt))
-            fp.write("\n")
-            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-            fp.write("\n")
-            fp.write(charges + "\n")
-            fp.write(data)
-            fp.write("\n")
 
-        with open('mex.pbs', 'w') as fp:
-            fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
-            fp.write("mem={0}gb\n".format(mem_pbs_opt))
-            fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
-            fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
-            fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-            fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
-            fp.write("/usr/local/apps/bin/g09setup mex.com mex.pbs")
-    """
-def make_mexc(method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc, cluster):
-    """ Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory """
-
-    data = ""
-
-    with open('tmp.txt') as fp:
-        data = fp.read()
-
-    # Reading data from file2
-    charges = "0 1"
-
-    new_dir = "mexc"
-    os.mkdir(new_dir)
-    if cluster == 'map':
-        with open(new_dir + '/mexc.com', 'w') as fp:
-            fp.write("%mem={0}mb\n".format(mem_com_mexc))
-            fp.write("%nprocs=1\n")
-            fp.write("#N TD(NStates=10) {0}".format(
-                method_mexc) + "/{0}\n".format(basis_set_mexc))
-            fp.write("\n")
-            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-            fp.write("\n")
-            fp.write(charges + "\n")
-            fp.write(data)
-            fp.write("\n")
-
-        with open(new_dir + '/mexc.pbs', 'w') as fp:
-            fp.write("#!/bin/sh\n")
-            fp.write(
-                "#PBS -N mexc_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
-            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
-            fp.write(
-                "#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
-            fp.write(
-                "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-            fp.write(
-                """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
-            fp.write("then\n")
-            fp.write(
-                "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
-            fp.write(
-                """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
-            fp.write(
-                "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
-            fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
-            fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
-            fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
-            fp.write(
-                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mexc.com mexc.out\n\nrm -r $scrdir\n")
-        new_dir = "mo"
-        os.mkdir(new_dir)
-        with open(new_dir + '/mo.com', 'w') as fp:
-            fp.write("%mem={0}mb\n".format(mem_com_mexc))
-            fp.write("%nprocs=1\n")
-            fp.write("#N {0}".format(
-                method_mexc) + "/{0}\n".format(basis_set_mexc) + "SP GFINPUT POP=FULL")
-            fp.write("\n")
-            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-            fp.write("\n")
-            fp.write(charges + "\n")
-            fp.write(data)
-            fp.write("\n")
-
-        with open(new_dir + '/mo.pbs', 'w') as fp:
-            fp.write("#!/bin/sh\n")
-            fp.write(
-                "#PBS -N mo_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
-            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
-            fp.write(
-                "#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
-            fp.write(
-                "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-            fp.write(
-                """echo "exec_host = $HOSTNAME"\n\nif [[ $HOSTNAME =~ cn([0-9]{3}) ]];\n""")
-            fp.write("then\n")
-            fp.write(
-                "  nodenum=${BASH_REMATCH[1]};\n  nodenum=$((10#$nodenum));\n  echo $nodenum\n\n")
-            fp.write(
-                """  if (( $nodenum <= 29 ))\n  then\n    echo "Using AVX version";\n""")
-            fp.write(
-                "    export g16root=/usr/local/apps/gaussian/g16-b01-avx/\n  elif (( $nodenum > 29 ))\n")
-            fp.write("""  then\n    echo "Using AVX2 version";\n    export g16root=/usr/local/apps/gaussian/g16-b01-avx2/\n  else\n""")
-            fp.write("""    echo "Unexpected condition!"\n    exit 1;\n  fi\nelse\n""")
-            fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
-            fp.write(
-                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mo.com mo.out\n\nrm -r $scrdir\n")
- 
-    elif cluster == 'seq':
-        with open(new_dir + '/mexc.com', 'w') as fp:
-            #fp.write("%mem={0}mb\n".format(mem_com_opt))
-            #fp.write("%nprocs=4\n")
-            fp.write("#N TD(NStates=10) {0}".format(method_mexc) +
-                    "/{0}\n".format(basis_set_mexc))
-            fp.write("\n")
-            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-            fp.write("\n")
-            fp.write(charges + "\n")
-            fp.write(data)
-            fp.write("\n")
-
-        with open(new_dir, '/mexc.pbs', 'w') as fp:
-            fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mexc_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
-            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
-            fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
-            fp.write("export g16root=/usr/local/apps/\n. $g16root/g16/bsd/g16.profile\n\n")
-            fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-            fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
-            fp.write("/usr/local/apps/bin/g16setup mex.com mex.pbs")
-
-        new_dir = "mo"
-        os.mkdir(new_dir)
-        
-        with open(new_dir, '/mo.com', 'w') as fp:
-                #fp.write("%mem={0}mb\n".format(mem_com_opt))
-                #fp.write("%nprocs=4\n")
-                fp.write("#N {0}".format(method_mexc) +
-                        "/{0} SP GFINPUT POP=FULL\n".format(basis_set_mexc))
-                fp.write("\n")
-                fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-                fp.write("\n")
-                fp.write(charges + "\n")
-                fp.write(data)
-                fp.write("\n")
-
-        with open(new_dir, '/mo.pbs', 'w') as fp:
-            fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mo_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
-            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
-            fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
-            fp.write("export g16root=/usr/local/apps/\n. $g16root/g16/bsd/g16.profile\n\n")
-            fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-            fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
-            fp.write("/usr/local/apps/bin/g16setup mo.com mo.pbs")
-       
-        new_dir = "freq"
-        os.mkdir(new_dir)
-        with open(new_dir, '/mex.com', 'w') as fp:
-            #fp.write("%mem={0}mb\n".format(mem_com_opt))
-            #fp.write("%nprocs=4\n")
-            fp.write("#N {0}".format(method_mexc) +
-                    "/{0} FREQ\n".format(basis_set_mexc))
-            fp.write("\n")
-            fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
-            fp.write("\n")
-            fp.write(charges + "\n")
-            fp.write(data)
-            fp.write("\n")
-
-        with open(new_dir, '/mex.pbs', 'w') as fp:
-            fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
-            fp.write("mem={0}gb\n".format(mem_pbs_mexc))
-            fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
-            fp.write("export g16root=/usr/local/apps/\n. $g16root/g16/bsd/g16.profile\n\n")
-            fp.write("scrdir=/tmp/bnp.$PBS_JOBID\n\nmkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
-            fp.write("printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n")
-            fp.write("/usr/local/apps/bin/g16setup mex.com mex.pbs")
+def qsub(path='.'):
+    resetDirNum = len(path.split("/"))
+    os.chdir(path)
+    pbs_file = glob.glob("*.pbs")[0]
+    cmd = 'qsub %s' % pbs_file
+    print(os.getcwd(), "cmd", cmd)
+    failure = subprocess.call(cmd, shell=True)
+    if path != '.':
+        for i in range(resetDirNum):
+            print('dir changed')
+            os.chdir("..")
 
 
+def make_exc_mo_freq(method_mexc, basis_set_mexc, 
+                mem_com_mexc, mem_pbs_mexc, cluster):
+    
+    baseName = 'mexc'
+    os.mkdir(baseName)
+    procedure = 'TD(NStates=10)'
+    output_num = 0
+    gaussianInputFiles(output_num, method_mexc, 
+                    basis_set_mexc, mem_com_mexc, 
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+
+    baseName = 'mo'
+    os.mkdir(baseName)
+    procedure = 'SP GFINPUT POP=FULL'
+    output_num = 0
+    gaussianInputFiles(output_num, method_mexc, 
+                    basis_set_mexc, mem_com_mexc, 
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+
+    baseName = 'freq'
+    os.mkdir(baseName)
+    procedure = 'FREQ'
+    output_num = 0
+    gaussianInputFiles(output_num, method_mexc, 
+                    basis_set_mexc, mem_com_mexc, 
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+    
 def clean_energies(hf_1, hf_2, zero_point):
     zero_point = zero_point[30:].replace(" (Hartree/Particle)", "")
     for i in range(10):
@@ -558,7 +459,6 @@ def clean_energies(hf_1, hf_2, zero_point):
 
     if hf_2 != 0:
         hf_2 = (hf_2[3:].replace("\n", "").split('\\'))
-        # print(hf_1[0], hf_2[0])
 
         if hf_1[0] > hf_2[0]:
             return float(hf_1[0]) + zero_point
@@ -600,18 +500,13 @@ def main(index,
             output_num = int(output_num[-1]) + 1
             if delay == 0:
                 resubmissions[index] = output_num
-                # if not starting from the beginning, the resubmission[index] needs to be set to current output number
         if len(out_completion) != len(out_files):
             print("Not finished yet")
             return True, resubmissions
         if resubmissions[index] > output_num:
             print("Awaiting queue")
             return True, resubmissions
-        """         if existing_output < resubmissions[index]:
-            print('exit without submission')
-            return True, resubmissions """
 
-        # print("Input file: " + filename)
         f = open(filename, 'r')
         lines = f.readlines()
         f.close()
@@ -653,50 +548,12 @@ def main(index,
                         imaginary=imaginary)
             freq, hf_1, hf_2, zero_point = freq_hf_zero(
                 lines, filename=filename)
-            # print("\n")
-            # print(freq)
-
-            # print(hf_1)
-            # print(hf_2)
-            # print(zero_point)
-            sum_energy = clean_energies(hf_1, hf_2, zero_point)
-            print('Total energy {0}: '.format(index+1), sum_energy)
-            make_mexc(method_mexc, basis_set_mexc,
-                        mem_com_mexc, mem_pbs_mexc, cluster)
-            os.chdir("mexc")
-            os.system("qsub mexc.pbs")
-            os.chdir("../mo")
-            os.system("qsub mo.pbs")
-            os.chdir("../freq")
-            os.system("qsub mex.pbs")
-            # os.path.abspath(os.getcwd())
-            failure = subprocess.call(cmd, shell=True)
-            resubmissions[index] += 1
-            os.chdir("..")
+            
+            make_exc_mo_freq(method_mexc, basis_set_mexc, 
+                            mem_com_mexc, mem_pbs_mexc, cluster)
+            
             os.remove("tmp.txt")
-
-            os.chdir("../..")
-            if "results" not in glob.glob("results"):
-                os.mkdir("results")
-            os.chdir("results")
-            if "energies" not in glob.glob("energies"):
-                os.mkdir("energies")
-            os.chdir("energies")
-
-            # os.chdir("../../results/energies")
-            print(os.getcwd())
-            f = open("energy{0}.txt".format(index+1), 'w')
-            f.write(str(sum_energy))
-            f.close()
-            if "energy_all.csv" not in glob.glob("energy_all.csv"):
-                ft = open("energy_all.csv", "w")
-                ft.write("%d,%.14f\n" % (index+1, sum_energy))
-                ft.close()
-            else:
-
-                ft = open("energy_all.csv", "a")
-                ft.write("%d,%.14f\n" % (index+1, sum_energy))
-                ft.close()
+            
             return False, resubmissions
         print('Calculation still running')
         return True, resubmissions
