@@ -6,7 +6,7 @@ import subprocess
 import time
 import sys
 import subprocess
-from src import error_mexc_v8
+from src import error_mexc_dyes_v1
 # requires obabel installed...
     # brew install obabel
     # conda install -c openbabel openbabel
@@ -130,6 +130,8 @@ def generateMolecules (smiles_tuple_list):
         line = line.replace("BBA", "9")
         line = line.replace("BBD", "8")
         print("line{0}:".format(num), line)
+        if not os.path.exists('results'):
+            os.mkdir('results')
         file = open('results/{0}.smi'.format(name), 'w+')
         file.write(line)
         file.close()
@@ -180,6 +182,8 @@ def writeInputFiles (xyzDict):
 """
 
 def writeInputFiles (xyzDict, method_opt, basis_set_opt):
+    if not os.path.exists("inputs"):
+        os.mkdir('inputs')
     os.chdir("inputs")
     for key, value in xyzDict.items():
         nameSplit = key.split(";;;")
@@ -335,11 +339,13 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         complete.append(0)
         resubmissions.append(2)
     calculations_complete = False
-
+    # comment change directory below in production
+    os.chdir('inputs')
     for i in range(number_delays):
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
             print(j)
+            print(os.getcwd())
             os.chdir(j)
             delay = i
             mexc_check = glob.glob("mexc")
@@ -353,7 +359,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     print('{0} entered mexc checkpoint 2'.format(num+1))
                     complete[num] = 2
             if complete[num] < 1:
-                action, resubmissions = error_mexc_v8.main(
+                action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster
@@ -380,6 +386,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
 
 def main():
+    """
     print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
@@ -388,13 +395,15 @@ def main():
     smiles_tuple_list = permutationDict(localStructuresDict)
     
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
-
+    """
     resubmit_delay_min = 0.01 # 60 * 12
     resubmit_max_attempts = 40
 
     # geometry optimization options
-    method_opt = "B3LYP"
-    basis_set_opt = "6-311G(d,p)"
+    #method_opt = "B3LYP"
+    method_opt = "HF"
+    #basis_set_opt = "6-311G(d,p)"
+    basis_set_opt = "6-31G"
     mem_com_opt = "1600"  # mb
     mem_pbs_opt = "10"  # gb
 
@@ -405,15 +414,16 @@ def main():
     mem_pbs_mexc = "10"  # gb"
     cluster='seq' 
 
-    writeInputFiles(xyzDict, method_opt, basis_set_opt)
+    #writeInputFiles(xyzDict, method_opt, basis_set_opt)
+    monitor_jobs = ['1ed_1b_1ea']
     print(monitor_jobs)
-    '''
+    
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster
                            )
-    '''
+    
     
 
 main()
