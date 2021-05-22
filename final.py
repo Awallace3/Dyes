@@ -6,7 +6,12 @@ import subprocess
 import time
 import sys
 import subprocess
-from src import error_mexc_dyes_v1
+
+sys.path.insert(1, './src') # this adds src to python path at runtime for modules
+import error_mexc_dyes_v1
+import ES_extraction
+from molecule_json import Molecule
+from molecule_json import MoleculeList
 # requires obabel installed...
     # brew install obabel
     # conda install -c openbabel openbabel
@@ -96,7 +101,8 @@ def smilesRingCleanUp(f, s, t):
 
 
 def generateMolecules (smiles_tuple_list): 
-    
+    if not os.path.exists("inputs"):
+        os.mkdir('inputs')
     #print(number_locals)
     #print(smiles_tuple_list)
     xyzDict = {}
@@ -117,6 +123,7 @@ def generateMolecules (smiles_tuple_list):
         else:
             print("making a new directory for %s or called %s\n" % (name, formalName))
             #print(name)
+         
             
 
         #first = first.replace("1", "7")
@@ -187,12 +194,20 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
     if not os.path.exists("inputs"):
         os.mkdir('inputs')
     os.chdir("inputs")
+    
     for key, value in xyzDict.items():
         nameSplit = key.split(";;;")
         name = nameSplit[0]
         formalName = nameSplit[1]
+
         print(nameSplit)
         os.mkdir(name)
+        err = subprocess.call("touch %s/info.json" % name, shell=True)
+        mol = Molecule()
+        mol.setName(name)
+        mol.setParts(formalName)
+        mol.setLocalName(name)
+        mol.sendToFile('%s/info.json' % name)
         subprocess.call("touch " + name + "/" + formalName, shell=True)
         #file = open(name + "/" + formalName, "w+")
         #file.write(' ')
@@ -204,7 +219,8 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         """
         #cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
         #carts = subprocess.check_output(cmd, shell=True)
-        
+
+
 
         file = open( name + "/mex.com", 'w+')
         file.write("")
@@ -270,58 +286,9 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         print(os.getcwd())
         os.system('qsub mex.pbs')
         os.chdir('..')
+    
+    os.chdir('..')
         
-        """
-        file = open( key + "/" + "mex" + ".pbs", 'w+') # pbs for maple
-        file.write("#!/bin/sh")
-        file.write("\n")
-        file.write("#PBS -N mex")
-        file.write("\n")
-        file.write("#PBS -S /bin/sh")
-        file.write("\n")
-        file.write("#PBS -j oe")
-        file.write("\n")
-        file.write("#PBS -m abe")
-        file.write("\n")
-        file.write("#PBS -l mem=10gb")
-        file.write("\n")
-        file.write("#PBS -l nodes=1:ppn=1")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("export g16root=/usr/local/apps/")
-        file.write("\n")
-        file.write("")
-        file.write("scrdir=/tmp/bnp.$PBS_JOBID")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("mkdir -p $scrdir")
-        file.write("\n")
-        file.write("export GAUSS_SCRDIR=$scrdir")
-        file.write("\n")
-        file.write("export OMP_NUM_THREADS=1")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("printf 'exec_host = '")
-        file.write("\n")
-        file.write("head -n 1 $PBS_NODEFILE")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("cd $PBS_O_WORKDIR")
-        file.write("\n")
-        file.write("g16 " + "mex" + ".com " + "mex" + ".out ")
-
-
-
-
-
-
-        file.close()
-        """
-          
     return
 
 def jobResubmit(monitor_jobs, min_delay, number_delays,
@@ -332,6 +299,15 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     """
     Modified from ice_analog_spectra_generator repo
     """
+    mol_lst = MoleculeList()
+    if os.path.exists('results.json'):
+        print("exists")
+        mol_lst.setData("results.json")
+    else:
+        print("does not exist")
+        mol_lst.sendToFile("results.json")
+
+    
     min_delay = min_delay * 60
     cluster_list = glob.glob("inputs/*")
     print(cluster_list)
@@ -347,7 +323,6 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
             print(j)
-            print(os.getcwd())
             os.chdir(j)
             delay = i
             mexc_check = glob.glob("mexc")
@@ -356,10 +331,24 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 print('{0} entered mexc checkpoint 1'.format(num+1))
                 complete[num] = 1
                 mexc_check_out = glob.glob("mexc/mexc.o*")
+                mexc_check_out_complete = glob.glob('mexc/mexc_o*')
+                
 
-                if complete[num] != 2 and len(mexc_check_out) > 1:
+                if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
                     print('{0} entered mexc checkpoint 2'.format(num+1))
+                    
+                    occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
+                    mol = Molecule()
+                    mol.setData('info.json')
+                    mol.setHOMO(occVal)
+                    mol.setLUMO(virtVal)
+                    mol.toJSON()
+
+                    mol_lst.addMolecule(mol)
+                    mol_lst.sendToFile('../../results.json')
+
                     complete[num] = 2
+
             if complete[num] < 1:
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -388,6 +377,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
 
 def main():
+    
     """
     print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
@@ -397,6 +387,7 @@ def main():
     smiles_tuple_list = permutationDict(localStructuresDict)
     
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
+
     """
     resubmit_delay_min = 0.01 # 60 * 12
     resubmit_max_attempts = 40
@@ -416,7 +407,9 @@ def main():
     mem_pbs_mexc = "10"  # gb"
     cluster='seq' 
 
+    # comment for testing
     #writeInputFiles(xyzDict, method_opt, basis_set_opt)
+    print(os.getcwd())
     monitor_jobs = ['1ed_1b_1ea']
     print(monitor_jobs)
     
