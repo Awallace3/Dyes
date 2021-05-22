@@ -138,6 +138,8 @@ def generateMolecules (smiles_tuple_list):
         
         #cmd = "obabel -ismi results/smiles{0}.smi -oxyz output.xyz --gen3D".format(num+1)
         cmd = "obabel -ismi results/{0}.smi -oxyz --gen3D".format(name)
+        ### To generate Pictures 
+       # smipic = "obabel results/{0}.smi -O results/{0}.png".format(name)
         carts = subprocess.check_output(cmd, shell=True)
         subprocess.call(cmd, shell=True)
         carts = str(carts)
@@ -427,3 +429,4 @@ def main():
     
 
 main()
+
