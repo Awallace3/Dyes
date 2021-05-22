@@ -9,7 +9,9 @@ import pandas as pd
 # import re
 import glob
 import subprocess
-from src import xyz2mol
+from molecule_json import Molecule
+from molecule_json import MoleculeList
+
 
 def gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
@@ -76,7 +78,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (baseName, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l")
+            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l" % baseName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
@@ -371,8 +373,14 @@ def xyzToSmiles(length, xyz):
 
     val = subprocess.check_output(cmd, shell=True).decode("utf-8")
     os.remove('molecule.xyz')
-    with open('molecule.smi', 'w') as fp:
-        fp.write(val.rstrip())
+    #with open('molecule.smi', 'w') as fp:
+    #    fp.write(val.rstrip())
+    mol = Molecule()
+    mol.setData('info.json')
+    mol.setGeneralSMILES(val.rstrip())
+    mol.sendToFile('info.json')
+    
+
 
 
 def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster):
@@ -578,7 +586,7 @@ def main(index,
             make_exc_mo_freq(method_mexc, basis_set_mexc, 
                             mem_com_mexc, mem_pbs_mexc, cluster)
             
-            #os.remove("tmp.txt")
+            os.remove("tmp.txt")
             
             return False, resubmissions
         print('Calculation still running')
