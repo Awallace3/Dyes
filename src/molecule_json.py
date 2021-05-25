@@ -1,5 +1,26 @@
 import json
 
+class Excitation:
+    def __init__(self): #intializing the class
+        self.exc = '' # Excitation number 
+        self.nm = 0
+        self.osci = 0 
+        self.orbital_Numbers = []
+    def setExc(self, exc): # setter function
+        self.exc = exc
+    def setNm(self, nm): # setter function
+        self.nm = nm
+    def setOsci(self, osci):
+        self.osci = osci
+    def setOrbital_Numbers(self,orbital_Numbers):
+        self.orbital_Numbers = orbital_Numbers
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+            sort_keys=True, indent=4)
+
+    def __str__(self):
+       return self.toJSON()
+
 class Molecule:
     def __init__(self):
         self.name = ''

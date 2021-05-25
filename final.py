@@ -7,9 +7,11 @@ import time
 import sys
 import subprocess
 
+
 sys.path.insert(1, './src') # this adds src to python path at runtime for modules
 import error_mexc_dyes_v1
 import ES_extraction
+from absorpt import absorpt
 from molecule_json import Molecule
 from molecule_json import MoleculeList
 # requires obabel installed...
@@ -342,6 +344,9 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     mol.setData('info.json')
                     mol.setHOMO(occVal)
                     mol.setLUMO(virtVal)
+                    # Testing below
+                    mol.setExcitations(absorpt('mexc/mexc.out'))
+
                     mol.toJSON()
 
                     mol_lst.addMolecule(mol)
