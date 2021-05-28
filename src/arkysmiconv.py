@@ -1,6 +1,6 @@
 import os
 
-path = '../backbones/9b.smi' 
+path = '../backbones/10b.smi' 
 def TheBBDBBAadder(filename):
     '''
     Argon is where the acceptor connects to backbone
