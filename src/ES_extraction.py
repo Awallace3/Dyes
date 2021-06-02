@@ -29,6 +29,6 @@ def ES_extraction(path):
 
     occVal = occVal -4.2 
     virtVal = virtVal -3.9
-    print('scaling:',occVal, virtVal)
+    #print('scaling:',occVal, virtVal)
     return occVal, virtVal
 #ES_extraction('../ES/ES.out')

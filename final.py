@@ -345,11 +345,14 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     mol.setHOMO(occVal)
                     mol.setLUMO(virtVal)
                     # Testing below
-                    mol.setExcitations(absorpt('mexc/mexc.out'))
+                    mol.setExictations(absorpt('mexc/mexc.out'))
 
                     mol.toJSON()
-
-                    mol_lst.addMolecule(mol)
+                    mol.sendToFile('info.json')
+                    
+                    #mol_lst.addMolecule(mol)
+                    mol_lst.updateMolecule(mol)
+                    #print(mol_lst)
                     mol_lst.sendToFile('../../results.json')
 
                     complete[num] = 2
