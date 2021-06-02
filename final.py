@@ -212,7 +212,7 @@ def submitOpt(monitor_jobs):
 def jobResubmit(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                 method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                cluster, route='results'
+                cluster
                 ):
     """
     Modified from ice_analog_spectra_generator repo
@@ -227,7 +227,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
     
     min_delay = min_delay * 60
-    cluster_list = glob.glob("%s/*" % route)
+    cluster_list = glob.glob("results/*")
     print(cluster_list)
     complete = []
     resubmissions = []
@@ -236,7 +236,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         resubmissions.append(2)
     calculations_complete = False
     # comment change directory below in production
-    os.chdir(route)
+    os.chdir('results')
     for i in range(number_delays):
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
@@ -332,9 +332,9 @@ def main():
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
     
-    submitOpt(monitor_jobs)
 
-    monitor_jobs = ['1ed_1b_1ea']
+    monitor_jobs = ['2ed_9b_3ea', '7ed_9b_1ea', 'TPA2_4b_3ea', '1ed_12b_1ea', '3ed_10b_2ea', '7ed_5b_2ea', '5ed_15b_2ea', '2ed_12b_3ea', '3ed_1b_1ea', '6ed_5b_1ea', '3ed_14b_3ea', '6ed_15b_2ea', '2ed_2b_3ea', '7ed_7b_1ea', 'TPA2_11b_1ea', '7ed_3b_2ea', 'TPA2_8b_1ea', 'TPA2_1b_1ea', '3ed_2b_2ea', '7ed_11b_3ea', '1ed_5b_2ea', '6ed_7b_2ea']
+    submitOpt(monitor_jobs)
 
     #print(monitor_jobs)
     
@@ -349,4 +349,5 @@ def main():
     
 
 main()
+# python3 -u ./final.py >> output.log & disown -h this is to submit superkit
 
