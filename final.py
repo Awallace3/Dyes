@@ -212,7 +212,7 @@ def submitOpt(monitor_jobs):
 def jobResubmit(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                 method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                cluster
+                cluster, route='results'
                 ):
     """
     Modified from ice_analog_spectra_generator repo
@@ -227,7 +227,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
     
     min_delay = min_delay * 60
-    cluster_list = glob.glob("results/*")
+    cluster_list = glob.glob("%s/*" % route)
     print(cluster_list)
     complete = []
     resubmissions = []
@@ -236,7 +236,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         resubmissions.append(2)
     calculations_complete = False
     # comment change directory below in production
-    os.chdir('results')
+    os.chdir(route)
     for i in range(number_delays):
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
@@ -301,14 +301,14 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
 
 def main():
-    
+    """
     print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
     localStructuresDict = collectLocalStructures(three_types) # p
     
     smiles_tuple_list = permutationDict(localStructuresDict)
-    
+    """
     
     resubmit_delay_min = 0.01 # 60 * 12
     resubmit_max_attempts = 40
@@ -327,13 +327,13 @@ def main():
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
     cluster='map' 
-
+    """
     # comment for testing
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
-    
+    """
 
-    monitor_jobs = ['2ed_9b_3ea', '7ed_9b_1ea', 'TPA2_4b_3ea', '1ed_12b_1ea', '3ed_10b_2ea', '7ed_5b_2ea', '5ed_15b_2ea', '2ed_12b_3ea', '3ed_1b_1ea', '6ed_5b_1ea', '3ed_14b_3ea', '6ed_15b_2ea', '2ed_2b_3ea', '7ed_7b_1ea', 'TPA2_11b_1ea', '7ed_3b_2ea', 'TPA2_8b_1ea', 'TPA2_1b_1ea', '3ed_2b_2ea', '7ed_11b_3ea', '1ed_5b_2ea', '6ed_7b_2ea']
+    monitor_jobs = ['1ed_1b_1ea']
     submitOpt(monitor_jobs)
 
     #print(monitor_jobs)
@@ -349,5 +349,4 @@ def main():
     
 
 main()
-# python3 -u ./final.py >> output.log & disown -h this is to submit superkit
 
