@@ -16,17 +16,16 @@ from molecule_json import MoleculeList
 def gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
                     mem_pbs_opt, cluster, 
-                    baseName='mex', procedure='OPT' 
+                    baseName='mex', procedure='OPT',
+                    data='' 
                     ):
     
     output_num = str(output_num)
     if output_num == '0':
         output_num = ''
-    
-    data = ""
-
-    with open('tmp.txt') as fp:
-        data = fp.read()
+    if data == '':
+        with open('tmp.txt') as fp:
+            data = fp.read()
 
     # Reading data from file2
     charges = "0 1"
@@ -47,6 +46,8 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write("#!/bin/sh\n")
             fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
+            # r410 node
+            fp.write("#PBS -q r410\n")
             fp.write(
                 "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(

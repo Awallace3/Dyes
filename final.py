@@ -221,9 +221,18 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         """
         #cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
         #carts = subprocess.check_output(cmd, shell=True)
+        data = ''
+        for line in value:
+            data += line+'\n'
+            
 
-
-
+        error_mexc_dyes_v1.gaussianInputFiles(
+                    0, method_opt, 
+                    basis_set_opt, mem_com_opt, 
+                    mem_pbs_opt, cluster, 
+                    baseName=name, procedure='OPT', data=data 
+        )
+        '''
         file = open( name + "/mex.com", 'w+')
         file.write("")
         file.write("#N %s/%s OPT \n" % (method_opt, basis_set_opt))
@@ -238,6 +247,7 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
 #   file.write(#"name of backbone: " + 1ea.smi + name\n)
 #   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
         file.close()
+
         file = open( name + "/mex.pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
         file.write("\n")
@@ -286,8 +296,9 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         file.close()
         os.chdir(name)
         print(os.getcwd())
-        os.system('qsub mex.pbs')
+        #os.system('qsub mex.pbs')
         os.chdir('..')
+        '''
     
     os.chdir('..')
         
@@ -386,7 +397,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
 def main():
     
-    """
+    '''
     print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
@@ -395,16 +406,16 @@ def main():
     smiles_tuple_list = permutationDict(localStructuresDict)
     
     xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
-
-    """
+    '''
+    
     resubmit_delay_min = 0.01 # 60 * 12
     resubmit_max_attempts = 40
 
     # geometry optimization options
-    #method_opt = "B3LYP"
-    method_opt = "HF"
-    #basis_set_opt = "6-311G(d,p)"
-    basis_set_opt = "6-31G"
+    method_opt = "B3LYP"
+    #method_opt = "HF"
+    basis_set_opt = "6-311G(d,p)"
+    #basis_set_opt = "6-31G"
     mem_com_opt = "1600"  # mb
     mem_pbs_opt = "10"  # gb
 
@@ -413,19 +424,20 @@ def main():
     basis_set_mexc = "6-311G(d,p)"
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
-    cluster='seq' 
+    cluster='map' 
 
     # comment for testing
     #writeInputFiles(xyzDict, method_opt, basis_set_opt)
     print(os.getcwd())
     monitor_jobs = ['1ed_1b_1ea']
-    print(monitor_jobs)
+
+    #print(monitor_jobs)
     
-    complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
-                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           cluster
-                           )
+    #complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
+    #                       method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+    #                       method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+    #                       cluster
+    #                       )
     
     
 
