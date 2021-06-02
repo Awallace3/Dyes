@@ -31,13 +31,13 @@ class Molecule:
         self.generalSMILES = ''
         self.parts = ''
         self.localName = ''
+        self.InChI_key = ''
 
     def setName(self, name):
         self.name = name
     
     def getName(self):
         return self.name
-    
     
     def setLUMO(self, energy):
         self.LUMO = energy
@@ -59,7 +59,12 @@ class Molecule:
 
     def setLocalName(self, localName):
         self.localName = localName
-
+    
+    def setInChI_key(self, InChI_key):
+        self.InChI_key = InChI_key
+    
+    def getInChI_key(self):
+        return self.InChI_key
 
     def sendToFile(self, name):
         with open(name, 'w') as fp:
@@ -108,15 +113,37 @@ class MoleculeList():
             data = json.load(json_file)
         self.molecules = data['molecules']
     
+    
     def removeMolecule(self, name):
         for i in range(len(self.molecules)):
             mol = Molecule()
             mol.giveData(self.molecules[i])
-            print(i)
+            print("\nDELETED:", i)
             if mol.getName() == name:
                 del self.molecules[i]
                 break
     
+    def checkMolecule(self, smiles):
+        found = False
+        for n, i in enumerate(self.molecules):
+            mol = Molecule()
+            mol.giveData(i)
+            print(mol.SMILES, smiles)
+            if mol.SMILES == smiles:
+                found = True
+        return found 
+
+    def updateMolecule(self, molecule):
+        for n, i in enumerate(self.molecules):
+            mol = Molecule()
+            mol.giveData(i)
+            if mol.name == molecule.name:
+                print('updating existing Molecule information in results.json')
+                self.molecules[n] = molecule
+            else:
+                print('Creating new Molecule in results.json')
+                self.addMolecule(mol)
+
     def sendToFile(self, fileName):
         with open(fileName, 'w') as fp:
             fp.write(self.toJSON())
@@ -128,23 +155,3 @@ class MoleculeList():
     def __str__(self):
        return self.toJSON()
     
-"""test = Molecule()
-test.setData('testing.json')
-mol_lst = MoleculeList()
-
-for i in range(5):
-    mol_lst.addMolecule(test)
-mol_lst.sendToFile("molecules_list.json")
-
-
-test = Molecule()
-mol_lst = MoleculeList()
-mol_lst.setData('molecules_list.json')
-mol_lst.removeMolecule('')
-#mol_lst.addMolecule(test)
-mol_lst.sendToFile("molecules_list.json")
-#mol_lst.removeMolecule('')
-#mol_lst.removeMolecule('')
-#print(mol_lst)
-
-"""
