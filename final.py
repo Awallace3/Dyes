@@ -221,9 +221,18 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         """
         #cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
         #carts = subprocess.check_output(cmd, shell=True)
+        data = ''
+        for line in value:
+            data += line+'\n'
+            
 
-
-
+        error_mexc_dyes_v1.gaussianInputFiles(
+                    0, method_opt, 
+                    basis_set_opt, mem_com_opt, 
+                    mem_pbs_opt, cluster, 
+                    baseName=name, procedure='OPT', data=data 
+        )
+        '''
         file = open( name + "/mex.com", 'w+')
         file.write("")
         file.write("#N %s/%s OPT \n" % (method_opt, basis_set_opt))
@@ -238,6 +247,7 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
 #   file.write(#"name of backbone: " + 1ea.smi + name\n)
 #   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
         file.close()
+
         file = open( name + "/mex.pbs", 'w+')   #pbs for sequoia
         file.write("#!/bin/sh")
         file.write("\n")
@@ -288,6 +298,7 @@ def writeInputFiles (xyzDict, method_opt, basis_set_opt):
         print(os.getcwd())
         #os.system('qsub mex.pbs')
         os.chdir('..')
+        '''
     
     os.chdir('..')
         
@@ -410,7 +421,7 @@ def main():
     basis_set_mexc = "6-311G(d,p)"
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
-    cluster='seq' 
+    cluster='map' 
 
     # comment for testing
     #writeInputFiles(xyzDict, method_opt, basis_set_opt)

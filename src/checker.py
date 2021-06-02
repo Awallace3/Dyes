@@ -5,8 +5,9 @@ import os
 # Input smiles string
 # Adds smiles string depending on if theres a BBA or BBD or both in the string
 # Depending on whether there is a BBA or BBD place the file in the directory
-
+name = input('What is name of chemdraw stucture without the Kr and Ar: ')
 smile = input('What is the smile string from Chemdraw (Place Ar for electron acceptor connection and Kr for electron donor connection): ')
+inchlkey = input('Copy and paste the inchlkey with the Ar and Kr: ')
 def arkysmiconv(smile):
     '''
     converts Ar and Kr to BBA and BBD
@@ -20,6 +21,14 @@ def arkysmiconv(smile):
         #print(a)
     #print(a)
     return a
+
+def inchlkeychecker():
+    '''
+    use results.json to figure out if inchlkeys are different
+
+    '''
+    
+
 
 def typeofstruct():
     '''
@@ -40,9 +49,13 @@ def typeofstruct():
         print(numoffiles)
         filename = open(str(numoffiles+1)+'ea.smi','x+')
         filename.write(str(smi))
+        filename.write('\n')
+        filename.write(str(name))
+        filename.write('\n')
+        filename.write(str(inchlkey))
         os.system('ls')
         x = 'acceptor'
-        print('acceptor')
+        print('This structure is an acceptor')
         filename.close()
         os.chdir('../../')
 
@@ -56,9 +69,13 @@ def typeofstruct():
         print(numoffiles)
         filename = open(str(numoffiles+1)+'ed.smi','x+')
         filename.write(str(smi))
+        filename.write('\n')
+        filename.write(str(name))
+        filename.write('\n')
+        filename.write(str(inchlkey))
         os.system('ls')
         x = 'donor'
-        print('donor')
+        print('This structure is an donor')
         filename.close()
         os.chdir('../../')
     elif 'BBD' in smi and 'BBA' in smi:
@@ -73,8 +90,12 @@ def typeofstruct():
         print(numoffiles)
         filename = open(str(numoffiles+1)+'b.smi','x+')
         filename.write(str(smi))
+        filename.write('\n')
+        filename.write(str(name))
+        filename.write('\n')
+        filename.write(str(inchlkey))
         os.system('ls')
-        print('backbone')
+        print('This structure is an backbone') 
         filename.close()
         os.chdir('../../')
         x = 'backbone'
@@ -85,7 +106,7 @@ typeofstruct()
 
 
 def checkifsamefile():
-    
+    #reads the 
     os.system('ls')
 
     return
