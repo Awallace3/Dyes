@@ -2,10 +2,8 @@ import os
 import glob
 import molecule_json
 
-#a = glob.glob('*/')
 def cleanLine(line):
     aList = []
-    #print(line)
     cropped_line = line.rstrip()
     for i in range(2,10):
         k = ' ' * i
@@ -26,25 +24,26 @@ def absorpt(path):
         excitedState = " Excited State   "
         data = []
         excitedStatenum = 0
-        
+        jobComplete = False 
         for n, j in enumerate(filename):
                 if 'Normal termination' in j:
-                        filename = open(path,'r')
-                        for n, i in enumerate(filename):
-                                if ' Excitation energies and oscillator strengths:' in i:
-                                        nregion = True
-                                        num = n
-                                if nregion:
-                                        #print(i)
-                                        #i = cleanLine(i)
-                                        
-                                        if excitedState in i:
-
-                                                excitedStatenum += 1
-                                                if excitedStatenum >= 4:
-
-                                                        break
-                                        data.append(i)
+                        jobComplete = True
+        if jobComplete == False:
+                print("JOB INCOMPLETE")
+                return []
+        filename.close()
+        with open(path, 'r') as fp:
+                lines = fp.readlines()
+        for n, i in enumerate(lines):
+                if ' Excitation energies and oscillator strengths:' in i:
+                        nregion = True
+                        num = n
+                if nregion:
+                        if excitedState in i:
+                                excitedStatenum += 1
+                                if excitedStatenum >= 4:
+                                        break
+                        data.append(i)
                         
         data = data[2:]
         data2 = []
@@ -77,9 +76,4 @@ def absorpt(path):
                 elif n == len(data2):
                         mol.setOrbital_Numbers(orbitalList)
                         excitations.append(mol)
-
         return excitations
-#print(absorpt('../ES/ES.out'))
-
-                                                                                                                             
-
