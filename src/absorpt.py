@@ -76,13 +76,4 @@ def absorpt(path):
                 elif n == len(data2):
                         mol.setOrbital_Numbers(orbitalList)
                         excitations.append(mol)
-<<<<<<< HEAD
         return excitations
-=======
-
-        return excitations
-#print(absorpt('../ES/ES.out'))
-
-                                                                                                                             
-
->>>>>>> e404f56896b0e45cfafc0350782039dfb3093291

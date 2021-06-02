@@ -433,11 +433,11 @@ def main():
 
     #print(monitor_jobs)
     
-    #complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
-    #                       method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-    #                       method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-    #                       cluster
-    #                       )
+    complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
+                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           cluster
+                           )
     
     
 
