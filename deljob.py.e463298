@@ -1,0 +1,6 @@
+/var/spool/PBS/mom_priv/jobs/463298.sequoia.SC: line 1: import: command not found
+/var/spool/PBS/mom_priv/jobs/463298.sequoia.SC: line 3: differ: command not found
+/var/spool/PBS/mom_priv/jobs/463298.sequoia.SC: line 4: a: command not found
+/var/spool/PBS/mom_priv/jobs/463298.sequoia.SC: line 5: out: command not found
+/var/spool/PBS/mom_priv/jobs/463298.sequoia.SC: line 7: syntax error near unexpected token `('
+/var/spool/PBS/mom_priv/jobs/463298.sequoia.SC: line 7: `for i in range(differ):'

@@ -79,8 +79,7 @@ def absorpt(path):
                         excitations.append(mol)
 
         return excitations
-print(absorpt('../ES/ES.out'))
+#print(absorpt('../ES/ES.out'))
 
-
-                                                                                                                                     
+                                                                                                                             
 

@@ -28,6 +28,7 @@ def typeofstruct():
     smi = arkysmiconv(smile)
     print(smi)
     if 'BBA' in smi and 'BBD' not in smi:
+       # print('acceptor')
         os.chdir('..')
         #print(len(os.listdir(os.getcwd())))
         numoffiles = 0
@@ -40,6 +41,7 @@ def typeofstruct():
         filename = open(str(numoffiles+1)+'ea.smi','x+')
         filename.write(str(smi))
         os.system('ls')
+        x = 'acceptor'
         print('acceptor')
         filename.close()
         os.chdir('../../')
@@ -55,6 +57,7 @@ def typeofstruct():
         filename = open(str(numoffiles+1)+'ed.smi','x+')
         filename.write(str(smi))
         os.system('ls')
+        x = 'donor'
         print('donor')
         filename.close()
         os.chdir('../../')
@@ -63,7 +66,7 @@ def typeofstruct():
         #print(len(os.listdir(os.getcwd())))
         numoffiles = 0
         for x in list(os.scandir('backbones')):
-            print(x)
+            #print(x)
             if x.is_file():
                 numoffiles += 1
         os.chdir('backbones/')
@@ -74,12 +77,19 @@ def typeofstruct():
         print('backbone')
         filename.close()
         os.chdir('../../')
-        print('backbone')
+        x = 'backbone'
     else:
         print('Error')
-    return 
+    return x
 typeofstruct()
-#os.system('ls')
+
+
+def checkifsamefile():
+    
+    os.system('ls')
+
+    return
+checkifsamefile()
 
 
 
