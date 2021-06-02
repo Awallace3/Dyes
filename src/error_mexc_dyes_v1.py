@@ -17,12 +17,16 @@ def gaussianInputFiles(output_num, method_opt,
                     basis_set_opt, mem_com_opt, 
                     mem_pbs_opt, cluster, 
                     baseName='mex', procedure='OPT',
-                    data='' 
+                    data='', dir_name=''
                     ):
     
     output_num = str(output_num)
     if output_num == '0':
         output_num = ''
+
+    if dir_name=='':
+        dir_name=baseName
+
     if data == '':
         with open('tmp.txt') as fp:
             data = fp.read()
@@ -31,7 +35,7 @@ def gaussianInputFiles(output_num, method_opt,
     charges = "0 1"
 
     if cluster == "map":
-        with open('%s/%s.com' % (baseName, baseName), 'w') as fp:
+        with open('%s/%s.com' % (dir_name, baseName), 'w') as fp:
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
             fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure) )
@@ -42,7 +46,7 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write(data)
             fp.write("\n")
 
-        with open('%s/%s.pbs' % (baseName, baseName), 'w') as fp:
+        with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
             fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
@@ -67,7 +71,7 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write("cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out".format(baseName, baseName) +
                     str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == 'seq':
-        with open('%s/%s.com' % (baseName, baseName), 'w') as fp:
+        with open('%s/%s.com' % (dir_name, baseName), 'w') as fp:
             fp.write('%mem=8gb\n')
             fp.write("#N %s/%s %s\n" % (method_opt, basis_set_opt, procedure) )
             fp.write("\n")
@@ -77,7 +81,7 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write(data)
             fp.write("\n")
 
-        with open('%s/%s.pbs' % (baseName, baseName), 'w') as fp:
+        with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
             fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l" % baseName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))

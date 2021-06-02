@@ -8,6 +8,7 @@ import sys
 import subprocess
 
 
+
 sys.path.insert(1, './src') # this adds src to python path at runtime for modules
 import error_mexc_dyes_v1
 import ES_extraction
@@ -30,16 +31,14 @@ def collectLocalStructures (subdirectories):
             with open(j) as f:
                 smiles = f.read()
                 smiles = smiles.split("\n")
-                #print(smiles)
                 smiles[0] = smiles[0].rstrip()
-                #smiles = smiles.rstrip()
-
-                #print(j[:-4])
                 localStructuresDict['local{0}'.format(num+1)].append((smiles[0], j[:-4], smiles[1]))
+                #  smiles[0]==smiles, j[:-4]==local_name, smiles[1]==name
 
+        
         os.chdir("..")
         number_locals += 1
-    #print(localStructuresDict)
+    print(localStructuresDict)
     
     return localStructuresDict
 
@@ -102,55 +101,52 @@ def smilesRingCleanUp(f, s, t):
     return line, name, formalName
 
 
-def generateMolecules (smiles_tuple_list): 
-    if not os.path.exists("inputs"):
-        os.mkdir('inputs')
+def generateMolecules (smiles_tuple_list, 
+                method_opt, basis_set_opt,
+                mem_com_opt, mem_pbs_opt, cluster): 
+    #if not os.path.exists("inputs"):
+    #    os.mkdir('inputs')
     #print(number_locals)
     #print(smiles_tuple_list)
     xyzDict = {}
     monitor_jobs = []
-
+    if not os.path.exists('results'):
+        os.mkdir('results')
+    if not os.path.exists('results/smiles_input'):
+        os.mkdir('results/smiles_input')
+    
+    os.chdir('results')
+    
     for num, i in enumerate(smiles_tuple_list):
-        #if num > 1:
-        #    return xyzDict
-        #print(i)
         first, second, third = i
-        print(first, second, third)
         line, name, formalName = smilesRingCleanUp(first, second, third)
 
-        exists = os.path.isdir("inputs/" + name)
-        if exists:
-            print("directory already exists for inputs/%s or called %s\n" % (name, formalName))
-            continue
-        else:
-            print("making a new directory for %s or called %s\n" % (name, formalName))
-            #print(name)
-         
-            
+        # CHECK LOCATION
 
-        #first = first.replace("1", "7")
-        #first = first.replace("2", "6")
-        #second = second.replace("1", "5")
-        #second = second.replace("2", "4")
-        #line = first + "." + second + "." + third
-        #print(line)
-        #print(num)
+        mol_lst = MoleculeList()
+        if os.path.exists('../results.json'):
+            mol_lst.setData("../results.json")
+        else:
+            print("Creating results.json\n")
+            mol_lst.sendToFile("../results.json")
+
+        if mol_lst.checkMolecule(line):
+            print('\nMolecule already exists and the name smiles is... \n%s\n' % line)
+            continue
+        mol = Molecule()
+        mol.setSMILES(line)
+        
         print("line{0}:".format(num), line)
         line = line.replace("BBA", "9")
         line = line.replace("BBD", "8")
         print("line{0}:".format(num), line)
-        if not os.path.exists('results'):
-            os.mkdir('results')
-        file = open('results/{0}.smi'.format(name), 'w+')
+        file = open('smiles_input/{0}.smi'.format(name), 'w+')
         file.write(line)
         file.close()
         
-        #cmd = "obabel -ismi results/smiles{0}.smi -oxyz output.xyz --gen3D".format(num+1)
-        cmd = "obabel -ismi results/{0}.smi -oxyz --gen3D".format(name)
-        ### To generate Pictures 
-       # smipic = "obabel results/{0}.smi -O results/{0}.png".format(name)
+        cmd = "obabel -ismi smiles_input/{0}.smi -oxyz --gen3D".format(name)
         carts = subprocess.check_output(cmd, shell=True)
-        subprocess.call(cmd, shell=True)
+        #subprocess.call(cmd, shell=True)
         carts = str(carts)
         carts = carts.rstrip()
         
@@ -171,138 +167,47 @@ def generateMolecules (smiles_tuple_list):
             invalid = True
             continue
         del carts_cleaned[-1]
-        xyzDict["{0}".format(name+";;;"+formalName)] = carts_cleaned
-        monitor_jobs.append(name)
-        print(monitor_jobs)
-        print('loop')
-    #print(xyzDict)
-    #print(name+";;;"+formalName)
-    return xyzDict, monitor_jobs
 
-"""
-def writeInputFiles (xyzDict):
-    os.chdir("inputs")
-    for key, value in xyzDict.items():
-        os.mkdir(key)
-        file = open( key + "/" + key, 'w+')
-        for line in value:
-            file.write(line)
-            file.write("\n")
-        file.close()
-    return
-"""
-
-def writeInputFiles (xyzDict, method_opt, basis_set_opt):
-    if not os.path.exists("inputs"):
-        os.mkdir('inputs')
-    os.chdir("inputs")
-    
-    for key, value in xyzDict.items():
-        nameSplit = key.split(";;;")
-        name = nameSplit[0]
-        formalName = nameSplit[1]
-
-        print(nameSplit)
+        print(carts_cleaned)
         os.mkdir(name)
         err = subprocess.call("touch %s/info.json" % name, shell=True)
-        mol = Molecule()
+
         mol.setName(name)
         mol.setParts(formalName)
         mol.setLocalName(name)
         mol.sendToFile('%s/info.json' % name)
-        subprocess.call("touch " + name + "/" + formalName, shell=True)
-        #file = open(name + "/" + formalName, "w+")
-        #file.write(' ')
-        #file.close()
 
-        """
-        Add image depictions
-        value in this loop is going to be each molecules cartesian coordinates
-        """
-        #cmd = "obabel ../results/" + name + ".smi -O {0}/".format(name) + name + ".png"
-        #carts = subprocess.check_output(cmd, shell=True)
         data = ''
-        for line in value:
+        for line in carts_cleaned:
             data += line+'\n'
             
-
         error_mexc_dyes_v1.gaussianInputFiles(
                     0, method_opt, 
                     basis_set_opt, mem_com_opt, 
                     mem_pbs_opt, cluster, 
-                    baseName=name, procedure='OPT', data=data 
+                    baseName='mex', procedure='OPT', data=data,
+                    dir_name=name
         )
-        '''
-        file = open( name + "/mex.com", 'w+')
-        file.write("")
-        file.write("#N %s/%s OPT \n" % (method_opt, basis_set_opt))
-        file.write("\n")
-        file.write("{0}\n\n".format(formalName))
-        file.write("0 1\n")
-        for line in value:
-            file.write(line)
-            file.write("\n")
-        file.write(" " + "\n")
-#   file.write(#"name of electron donor:" + 1ed.smi + name\n)
-#   file.write(#"name of backbone: " + 1ea.smi + name\n)
-#   file.write(#"name of electron acceptor: " + 1ea.smi + name\n)
-        file.close()
 
-        file = open( name + "/mex.pbs", 'w+')   #pbs for sequoia
-        file.write("#!/bin/sh")
-        file.write("\n")
-        file.write("#PBS -N " + str(name))
-        file.write("\n")
-        file.write("#PBS -S /bin/sh")
-        file.write("\n")
-        file.write("#PBS -j oe")
-        file.write("\n")
-        file.write("#PBS -m abe")
-        file.write("\n")
-        file.write("#PBS -l cput=4000:00:00")
-        file.write("\n")
-        file.write("#PBS -l mem=10gb")
-        file.write("\n")
-        file.write("#PBS -l nodes=1:ppn=1")
-        file.write("\n")
-        file.write("#PBS -l file=100gb")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("export g09root=/usr/local/apps/")
-        file.write("\n")
-        file.write(". $g09root/g09/bsd/g09.profile")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("scrdir=/tmp/bnp.$PBS_JOBID")
-        file.write("\n")
-        file.write("mkdir -p $scrdir")
-        file.write("\n")
-        file.write("export GAUSS_SCRDIR=$scrdir")
-        file.write("\n")
-        file.write("export OMP_NUM_THREADS=1")
-        file.write("\n")
-        file.write("")
-        file.write("printf 'exec_host = '")
-        file.write("\n")
-        file.write("head -n 1 $PBS_NODEFILE")
-        file.write("\n")
-        file.write("")
-        file.write("\n")
-        file.write("cd $PBS_O_WORKDIR")
-        file.write("\n")
-        file.write("/usr/local/apps/bin/g09setup " +" mex.com mex.out")
-        file.close()
-        os.chdir(name)
-        print(os.getcwd())
-        #os.system('qsub mex.pbs')
-        os.chdir('..')
-        '''
-    
+        mol_lst.addMolecule(mol)
+        mol_lst.sendToFile("../results.json")
+        monitor_jobs.append(name)
+        print(monitor_jobs)
+    os.chdir("..")
+    #print(xyzDict)
+    #print(name+";;;"+formalName)
+    return monitor_jobs
+
+
+def submitOpt(monitor_jobs):
+    os.chdir('results')
+    for i in monitor_jobs:
+        os.chdir(i)
+        print('qsub in %s' % i)
+        cmd = 'qsub mex.pbs'
+        subprocess.call(cmd, shell=True)
+        os.chdir("..")
     os.chdir('..')
-        
-    return
 
 def jobResubmit(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -322,7 +227,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
     
     min_delay = min_delay * 60
-    cluster_list = glob.glob("inputs/*")
+    cluster_list = glob.glob("results/*")
     print(cluster_list)
     complete = []
     resubmissions = []
@@ -331,7 +236,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         resubmissions.append(2)
     calculations_complete = False
     # comment change directory below in production
-    os.chdir('inputs')
+    os.chdir('results')
     for i in range(number_delays):
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
@@ -397,16 +302,13 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
 def main():
     
-    '''
     print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
     localStructuresDict = collectLocalStructures(three_types) # p
-
+    
     smiles_tuple_list = permutationDict(localStructuresDict)
     
-    xyzDict, monitor_jobs = generateMolecules(smiles_tuple_list)
-    '''
     
     resubmit_delay_min = 0.01 # 60 * 12
     resubmit_max_attempts = 40
@@ -427,8 +329,11 @@ def main():
     cluster='map' 
 
     # comment for testing
-    #writeInputFiles(xyzDict, method_opt, basis_set_opt)
-    print(os.getcwd())
+    monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
+                mem_com_opt, mem_pbs_opt, cluster)
+    
+    submitOpt(monitor_jobs)
+
     monitor_jobs = ['1ed_1b_1ea']
 
     #print(monitor_jobs)
@@ -438,6 +343,8 @@ def main():
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster
                            )
+    '''
+    '''
     
     
 

@@ -31,13 +31,13 @@ class Molecule:
         self.generalSMILES = ''
         self.parts = ''
         self.localName = ''
+        self.InChI_key = ''
 
     def setName(self, name):
         self.name = name
     
     def getName(self):
         return self.name
-    
     
     def setLUMO(self, energy):
         self.LUMO = energy
@@ -59,7 +59,12 @@ class Molecule:
 
     def setLocalName(self, localName):
         self.localName = localName
-
+    
+    def setInChI_key(self, InChI_key):
+        self.InChI_key = InChI_key
+    
+    def getInChI_key(self):
+        return self.InChI_key
 
     def sendToFile(self, name):
         with open(name, 'w') as fp:
@@ -108,6 +113,7 @@ class MoleculeList():
             data = json.load(json_file)
         self.molecules = data['molecules']
     
+    
     def removeMolecule(self, name):
         for i in range(len(self.molecules)):
             mol = Molecule()
@@ -117,6 +123,16 @@ class MoleculeList():
                 del self.molecules[i]
                 break
     
+    def checkMolecule(self, smiles):
+        found = False
+        for n, i in enumerate(self.molecules):
+            mol = Molecule()
+            mol.giveData(i)
+            print(mol.SMILES, smiles)
+            if mol.SMILES == smiles:
+                found = True
+        return found 
+
     def updateMolecule(self, molecule):
         for n, i in enumerate(self.molecules):
             mol = Molecule()
