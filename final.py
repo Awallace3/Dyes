@@ -212,7 +212,7 @@ def submitOpt(monitor_jobs):
 def jobResubmit(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                 method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                cluster
+                cluster, route='results'
                 ):
     """
     Modified from ice_analog_spectra_generator repo
@@ -227,7 +227,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
     
     min_delay = min_delay * 60
-    cluster_list = glob.glob("results/*")
+    cluster_list = glob.glob("%s/*" % route)
     print(cluster_list)
     complete = []
     resubmissions = []
@@ -236,7 +236,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         resubmissions.append(2)
     calculations_complete = False
     # comment change directory below in production
-    os.chdir('results')
+    os.chdir(route)
     for i in range(number_delays):
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
