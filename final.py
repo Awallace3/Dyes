@@ -310,8 +310,8 @@ def main():
     smiles_tuple_list = permutationDict(localStructuresDict)
     """
     
-    resubmit_delay_min = 0.01 # 60 * 12
-    resubmit_max_attempts = 40
+    resubmit_delay_min = 60 * 12
+    resubmit_max_attempts = 100
 
     # geometry optimization options
     method_opt = "B3LYP"
@@ -332,8 +332,7 @@ def main():
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
     """
-
-    monitor_jobs = ['1ed_1b_1ea']
+    monitor_jobs = ['2ed_9b_3ea', '7ed_9b_1ea', 'TPA2_4b_3ea', '1ed_12b_1ea', '3ed_10b_2ea', '7ed_5b_2ea', '5ed_15b_2ea', '2ed_12b_3ea', '3ed_1b_1ea', '6ed_5b_1ea', '3ed_14b_3ea', '6ed_15b_2ea', '2ed_2b_3ea', '7ed_7b_1ea', 'TPA2_11b_1ea', '7ed_3b_2ea', 'TPA2_8b_1ea', 'TPA2_1b_1ea', '3ed_2b_2ea', '7ed_11b_3ea', '1ed_5b_2ea', '6ed_7b_2ea']
     submitOpt(monitor_jobs)
 
     #print(monitor_jobs)
