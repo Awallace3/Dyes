@@ -16,8 +16,9 @@ from molecule_json import MoleculeList
 def gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
                     mem_pbs_opt, cluster, 
-                    baseName='mex', procedure='OPT',
-                    data='', dir_name=''
+                    baseName='mexc', procedure='OPT',
+                    data='', dir_name='', solvent='', 
+                    outName='mexc_o'
                     ):
     
     output_num = str(output_num)
@@ -26,7 +27,7 @@ def gaussianInputFiles(output_num, method_opt,
 
     if dir_name=='':
         dir_name=baseName
-
+    
     if data == '':
         with open('tmp.txt') as fp:
             data = fp.read()
@@ -38,7 +39,11 @@ def gaussianInputFiles(output_num, method_opt,
         with open('%s/%s.com' % (dir_name, baseName), 'w') as fp:
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
-            fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure) )
+            if solvent == '':
+                fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
+            else:
+                fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
+
             fp.write("\n")
             fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
             fp.write("\n")
@@ -48,7 +53,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N mex_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l")
+            fp.write("#PBS -N %s\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l" % outName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             # r410 node
             fp.write("#PBS -q r410\n")
@@ -83,7 +88,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l" % baseName)
+            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l" % outName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
@@ -117,7 +122,7 @@ def conv_num(string):
     return li
 
 
-def clean_many_txt():
+def clean_many_txt(geomDirName):
     """ This will replace the numerical forms of the elements as their letters numbered in order """
 
     f = open('tmp.txt', 'r')
@@ -148,7 +153,7 @@ def clean_many_txt():
         length += 1
     f.close()
 
-    xyzToSmiles(length, xyzToMolLst)
+    xyzToSmiles(length, xyzToMolLst, geomDirName)
 
 
 
@@ -184,7 +189,7 @@ def i_freq_check(filename):
     return imaginary, freq_clean, freq_lst_len
 
 
-def add_imaginary(freq_clean, freq_lst_len, filename):
+def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName):
     # print(freq_clean)
     cnt = 0
     for k in freq_clean:
@@ -222,7 +227,7 @@ def add_imaginary(freq_clean, freq_lst_len, filename):
     np.savetxt("tmp.txt", carts,
                fmt="%s")
 
-    clean_many_txt()
+    clean_many_txt(geomDirName)
 
 def freq_hf_zero(lines, filename):
     frequency = "Frequencies --"
@@ -255,7 +260,7 @@ def freq_hf_zero(lines, filename):
         return freqs[0], HFs[0], HFs[1], zeros[0]
 
 
-def find_geom(lines, error, filename, imaginary):
+def find_geom(lines, error, filename, imaginary, geomDirName):
     print("Opening..." + filename)
     found = False
     geom_size = 0
@@ -362,11 +367,11 @@ def find_geom(lines, error, filename, imaginary):
                fmt="%s")
     
     if not imaginary:
-        clean_many_txt()
+        clean_many_txt(geomDirName)
     elif error:
-        clean_many_txt()
+        clean_many_txt(geomDirName)
     
-def xyzToSmiles(length, xyz):
+def xyzToSmiles(length, xyz, geomDirName):
     with open('molecule.xyz', 'w') as fp:
         fp.write('%s\ncharge=0=\n' % length)
         for n, i in enumerate(xyz):
@@ -374,16 +379,30 @@ def xyzToSmiles(length, xyz):
                 fp.write(i[:-2])
             else:
                 fp.write(i)
+
+    """
     cmd = 'python3 ../../src/xyz2mol.py ./molecule.xyz'
 
     val = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    
     os.remove('molecule.xyz')
-    #with open('molecule.smi', 'w') as fp:
-    #    fp.write(val.rstrip())
+    """
+    print("\n\n")
+    cmd = 'obabel -ixyz molecule.xyz -osmi -molecule.smi'
+    err = subprocess.call(cmd, shell=True)
+    with open('molecule.smi', 'r') as fp:
+        val = fp.readlines()[0]
+        val = val.split("charge")
+        val = val[0].rstrip()
+    print(val)
+
     mol = Molecule()
-    mol.setData('info.json')
-    mol.setGeneralSMILES(val.rstrip())
-    mol.sendToFile('info.json')
+    if os.path.exists('info.json'):
+        mol.setData('info.json')
+    else:
+        mol.setLocalName(geomDirName)
+        mol.setGeneralSMILES(val.rstrip())
+        mol.sendToFile('info.json')
     
 
 
@@ -451,8 +470,10 @@ def qsub(path='.'):
 
 
 def make_exc_mo_freq(method_mexc, basis_set_mexc, 
-                mem_com_mexc, mem_pbs_mexc, cluster):
-    
+                mem_com_mexc, mem_pbs_mexc, cluster,
+                geomDirName
+                ):
+    """
     baseName = 'mexc'
     os.mkdir(baseName)
     procedure = 'TD(NStates=10)'
@@ -464,7 +485,8 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     )
     path = '%s' % baseName
     qsub(path)
-
+    """
+    """
     baseName = 'mo'
     os.mkdir(baseName)
     procedure = 'SP GFINPUT POP=FULL'
@@ -476,7 +498,8 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     )
     path = '%s' % baseName
     qsub(path)
-
+    """
+    """
     baseName = 'freq'
     os.mkdir(baseName)
     procedure = 'FREQ'
@@ -485,6 +508,24 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     basis_set_mexc, mem_com_mexc, 
                     mem_pbs_mexc, cluster,
                     baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+    """
+
+    baseName = 'cam-b3lyp'
+    os.mkdir(baseName)
+    procedure = 'TD(NStates=10)'
+    output_num = 0
+    basis_set_mexc='CAM-B3LYP'
+    #solvent = 'SCRF=(Solvent=Dichloromethane)'
+    solvent=''
+    outName = geomDirName +'_o'
+    gaussianInputFiles(output_num, method_mexc, 
+                    basis_set_mexc, mem_com_mexc, 
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure, solvent,
+                    outName
                     )
     path = '%s' % baseName
     qsub(path)
@@ -519,7 +560,7 @@ def main(index,
          method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
          method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
          resubmissions, delay,
-         cluster
+         cluster, geomDirName
          ):
 
     out_files = glob.glob("*.out*")
@@ -561,7 +602,7 @@ def main(index,
         cmd = "qsub mex.pbs"
         if error == True:
             find_geom(lines, error=True, filename=filename,
-                        imaginary=imaginary)
+                        imaginary=imaginary, geomDirName=geomDirName)
             make_input_files_no_constraints(
                 output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
             os.system("qsub mex.pbs")
@@ -571,8 +612,8 @@ def main(index,
 
         elif imaginary == True:
             find_geom(lines, error=False, filename=filename,
-                        imaginary=imaginary)
-            add_imaginary(freq_clean, freq_lst_len, filename)
+                        imaginary=imaginary, geomDirName=geomDirName)
+            add_imaginary(freq_clean, freq_lst_len, filename, geomDirName=geomDirName)
 
             make_input_files_no_constraints(
                 output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
@@ -584,12 +625,15 @@ def main(index,
         else:
             cmd = "qsub mexc.pbs"
             find_geom(lines, error=False, filename=filename,
-                        imaginary=imaginary)
+                        imaginary=imaginary, geomDirName=geomDirName)
+            '''
             freq, hf_1, hf_2, zero_point = freq_hf_zero(
                 lines, filename=filename)
-            
+            '''
             make_exc_mo_freq(method_mexc, basis_set_mexc, 
-                            mem_com_mexc, mem_pbs_mexc, cluster)
+                            mem_com_mexc, mem_pbs_mexc, cluster,
+                            geomDirName
+                            )
             
             os.remove("tmp.txt")
             

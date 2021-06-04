@@ -3,3 +3,6 @@ results/
 src/ice_manager.py
 *.png
 src/__pycache__/*
+backbones_all
+eAcceptors_all
+eDonors_all
