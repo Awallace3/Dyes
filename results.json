@@ -2,7 +2,6 @@
     "molecules": [
         {
             "HOMO": 1.1043152780499996,
-            "InChI_key": "",
             "LUMO": -1.0724649846499998,
             "SMILES": "(BBD)(C=C7)=CC=C7N(C6=CC=CC=C6)C3=CC=CC=C3.C(BBA)5=C4C(N=CC=N4)=C((BBD))S5.C(BBA)1=CC=C(/C=C(C#N)/C(O)=O)C=C1",
             "excitations": [

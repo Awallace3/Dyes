@@ -31,7 +31,6 @@ class Molecule:
         self.generalSMILES = ''
         self.parts = ''
         self.localName = ''
-        self.InChI_key = ''
 
     def setName(self, name):
         self.name = name
@@ -60,12 +59,6 @@ class Molecule:
     def setLocalName(self, localName):
         self.localName = localName
     
-    def setInChI_key(self, InChI_key):
-        self.InChI_key = InChI_key
-    
-    def getInChI_key(self):
-        return self.InChI_key
-
     def sendToFile(self, name):
         with open(name, 'w') as fp:
             fp.write(self.toJSON())

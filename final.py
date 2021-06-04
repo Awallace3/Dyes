@@ -72,31 +72,6 @@ def smilesRingCleanUp(f, s, t):
     smi2 = smi2.replace("2", "4")
     line = smi1 + "." + smi2 + "." + smi3
     #print("line:", line)
-    """
-    for n, ch in enumerate(f):
-        if ch.isnumeric():
-            #print(ch)
-            lst1.append([int(ch), n, 1])
-    for n, ch in enumerate(s):
-        if ch.isnumeric():
-            #print(ch)
-            lst1.append([int(ch), n, 2])
-    for n, ch in enumerate(t):
-        if ch.isnumeric():
-            #print(ch)
-            lst1.append([int(ch), n, 3])
-    
-    for i in range(len(lst1)):
-        if st1[i][0] not in claimed:
-            claimed.append(st1[i][0])
-            double.append(st1[i][0])
-        else:
-            if st1[i][0] in double:
-                continue
-
-    """
-    #print(lst1)
-    #print(claimed)
 
     return line, name, formalName
 
@@ -249,8 +224,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 print('{0} entered mexc checkpoint 1'.format(num+1))
                 complete[num] = 1
                 mexc_check_out = glob.glob("mexc/mexc.o*")
-                mexc_check_out_complete = glob.glob('mexc/mexc_o*')
-                
+                mexc_check_out_complete = glob.glob('mexc/*_o*')
 
                 if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
                     print('{0} entered mexc checkpoint 2'.format(num+1))
@@ -277,7 +251,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                    resubmissions, delay, cluster
+                    resubmissions, delay, cluster, j
                 )
                 print(resubmissions)
             
@@ -312,6 +286,8 @@ def main():
     
     resubmit_delay_min = 60 * 12
     resubmit_max_attempts = 100
+    resubmit_delay_min = 0.01 # 60 * 12
+    resubmit_max_attempts = 3
 
     # geometry optimization options
     method_opt = "B3LYP"
@@ -322,30 +298,31 @@ def main():
     mem_pbs_opt = "10"  # gb
 
     # TD-DFT options
-    method_mexc = "B3lYP"
+    method_mexc = "CAM-B3LYP"
     basis_set_mexc = "6-311G(d,p)"
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
-    cluster='map' 
+    cluster='seq' 
     """
     # comment for testing
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
     """
     monitor_jobs = ['2ed_9b_3ea', '7ed_9b_1ea', 'TPA2_4b_3ea', '1ed_12b_1ea', '3ed_10b_2ea', '7ed_5b_2ea', '5ed_15b_2ea', '2ed_12b_3ea', '3ed_1b_1ea', '6ed_5b_1ea', '3ed_14b_3ea', '6ed_15b_2ea', '2ed_2b_3ea', '7ed_7b_1ea', 'TPA2_11b_1ea', '7ed_3b_2ea', 'TPA2_8b_1ea', 'TPA2_1b_1ea', '3ed_2b_2ea', '7ed_11b_3ea', '1ed_5b_2ea', '6ed_7b_2ea']
-    submitOpt(monitor_jobs)
 
+    monitor_jobs = ['1ed_1b_1ea']
+    #monitor_jobs = ['1ed_10b_1ea', '1ed_10b_2ea', '1ed_10b_3ea', '1ed_11b_1ea', '1ed_11b_2ea', '1ed_11b_3ea', '1ed_12b_2ea', '1ed_12b_3ea', '1ed_13b_1ea', '1ed_13b_2ea', '1ed_14b_2ea', '1ed_14b_3ea', '1ed_15b_1ea', '1ed_15b_2ea', '1ed_15b_3ea', '1ed_16b_1ea', '1ed_16b_2ea', '1ed_16b_3ea', '1ed_1b_2ea', '1ed_1b_3ea', '1ed_2b_1ea', '1ed_2b_2ea', '1ed_2b_3ea', '1ed_3b_1ea', '1ed_3b_2ea', '1ed_3b_3ea', '1ed_4b_1ea', '1ed_4b_2ea', '1ed_4b_3ea', '1ed_5b_1ea', '1ed_5b_2ea', '1ed_5b_3ea', '1ed_6b_2ea', '1ed_6b_3ea', '1ed_7b_1ea', '1ed_7b_2ea', '1ed_7b_3ea', '1ed_8b_2ea', '1ed_8b_3ea', '1ed_9b_1ea', '1ed_9b_3ea', '2ed_10b_1ea', '2ed_10b_2ea', '2ed_10b_3ea', '2ed_11b_1ea', '2ed_11b_2ea', '2ed_11b_3ea', '2ed_12b_1ea', '2ed_12b_2ea', '2ed_13b_1ea', '2ed_13b_2ea', '2ed_13b_3ea', '2ed_14b_1ea', '2ed_14b_2ea', '2ed_14b_3ea', '2ed_15b_2ea', '2ed_15b_3ea', '2ed_16b_1ea', '2ed_16b_2ea', '2ed_16b_3ea', '2ed_1b_1ea', '2ed_1b_2ea', '2ed_1b_3ea', '2ed_2b_1ea', '2ed_2b_2ea', '2ed_2b_3ea', '2ed_3b_1ea', '2ed_3b_2ea', '2ed_3b_3ea', '2ed_4b_1ea', '2ed_4b_2ea', '2ed_4b_3ea', '2ed_5b_1ea', '2ed_5b_2ea', '2ed_5b_3ea', '2ed_6b_1ea', '2ed_6b_2ea', '2ed_6b_3ea', '2ed_7b_1ea', '2ed_7b_2ea', '2ed_7b_3ea', '2ed_8b_1ea', '2ed_8b_2ea', '2ed_8b_3ea', '2ed_9b_2ea', '3ed_10b_3ea', '3ed_11b_1ea', '3ed_11b_2ea', '3ed_11b_3ea', '3ed_12b_1ea', '3ed_12b_2ea', '3ed_12b_3ea', '3ed_13b_1ea', '3ed_13b_2ea', '3ed_13b_3ea', '3ed_14b_2ea', '3ed_15b_1ea', '3ed_15b_2ea', '3ed_15b_3ea', '3ed_16b_1ea', '3ed_16b_2ea', '3ed_16b_3ea', '3ed_1b_1ea', '3ed_1b_2ea', '3ed_1b_3ea', '3ed_2b_1ea', '3ed_2b_2ea', '3ed_2b_3ea', '3ed_3b_1ea', '3ed_3b_2ea', '3ed_3b_3ea', '3ed_4b_1ea', '3ed_4b_2ea', '3ed_4b_3ea', '3ed_5b_1ea', '3ed_5b_2ea', '3ed_5b_3ea', '3ed_6b_2ea', '3ed_6b_3ea', '3ed_7b_1ea', '3ed_7b_2ea', '3ed_7b_3ea', '3ed_8b_1ea', '3ed_8b_2ea', '3ed_8b_3ea', '3ed_9b_1ea', '3ed_9b_2ea', '3ed_9b_3ea', '5ed_10b_1ea', '5ed_10b_2ea', '5ed_10b_3ea', '5ed_11b_1ea', '5ed_11b_2ea', '5ed_11b_3ea', '5ed_12b_2ea', '5ed_12b_3ea', '5ed_13b_1ea', '5ed_13b_2ea', '5ed_13b_3ea', '5ed_14b_1ea', '5ed_14b_2ea', '5ed_14b_3ea', '5ed_15b_1ea', '5ed_15b_3ea', '5ed_16b_2ea', '5ed_16b_3ea', '5ed_1b_2ea', '5ed_1b_3ea', '5ed_2b_1ea', '5ed_2b_2ea', '5ed_3b_2ea', '5ed_3b_3ea', '5ed_4b_1ea', '5ed_4b_2ea', '5ed_4b_3ea', '5ed_5b_2ea', '5ed_5b_3ea', '5ed_6b_1ea', '5ed_6b_2ea', '5ed_6b_3ea', '5ed_7b_1ea', '5ed_7b_2ea', '5ed_7b_3ea', '5ed_8b_2ea', '5ed_8b_3ea', '5ed_9b_1ea', '5ed_9b_2ea', '5ed_9b_3ea', '6ed_10b_1ea', '6ed_10b_2ea', '6ed_10b_3ea', '6ed_11b_1ea', '6ed_11b_2ea', '6ed_11b_3ea', '6ed_12b_1ea', '6ed_12b_3ea', '6ed_13b_2ea', '6ed_13b_3ea', '6ed_14b_2ea', '6ed_14b_3ea', '6ed_15b_1ea', '6ed_15b_3ea', '6ed_16b_1ea', '6ed_16b_2ea', '6ed_1b_1ea', '6ed_1b_2ea', '6ed_2b_2ea', '6ed_3b_1ea', '6ed_4b_1ea', '6ed_4b_3ea', '6ed_5b_3ea', '6ed_6b_1ea', '6ed_6b_2ea', '6ed_6b_3ea', '6ed_7b_1ea', '6ed_7b_3ea', '6ed_8b_1ea', '6ed_8b_2ea', '6ed_8b_3ea', '6ed_9b_1ea', '6ed_9b_2ea', '7ed_10b_1ea', '7ed_10b_2ea', '7ed_10b_3ea', '7ed_11b_1ea', '7ed_11b_2ea', '7ed_12b_2ea', '7ed_13b_1ea', '7ed_13b_2ea', '7ed_13b_3ea', '7ed_14b_1ea', '7ed_14b_3ea', '7ed_15b_1ea', '7ed_15b_2ea', '7ed_15b_3ea', '7ed_16b_1ea', '7ed_16b_2ea', '7ed_16b_3ea', '7ed_1b_1ea', '7ed_1b_2ea', '7ed_1b_3ea', '7ed_2b_1ea', '7ed_2b_2ea', '7ed_2b_3ea', '7ed_3b_1ea', '7ed_3b_3ea', '7ed_4b_1ea', '7ed_4b_2ea', '7ed_4b_3ea', '7ed_5b_1ea', '7ed_5b_3ea', '7ed_6b_1ea', '7ed_6b_2ea', '7ed_6b_3ea', '7ed_7b_2ea', '7ed_7b_3ea', '7ed_8b_1ea', '7ed_8b_2ea', '7ed_8b_3ea', '7ed_9b_2ea', '7ed_9b_3ea', 'TPA2_10b_1ea', 'TPA2_10b_2ea', 'TPA2_10b_3ea', 'TPA2_11b_2ea', 'TPA2_11b_3ea', 'TPA2_12b_1ea', 'TPA2_12b_2ea', 'TPA2_13b_1ea', 'TPA2_13b_2ea', 'TPA2_13b_3ea', 'TPA2_14b_1ea', 'TPA2_14b_2ea', 'TPA2_14b_3ea', 'TPA2_15b_1ea', 'TPA2_15b_2ea', 'TPA2_15b_3ea', 'TPA2_16b_1ea', 'TPA2_16b_2ea', 'TPA2_16b_3ea', 'TPA2_1b_1ea', 'TPA2_1b_2ea', 'TPA2_1b_3ea', 'TPA2_2b_1ea', 'TPA2_2b_2ea', 'TPA2_2b_3ea', 'TPA2_3b_1ea', 'TPA2_3b_2ea', 'TPA2_3b_3ea', 'TPA2_4b_1ea', 'TPA2_4b_2ea', 'TPA2_4b_3ea', 'TPA2_5b_1ea', 'TPA2_5b_2ea', 'TPA2_5b_3ea', 'TPA2_6b_1ea', 'TPA2_6b_2ea', 'TPA2_6b_3ea', 'TPA2_7b_1ea', 'TPA2_7b_2ea', 'TPA2_7b_3ea', 'TPA2_8b_2ea', 'TPA2_8b_3ea', 'TPA2_9b_1ea', 'TPA2_9b_2ea', 'TPA2_9b_3ea', '2ed_9b_3ea', '7ed_9b_1ea', 'TPA2_4b_3ea', '1ed_12b_1ea', '3ed_10b_2ea', '7ed_5b_2ea', '5ed_15b_2ea', '2ed_12b_3ea', '3ed_1b_1ea', '6ed_5b_1ea', '3ed_14b_3ea', '6ed_15b_2ea', '2ed_2b_3ea', '7ed_7b_1ea', 'TPA2_11b_1ea', '7ed_3b_2ea', 'TPA2_8b_1ea', 'TPA2_1b_1ea', '3ed_2b_2ea', '7ed_11b_3ea', '1ed_5b_2ea', '6ed_7b_2ea']
+    submitOpt(monitor_jobs)
     #print(monitor_jobs)
-    
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster
                            )
     '''
+    module load python
+    source activate rdkit
+    home6/r2532/chem/dyemoleculecata/
     '''
-    
-    
-
 main()
 
