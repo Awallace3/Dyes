@@ -473,6 +473,35 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                 mem_com_mexc, mem_pbs_mexc, cluster,
                 geomDirName
                 ):
+    
+    #baseName = 'cam-b3lyp'
+    baseName = 'mexc'
+    os.mkdir(baseName)
+    procedure = 'TD(NStates=10)'
+    output_num = 0
+    #basis_set_mexc='CAM-B3LYP'
+
+    #solvent = 'SCRF=(Solvent=Dichloromethane)'
+    solvent=''
+    outName = geomDirName 
+    gaussianInputFiles(output_num, method_mexc, 
+                    basis_set_mexc, mem_com_mexc, 
+                    mem_pbs_mexc, cluster,
+                    baseName=baseName, procedure=procedure,
+                    data='', dir_name='', solvent='', 
+                    outName=outName
+                    )
+    """
+    gaussianInputFiles(output_num, method_opt, 
+                    basis_set_opt, mem_com_opt, 
+                    mem_pbs_opt, cluster, 
+                    baseName='mexc', procedure='OPT',
+                    data='', dir_name='', solvent='', 
+                    outName='mexc_o'
+                    ):
+    """
+    path = '%s' % baseName
+    qsub(path)
     """
     baseName = 'mexc'
     os.mkdir(baseName)
@@ -513,22 +542,6 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
     qsub(path)
     """
 
-    baseName = 'cam-b3lyp'
-    os.mkdir(baseName)
-    procedure = 'TD(NStates=10)'
-    output_num = 0
-    basis_set_mexc='CAM-B3LYP'
-    #solvent = 'SCRF=(Solvent=Dichloromethane)'
-    solvent=''
-    outName = geomDirName +'_o'
-    gaussianInputFiles(output_num, method_mexc, 
-                    basis_set_mexc, mem_com_mexc, 
-                    mem_pbs_mexc, cluster,
-                    baseName, procedure, solvent,
-                    outName
-                    )
-    path = '%s' % baseName
-    qsub(path)
     
 def clean_energies(hf_1, hf_2, zero_point):
     zero_point = zero_point[30:].replace(" (Hartree/Particle)", "")
