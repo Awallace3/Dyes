@@ -3,10 +3,11 @@
         {
             "HOMO": 1.1043152780499996,
             "LUMO": -1.0724649846499998,
-            "SMILES": "(BBD)(C=C7)=CC=C7N(C6=CC=CC=C6)C3=CC=CC=C3.C(BBA)5=C4C(N=CC=N4)=C((BBD))S5.C(BBA)1=CC=C(/C=C(C#N)/C(O)=O)C=C1",
+            "SMILES": "C(BBD)(C=C7)=CC=C7N(C6=CC=CC=C6)C3=CC=CC=C3.C(BBA)5=C4C(N=CC=N4)=C((BBD))S5.C(BBA)1=CC=C(/C=C(C#N)/C(O)=O)C=C1",
             "excitations": [
                 {
                     "exc": 1,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
                     "nm": 558.69,
                     "orbital_Numbers": [
                         139,
@@ -17,6 +18,7 @@
                 },
                 {
                     "exc": 2,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
                     "nm": 427.28,
                     "orbital_Numbers": [
                         138,
@@ -30,6 +32,7 @@
                 },
                 {
                     "exc": 3,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
                     "nm": 416.84,
                     "orbital_Numbers": [
                         138,
@@ -45,10 +48,10 @@
                     "osci": 0.4729
                 }
             ],
-            "generalSMILES": "N#C/C(C=c1ccc(=C2[S+]=C(c3ccc(N(c4ccccc4)c4ccccc4)cc3)c3nccnc32)cc1)=C(\\[O-])O",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "1ed_1b_1ea",
             "name": "1ed_1b_1ea",
-            "parts": "triphenylamine::thienopyrazine::2-cyano-2-phenylacrylic acid"
+            "parts": "triphenylamine::thieno[3,4-b]pyrazine::(E)-2-cyano-3-phenylacrylic acid"
         }
     ]
 }

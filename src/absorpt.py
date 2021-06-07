@@ -17,7 +17,7 @@ def cleanLine(line):
             aList.append(i)
     return aList
 
-def absorpt(path):
+def absorpt(path, method_mexc, basis_set_mexc):
         filename = open(path,'r')
         num = 0
         nregion = False
@@ -64,6 +64,7 @@ def absorpt(path):
                         mol.setNm(float(x[6]))
                         mol.setOsci(float(x[8][2:]))
                         orbitalList = []
+                        mol.setMethod_basis_set("%s/%s" % (method_mexc, basis_set_mexc))
                 else:
                         if x[0] != 'This' and x[0] != 'Total' and x[0] != 'Copying':
                                 orbitalList.append(int(x[0]))

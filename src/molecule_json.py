@@ -3,9 +3,11 @@ import json
 class Excitation:
     def __init__(self): #intializing the class
         self.exc = '' # Excitation number 
+        self.method_basis_set = ''
         self.nm = 0
         self.osci = 0 
         self.orbital_Numbers = []
+    
     def setExc(self, exc): # setter function
         self.exc = exc
     def setNm(self, nm): # setter function
@@ -14,6 +16,8 @@ class Excitation:
         self.osci = osci
     def setOrbital_Numbers(self,orbital_Numbers):
         self.orbital_Numbers = orbital_Numbers
+    def setMethod_basis_set(self, method_basisSet):
+        self.method_basis_set = method_basisSet
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
             sort_keys=True, indent=4)
@@ -64,7 +68,7 @@ class Molecule:
             fp.write(self.toJSON())
 
     def giveData(self, data):
-        #print(data)
+        print(data)
         self.name = data["name"]
         self.LUMO = data["LUMO"]
         self.HOMO = data["HOMO"]
@@ -129,6 +133,7 @@ class MoleculeList():
     def updateMolecule(self, molecule):
         for n, i in enumerate(self.molecules):
             mol = Molecule()
+            print(i)
             mol.giveData(i)
             if mol.name == molecule.name:
                 print('updating existing Molecule information in results.json')
