@@ -1,5 +1,6 @@
 
 import os
+import subprocess
 
 
 # Input smiles string
@@ -7,7 +8,7 @@ import os
 # Depending on whether there is a BBA or BBD place the file in the directory
 name = input('What is name of chemdraw stucture without the Kr and Ar: ')
 smile = input('What is the smile string from Chemdraw (Place Ar for electron acceptor connection and Kr for electron donor connection): ')
-inchlkey = input('Copy and paste the inchlkey with the Ar and Kr: ')
+#inchlkey = input('Copy and paste the inchlkey with the Ar and Kr: ')
 def arkysmiconv(smile):
     '''
     converts Ar and Kr to BBA and BBD
@@ -62,6 +63,40 @@ def typeofstruct():
     return x
 #typeofstruct()
 
+def CreatesInchlKey(smile):
+    filename = open('creator.smi','w+')
+    filename.write(str(smile))
+    filename.close()
+    key = 'obabel creator.smi -oinchikey'
+    carts = subprocess.check_output(key, shell=True)
+        #subprocess.call(cmd, shell=True)
+    carts = str(carts)
+    
+    l = []
+    for i in carts:
+        l.append(i)
+    l.remove('b')
+    l.remove("'")
+    l.remove("'")
+    l.remove('n')
+    l.remove("\\")
+    inchlkey = ''
+    for i in l:
+        inchlkey += str(i)
+    os.remove('creator.smi')
+
+    
+
+
+    #carts.remove('\n')
+    #carts.remove('b')
+   
+
+
+
+
+    return inchlkey
+
 def InchlKeyDicBackbone():
     InchlKeyBackboneDict = {}
     for h in os.listdir('Dyes/backbones/'):
@@ -97,6 +132,7 @@ def inchlkeychecker():
     '''
     struct = typeofstruct()
     smi = arkysmiconv(smile)
+    inchlkey = CreatesInchlKey(smile)
     if struct == 'backbone':
         BackboneDict = InchlKeyDicBackbone()
         if inchlkey in BackboneDict.keys():
