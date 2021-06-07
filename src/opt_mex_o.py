@@ -13,8 +13,8 @@ def opt_mex_o(monitor_jobs):
 
     for i in monitor_jobs:
         os.chdir(i)
-        print(i)
         cmd = "touch mex_o.o100000"
+        print(i, cmd)
         subprocess.call(cmd, shell=True)
         os.chdir("..")
 
