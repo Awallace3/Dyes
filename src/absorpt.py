@@ -48,12 +48,15 @@ def absorpt(path, method_mexc, basis_set_mexc):
         data = data[2:]
         data2 = []
         for n,i in enumerate(data):
+                # new line
+                i = i.replace('->', ' ')
+                #
                 x = cleanLine(i)
                 if x == []:
                         continue
                 data2.append(x)
         
-        
+        #print(data2)
         excitations = []
         for n,x in enumerate(data2):
                 #print(x)
@@ -68,7 +71,9 @@ def absorpt(path, method_mexc, basis_set_mexc):
                 else:
                         if x[0] != 'This' and x[0] != 'Total' and x[0] != 'Copying':
                                 orbitalList.append(int(x[0]))
-                                orbitalList.append(int(x[1][2:]))
+                                # line swapped after replacing -> with wb
+                                #orbitalList.append(int(x[1][2:]))
+                                orbitalList.append(int(x[1]))
                                 orbitalList.append(float(x[2]))
                 if n < len(data2):
                         if x[0] == 'Excited':

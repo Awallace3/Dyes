@@ -68,7 +68,6 @@ class Molecule:
             fp.write(self.toJSON())
 
     def giveData(self, data):
-        print(data)
         self.name = data["name"]
         self.LUMO = data["LUMO"]
         self.HOMO = data["HOMO"]
@@ -109,6 +108,7 @@ class MoleculeList():
         with open(fileName, 'r') as json_file:
             data = json.load(json_file)
         self.molecules = data['molecules']
+
     
     
     def removeMolecule(self, name):
@@ -131,9 +131,32 @@ class MoleculeList():
         return found 
 
     def updateMolecule(self, molecule):
+        size = len(self.molecules)
+        found = False
+        for i in range(size):
+            mol = Molecule()
+            #print(self.molecules[i])
+            #print(type(i))
+            #print(len(self.molecules))
+            #print(i.getName())
+            mol.giveData(self.molecules[i])
+            if mol.name == molecule.name:
+                #print('updating existing Molecule information in results.json')
+                self.molecules[i] = molecule
+                found = True
+                break
+
+        if found == False:
+            print('Creating new Molecule in results.json for %s' % molecule.getName())
+            #self.addMolecule(mol)
+            #mol = Molecule()
+            self.addMolecule(molecule)
+        '''
         for n, i in enumerate(self.molecules):
             mol = Molecule()
-            print(i)
+            #print(type(i))
+            #print(len(self.molecules))
+            #print(i.getName())
             mol.giveData(i)
             if mol.name == molecule.name:
                 print('updating existing Molecule information in results.json')
@@ -141,7 +164,8 @@ class MoleculeList():
             else:
                 print('Creating new Molecule in results.json')
                 self.addMolecule(mol)
-
+                #self.addMolecule(i)
+        '''
     def sendToFile(self, fileName):
         with open(fileName, 'w') as fp:
             fp.write(self.toJSON())

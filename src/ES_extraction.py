@@ -11,12 +11,13 @@ def ES_extraction(path):
         lines = fp.readlines()
     #print(lines)
     for i in lines:
-        #print(i)
         if occupied in i:
             occLst.append(i)
         if virtual in i:
             virtLst.append(i)
-    
+    if len(occLst) == 0 and len(virtLst) == 0:
+        print("ES_extraction error: Found no data in %s" % path)
+        return 0, 0
     occLst = occLst[-1].split('  ')
     virtLst = virtLst[0].split('  ')
     

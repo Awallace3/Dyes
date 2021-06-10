@@ -53,7 +53,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N %s\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l" % outName)
+            fp.write("#PBS -N %s\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l " % outName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             # r410 node
             fp.write("#PBS -q r410\n")
@@ -89,7 +89,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -W umask=022\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l" % outName)
+            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -W umask=022\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l " % outName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
@@ -127,9 +127,16 @@ def clean_many_txt(geomDirName):
     """ This will replace the numerical forms of the elements as their letters numbered in order """
 
     f = open('tmp.txt', 'r')
-    a = ['16.0 ', '6.0 ', '8.0 ', '1.0 ', '7.0 ' ]
+    a = ['14.0 ','30.0 ' ,
+            '16.0 ', '6.0 ', 
+            '8.0 ', '1.0 ', 
+            '7.0 ' 
+        ]
     table = {
-        '6.0 ': 'C', '8.0 ': 'O', '1.0 ': 'H', '7.0 ': 'N', '16.0 ': 'S'
+        '6.0 ': 'C', '8.0 ': 'O', 
+        '1.0 ': 'H', '7.0 ': 'N', 
+        '16.0 ': 'S', '30.0 ': 'Zn', 
+        '14.0 ': 'Si'
     }
 
     xyzToMolLst = []
@@ -400,11 +407,18 @@ def xyzToSmiles(length, xyz, geomDirName):
     mol = Molecule()
     if os.path.exists('info.json'):
         mol.setData('info.json')
+        mol.setGeneralSMILES(val.rstrip())
+        mol.sendToFile('info.json')
+        mol_lst = MoleculeList()
+        mol_lst.setData("../../results.json")
+        mol_lst.updateMolecule(mol)
+        #print(mol_lst)
+        mol_lst.sendToFile('../../results.json')
     else:
+
         mol.setLocalName(geomDirName)
         mol.setGeneralSMILES(val.rstrip())
         mol.sendToFile('info.json')
-    
 
 
 
