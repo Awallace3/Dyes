@@ -22,6 +22,7 @@ def arkysmiconv(smile):
         #print(a)
     #print(a)
     return a
+
 def typeofstruct():
     '''
     Places Smiles in file and inputs in correct directory
@@ -30,33 +31,38 @@ def typeofstruct():
     print(smi)
     if 'BBA' in smi and 'BBD' not in smi:
        # print('acceptor')
-        os.chdir('..')
+        #os.chdir('..')
         #print(len(os.listdir(os.getcwd())))
-        numoffiles = 0
-        for x in list(os.scandir('eAcceptors')):
-            if x.is_file():
-                numoffiles += 1
-        os.chdir('eAcceptors/')
-        print(numoffiles)
-        os.system('ls')
+       # numoffiles = 0
+       # for x in list(os.scandir('../eAcceptors')):
+       #     if x.is_file():
+       #         numoffiles += 1
+       # os.chdir('eAcceptors/')
+       # print(numoffiles)
+      #  os.system('ls')
         x = 'acceptor'
         print('This structure is an acceptor')
-        os.chdir('../../')
+      #  os.chdir('../../')
 
     elif 'BBD' in smi and 'BBA' not in smi:
-        os.chdir('..')
-        numoffiles = 0
-        for x in list(os.scandir('eDonors')):
-            if x.is_file():
-                numoffiles += 1
-        os.chdir('eDonors/')
-        print(numoffiles)
+      #  os.chdir('..')
+      #  numoffiles = 0
+      ##  for x in list(os.scandir('../eDonors')):
+       #     if x.is_file():
+       #         numoffiles += 1
+    #    os.chdir('eDonors/')
+      #  print(numoffiles)
         x = 'donor'
         print('This structure is an donor')
-        os.chdir('../../')
+    #    os.chdir('../../')
     elif 'BBD' in smi and 'BBA' in smi:
+   #    for x in list(os.scandir('../eDonors')):
+   #         if x.is_file():
+   #             numoffiles += 1
+    #    os.chdir('eDonors/')
+   #     print(numoffiles)
         print('This structure is an backbone') 
-        os.chdir('../../')
+     #   os.chdir('../../')
         x = 'backbone'
     else:
         print('Error')
@@ -85,23 +91,13 @@ def CreatesInchlKey(smile):
         inchlkey += str(i)
     os.remove('creator.smi')
 
-    
-
-
-    #carts.remove('\n')
-    #carts.remove('b')
-   
-
-
-
-
     return inchlkey
 
 def InchlKeyDicBackbone():
     InchlKeyBackboneDict = {}
-    for h in os.listdir('Dyes/backbones/'):
+    for h in os.listdir('../backbones/'):
         if '.smi' in h:
-            with open('Dyes/backbones/'+str(h)) as f:
+            with open('../backbones/'+str(h)) as f:
                 data = f.readlines()[2].rstrip('\n')
                 print(data)
                 InchlKeyBackboneDict[data] = data
@@ -109,9 +105,9 @@ def InchlKeyDicBackbone():
 
 def InchlKeyDicAcceptor():
     InchlKeyAcceptorDict = {}
-    for h in os.listdir('Dyes/eAcceptors/'):
+    for h in os.listdir('../eAcceptors/'):
         if '.smi' in h:
-            with open('Dyes/eAcceptors/'+str(h)) as f:
+            with open('../eAcceptors/'+str(h)) as f:
                 data = f.readlines()[2].rstrip('\n')
                 print(data)
                 InchlKeyAcceptorDict[data] = data
@@ -119,9 +115,9 @@ def InchlKeyDicAcceptor():
 
 def InchlKeyDicDonor():
     InchlKeyDonorsDict = {}
-    for h in os.listdir('Dyes/eDonors/'):
+    for h in os.listdir('../eDonors/'):
         if '.smi' in h:
-            with open('Dyes/eDonors/'+str(h)) as f:
+            with open('../eDonors/'+str(h)) as f:
                 data = f.readlines()[2].rstrip('\n')
                 print(data)
                 InchlKeyDonorsDict[data] = data
@@ -139,54 +135,54 @@ def inchlkeychecker():
             print('exists')
         elif inchlkey not in BackboneDict.keys():
             numoffiles = 0
-            for x in list(os.scandir('Dyes/backbones')):
+            for x in list(os.scandir('../backbones')):
                 if x.is_file():
                     numoffiles += 1
-            os.chdir('Dyes/backbones/')
-            filename = open(str(numoffiles+1)+'b.smi','x+')
+         #   os.chdir('Dyes/backbones/')
+            filename = open('../backbones/' + str(numoffiles+1)+'b.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-            os.chdir('../../')
+        #    os.chdir('../../')
     if struct == 'acceptor':
         AcceptorDict = InchlKeyDicAcceptor()
         if inchlkey in AcceptorDict.keys():
             print('exists')
         elif inchlkey not in AcceptorDict.keys():
             numoffiles = 0
-            for x in list(os.scandir('Dyes/eAcceptors')):
+            for x in list(os.scandir('../eAcceptors')):
                 if x.is_file():
                     numoffiles += 1
-            os.chdir('Dyes/eAcceptors/')
-            filename = open(str(numoffiles+1)+'ea.smi','x+')
+        #    os.chdir('Dyes/eAcceptors/')
+            filename = open('../eAcceptors/' + str(numoffiles+1)+'ea.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-            os.chdir('../../')   
+         #   os.chdir('../../')   
     if struct == 'donor':
         DonorDict = InchlKeyDicDonor()    
         if inchlkey in DonorDict.keys():
             print('exists')
         elif inchlkey not in DonorDict.keys():
             numoffiles = 0
-            for x in list(os.scandir('Dyes/eDonors')):
+            for x in list(os.scandir('../eDonors')):
                 if x.is_file():
                     numoffiles += 1
-            os.chdir('Dyes/eDonors/')
-            filename = open(str(numoffiles+1)+'ed.smi','x+')
+        #    os.chdir('Dyes/eDonors/')
+            filename = open('../eDonors/' +str(numoffiles+1)+'ed.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-            os.chdir('../../')           
+       #     os.chdir('../../')           
 
     return
 inchlkeychecker()
