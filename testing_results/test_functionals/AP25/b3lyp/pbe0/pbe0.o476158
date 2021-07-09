@@ -1,9 +1,0 @@
-exec_host = n121.head.mcsr.olemiss.edu
-Error: segmentation violation
-   rax 0000000000000000, rbx ffffffffffffffff, rcx 00002aaaab21e237
-   rdx 00000000000042db, rsp 00007ffffff5e598, rbp 00007ffffff5eb10
-   rsi 000000000000000b, rdi 00000000000042db, r8  00002aaaaaaf47c0
-   r9  0000000000000000, r10 000000007c998911, r11 0000000000000202
-   r12 0000000000000000, r13 0000000000000000, r14 00007ffffff5eb58
-   r15 00000000000003e6
-  --- traceback not available
