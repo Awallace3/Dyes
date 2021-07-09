@@ -2,7 +2,7 @@ import json
 
 class PieceInfo:
     def __init__(self):
-        self.localName = ''
+        self.localNamePiece = ''
         self.allowed = 0
         self.InChI_key = ''
         self.smiles = ''
@@ -43,6 +43,7 @@ class AllowedList:
             data = json.load(json_file)
         self.molecules = data['allowed_list']
 
+    """
     def updateMolecule(self, piece):
         size = len(self.pieces)
         found = False
@@ -62,3 +63,4 @@ class AllowedList:
             #self.addMolecule(mol)
             #mol = Molecule()
             self.addMolecule(molecule)
+    """

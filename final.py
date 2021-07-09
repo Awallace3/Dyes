@@ -215,13 +215,13 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     for i in range(number_delays):
         # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
-            print(j)
+            #print(j)
             os.chdir(j)
             delay = i
             mexc_check = glob.glob("mexc")
             # print(mexc_check)
             if len(mexc_check) > 0:
-                print('{0} entered mexc checkpoint 1'.format(num+1))
+                #print('{0} entered mexc checkpoint 1'.format(num+1))
                 complete[num] = 1
                 mexc_check_out = glob.glob("mexc/mexc.o*")
                 mexc_check_out_complete = glob.glob('mexc/*_o*')
@@ -255,7 +255,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster, j
                 )
-                print(resubmissions)
+                #print(resubmissions)
             
             mexc_check = []
             os.chdir('..')

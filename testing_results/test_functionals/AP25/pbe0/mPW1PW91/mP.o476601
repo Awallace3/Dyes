@@ -1,0 +1,18 @@
+exec_host = n064.head.mcsr.olemiss.edu
+Error: software termination
+   rax 00002aaab1d36d08, rbx 00002aaab1cdb0f8, rcx 0000000000000260
+   rdx 00002aaab1ccd480, rsp 00007ffffffc6120, rbp 00007ffffffc6210
+   rsi 00002aaab1cd0af8, rdi 00002aaab1cbd3b8, r8  00002aaab1ce0bc0
+   r9  00002aaab1cca868, r10 00002aaab1cd58c8, r11 00002aaab1cc4b08
+   r12 00002aaab1cc79b8, r13 00002aaab1cd8248, r14 00002aaab1cc2188
+   r15 00002aaab1cddfa8
+Error: software termination
+   rax fffffffffffffffc, rbx 00007fffffff6760, rcx 00002aaaab2a4e2a
+   rdx 0000000000000000, rsp 00007fffffff6728, rbp 0000000000000001
+   rsi 00007fffffff6760, rdi 00000000000057cf, r8  00002aaaab58a4c0
+   r9  00007fffffff6680, r10 0000000000000000, r11 0000000000000246
+   r12 00007fffffff6780, r13 0000000000000066, r14 0000000000000000
+   r15 00007fffffffd140
+  --- traceback not available
+  --- traceback not available
+Aborted (core dumped)
