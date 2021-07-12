@@ -399,7 +399,7 @@ def main():
     cluster='seq'
 
     add_methods = {
-        "methods" : ["PBE0PBE"],
+        "methods" : ["PBE1PBE"],
         "basis_set" : ["6-311G(d,p)"],
         "mem_com" : ["1600"],
         "mem_pbs" : ["10"]
