@@ -51,6 +51,10 @@ class Molecule:
     def setExictations(self, energy_osc):
         self.excitations = energy_osc
     
+    def appendExcitations(self, excitation_objs_lst):
+        for i in excitation_objs_lst:
+            self.excitations.append(i)
+    
     def setSMILES(self, smiles):
         self.SMILES = smiles
         

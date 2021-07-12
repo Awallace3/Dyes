@@ -20,7 +20,8 @@ def gaussianInputFiles(output_num, method_opt,
                     data='', dir_name='', solvent='', 
                     outName='mexc_o'
                     ):
-    
+    # baseName = baseName.com / baseName.pbs / baseName.out
+    # dir_name = directory name 
     output_num = str(output_num)
     if output_num == '0':
         output_num = ''
@@ -490,7 +491,13 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                 ):
     
     #baseName = 'cam-b3lyp'
-    baseName = 'mexc'
+    if method_mexc == 'CAM-B3LYP':
+        baseName = 'mexc'
+    else:
+        baseName = method_mexc.lower()
+    if os.path.exists(baseName):
+        print('\n%s directory already exists\n' % (baseName))
+        return 
     os.mkdir(baseName)
     procedure = 'TD(NStates=10)'
     output_num = 0
@@ -506,6 +513,8 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     data='', dir_name='', solvent='', 
                     outName=outName
                     )
+    path = '%s' % baseName
+    qsub(path)
     """
     gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
@@ -515,8 +524,7 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     outName='mexc_o'
                     ):
     """
-    path = '%s' % baseName
-    qsub(path)
+    
     """
     baseName = 'mexc'
     os.mkdir(baseName)
