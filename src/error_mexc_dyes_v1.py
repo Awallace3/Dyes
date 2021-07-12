@@ -474,6 +474,7 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
+    print(resetDirNum)
     os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = 'qsub %s' % pbs_file
@@ -493,12 +494,14 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
     #baseName = 'cam-b3lyp'
     if method_mexc == 'CAM-B3LYP':
         baseName = 'mexc'
+        dir_name = 'mexc'
     else:
-        baseName = method_mexc.lower()
-    if os.path.exists(baseName):
-        print('\n%s directory already exists\n' % (baseName))
+        baseName = 'mexc'
+        dir_name = method_mexc.lower()
+    if os.path.exists(dir_name):
+        print('\n%s directory already exists\n' % (dir_name))
         return 
-    os.mkdir(baseName)
+    os.mkdir(dir_name)
     procedure = 'TD(NStates=10)'
     output_num = 0
     #basis_set_mexc='CAM-B3LYP'
@@ -510,7 +513,7 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     basis_set_mexc, mem_com_mexc, 
                     mem_pbs_mexc, cluster,
                     baseName=baseName, procedure=procedure,
-                    data='', dir_name='', solvent='', 
+                    data='', dir_name=dir_name, solvent='', 
                     outName=outName
                     )
     path = '%s' % baseName
@@ -666,6 +669,7 @@ def main(index,
             freq, hf_1, hf_2, zero_point = freq_hf_zero(
                 lines, filename=filename)
             '''
+            print("entering make_exc_mo_freq")
             make_exc_mo_freq(method_mexc, basis_set_mexc, 
                             mem_com_mexc, mem_pbs_mexc, cluster,
                             geomDirName

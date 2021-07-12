@@ -1,57 +1,14 @@
 {
     "molecules": [
         {
-            "HOMO": 1.1043152780499996,
-            "LUMO": -1.0724649846499998,
-            "SMILES": "C(BBD)(C=C7)=CC=C7N(C6=CC=CC=C6)C3=CC=CC=C3.C(BBA)5=C4C(N=CC=N4)=C((BBD))S5.C(BBA)1=CC=C(/C=C(C#N)/C(O)=O)C=C1",
-            "excitations": [
-                {
-                    "exc": 1,
-                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
-                    "nm": 558.69,
-                    "orbital_Numbers": [
-                        139,
-                        140,
-                        0.70349
-                    ],
-                    "osci": 0.773
-                },
-                {
-                    "exc": 2,
-                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
-                    "nm": 427.28,
-                    "orbital_Numbers": [
-                        138,
-                        140,
-                        -0.12414,
-                        139,
-                        141,
-                        0.68478
-                    ],
-                    "osci": 0.3877
-                },
-                {
-                    "exc": 3,
-                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
-                    "nm": 416.84,
-                    "orbital_Numbers": [
-                        138,
-                        140,
-                        0.67826,
-                        139,
-                        141,
-                        0.12766,
-                        139,
-                        142,
-                        -0.13046
-                    ],
-                    "osci": 0.4729
-                }
-            ],
+            "HOMO": 0,
+            "LUMO": 0,
+            "SMILES": "",
+            "excitations": [],
             "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "1ed_1b_1ea",
             "name": "1ed_1b_1ea",
-            "parts": "triphenylamine::thieno[3,4-b]pyrazine::(E)-2-cyano-3-phenylacrylic acid"
+            "parts": "1ed::1b::1ea"
         },
         {
             "HOMO": 2.0591627777,
