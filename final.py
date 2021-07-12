@@ -396,6 +396,7 @@ def main():
     basis_set_mexc = "6-311G(d,p)"
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
+    #cluster='map'
     cluster='seq'
 
     add_methods = {
