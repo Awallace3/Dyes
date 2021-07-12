@@ -20,7 +20,8 @@ def gaussianInputFiles(output_num, method_opt,
                     data='', dir_name='', solvent='', 
                     outName='mexc_o'
                     ):
-    
+    # baseName = baseName.com / baseName.pbs / baseName.out
+    # dir_name = directory name 
     output_num = str(output_num)
     if output_num == '0':
         output_num = ''
@@ -473,6 +474,7 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
+    print(resetDirNum)
     os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = 'qsub %s' % pbs_file
@@ -490,8 +492,16 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                 ):
     
     #baseName = 'cam-b3lyp'
-    baseName = 'mexc'
-    os.mkdir(baseName)
+    if method_mexc == 'CAM-B3LYP':
+        baseName = 'mexc'
+        dir_name = 'mexc'
+    else:
+        baseName = 'mexc'
+        dir_name = method_mexc.lower()
+    if os.path.exists(dir_name):
+        print('\n%s directory already exists\n' % (dir_name))
+        return 
+    os.mkdir(dir_name)
     procedure = 'TD(NStates=10)'
     output_num = 0
     #basis_set_mexc='CAM-B3LYP'
@@ -503,9 +513,11 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     basis_set_mexc, mem_com_mexc, 
                     mem_pbs_mexc, cluster,
                     baseName=baseName, procedure=procedure,
-                    data='', dir_name='', solvent='', 
+                    data='', dir_name=dir_name, solvent='', 
                     outName=outName
                     )
+    path = '%s' % dir_name
+    qsub(path)
     """
     gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
@@ -515,8 +527,7 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     outName='mexc_o'
                     ):
     """
-    path = '%s' % baseName
-    qsub(path)
+    
     """
     baseName = 'mexc'
     os.mkdir(baseName)
@@ -658,6 +669,7 @@ def main(index,
             freq, hf_1, hf_2, zero_point = freq_hf_zero(
                 lines, filename=filename)
             '''
+            print("entering make_exc_mo_freq")
             make_exc_mo_freq(method_mexc, basis_set_mexc, 
                             mem_com_mexc, mem_pbs_mexc, cluster,
                             geomDirName

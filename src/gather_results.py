@@ -98,6 +98,9 @@ def acquire_averages(df, piece_dict, allowed_dict ):
         avg_LUMO = sum(data['LUMO']) / len(data['LUMO'])
         piece_dict[key] = [avg_nm, avg_osci, avg_LUMO]
     print(piece_dict)
+    for key, value in piece_dict.items():
+        #print(key, value[0])
+        print("KEY: %s, nm: %.1f" % (key, value[0]))
     print()
     
     return piece_dict
@@ -144,7 +147,8 @@ def score_pieces (df):
     #allowed_dict = evalAllowed(eA_dict, allowed_dict)
     #allowed_dict = evalAllowed(eD_dict, allowed_dict)
     
-    print(allowed_dict)
+
+    #print(allowed_dict)
 
     return 
 

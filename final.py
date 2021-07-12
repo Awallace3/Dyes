@@ -1,3 +1,4 @@
+from operator import add
 import numpy as np
 import os
 import itertools
@@ -184,14 +185,46 @@ def submitOpt(monitor_jobs):
         os.chdir("..")
     os.chdir('..')
 
+def add_excitation_data(
+        dir_name, baseName,
+        method_mexc, basis_set_mexc,
+
+    ):
+    occVal, virtVal = ES_extraction.ES_extraction('%s/%s.out' % (dir_name, baseName))
+    mol = Molecule()
+    mol.setData('info.json')
+    mol.setHOMO(occVal)
+    mol.setLUMO(virtVal)
+    mol.appendExcitations(absorpt('mexc/mexc.out', method_mexc, basis_set_mexc))
+    mol.toJSON()
+    mol.sendToFile('info.json')
+    mol_lst = MoleculeList()
+    mol_lst.setData("../../results.json")
+    mol_lst.updateMolecule(mol)
+    mol_lst.sendToFile('../../results.json')
+
+
 def jobResubmit(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                 method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                cluster, route='results'
+                cluster, route='results',
+                add_methods= {
+                    "methods" : [],
+                    "basis_set" : [],
+                    "mem_com" : [],
+                    "mem_pbs" : []
+                }
                 ):
     """
     Modified from ice_analog_spectra_generator repo
     """
+    add_methods_length = len(add_methods['methods'])
+
+    if add_methods_length != len(add_methods['basis_set']) and add_methods_length != len(add_methods['mem_com']) and add_methods_length != len(add_methods['mem_pbs']):
+        print("add_methods must have values that have lists of the same length.\nTerminating jobResubmit before start")
+        return []
+    resubmission_max = add_methods_length
+        
     mol_lst = MoleculeList()
     if os.path.exists('results.json'):
         print("exists")
@@ -202,18 +235,21 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
     
     min_delay = min_delay * 60
-    cluster_list = glob.glob("%s/*" % route)
+    #cluster_list = glob.glob("%s/*" % route)
     #print(cluster_list)
     complete = []
     resubmissions = []
     for i in range(len(monitor_jobs)):
         complete.append(0)
         resubmissions.append(2)
+        #resubmissions.append(resubmission_max)
     calculations_complete = False
     # comment change directory below in production
     os.chdir(route)
+    
     for i in range(number_delays):
         # time.sleep(min_delay)
+        print(i)
         for num, j in enumerate(monitor_jobs):
             #print(j)
             os.chdir(j)
@@ -226,7 +262,8 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 mexc_check_out = glob.glob("mexc/mexc.o*")
                 mexc_check_out_complete = glob.glob('mexc/*_o*')
 
-                if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
+                #if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
+                if complete[num] < 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
                     print('{0} entered mexc checkpoint 2'.format(num+1))
                     
                     occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
@@ -246,9 +283,13 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     mol_lst.updateMolecule(mol)
                     #print(mol_lst)
                     mol_lst.sendToFile('../../results.json')
-
+                    
                     complete[num] = 2
 
+                #if complete[num] >= 2
+
+
+            print(complete[num])
             if complete[num] < 1:
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -256,13 +297,35 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     resubmissions, delay, cluster, j
                 )
                 #print(resubmissions)
+            elif complete[num] == 2:
+                pos = complete[num] - 2
+                #print(pos)
+                #print(add_methods)
+                #print('entering error_mexc')
+                action, resubmissions = error_mexc_dyes_v1.main(
+                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                    add_methods["methods"][pos], add_methods['basis_set'][pos],
+                    add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
+                    resubmissions, delay, cluster, j
+                )
+                
+             
+            pos = complete[num] - 2
+            #print(pos)
+            if pos >= 0:
+                dir_name = add_methods['methods'][pos].lower()
+                mexc_check_out = glob.glob("%s/mexc.o*" % dir_name)
+                mexc_check_out_complete = glob.glob('%s/*_o*' % dir_name)
+                if complete[num] < 3 and len(mexc_check_out) >0 and len (mexc_check_out_complete) > 0:
+                    add_excitation_data(dir_name, 'mexc', add_methods['methods'][pos], add_methods['basis_set'][pos])
             
             mexc_check = []
             os.chdir('..')
         stage = 0
         for k in range(len(complete)):
             stage += complete[k]
-            if stage == len(complete)*2:
+            #if stage == len(complete)*2:
+            if stage == len(complete)*add_methods_length:
                 calculations_complete = True
 
         if calculations_complete == True:
@@ -334,25 +397,33 @@ def main():
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
     cluster='seq'
+
+    add_methods = {
+        "methods" : ["PBE1PBE"],
+        "basis_set" : ["6-311G(d,p)"],
+        "mem_com" : ["1600"],
+        "mem_pbs" : ["10"]
+    }
+
+
     """
     # comment for testing
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
     """
-    #monitor_jobs = ['2ed_9b_3ea', '7ed_9b_1ea', 'TPA2_4b_3ea', '1ed_12b_1ea', '3ed_10b_2ea', '7ed_5b_2ea', '5ed_15b_2ea', '2ed_12b_3ea', '3ed_1b_1ea', '6ed_5b_1ea', '3ed_14b_3ea', '6ed_15b_2ea', '2ed_2b_3ea', '7ed_7b_1ea', 'TPA2_11b_1ea', '7ed_3b_2ea', 'TPA2_8b_1ea', 'TPA2_1b_1ea', '3ed_2b_2ea', '7ed_11b_3ea', '1ed_5b_2ea', '6ed_7b_2ea']
-    monitor_jobs = ['1ed_10b_1ea', '1ed_10b_2ea', '1ed_10b_3ea', '1ed_11b_1ea', '1ed_11b_2ea', '1ed_11b_3ea', '1ed_12b_1ea', '1ed_12b_2ea', '1ed_12b_3ea', '1ed_13b_1ea', '1ed_13b_2ea', '1ed_13b_3ea', '1ed_14b_1ea', '1ed_14b_2ea', '1ed_14b_3ea', '1ed_15b_1ea', '1ed_15b_2ea', '1ed_15b_3ea', '1ed_16b_1ea', '1ed_16b_2ea', '1ed_16b_3ea', '1ed_1b_2ea', '1ed_1b_3ea', '1ed_2b_1ea', '1ed_2b_2ea', '1ed_2b_3ea', '1ed_3b_1ea', '1ed_3b_2ea', '1ed_3b_3ea', '1ed_4b_1ea', '1ed_4b_2ea', '1ed_4b_3ea', '1ed_5b_1ea', '1ed_5b_2ea', '1ed_5b_3ea', '1ed_6b_1ea', '1ed_6b_2ea', '1ed_6b_3ea', '1ed_7b_1ea', '1ed_7b_2ea', '1ed_7b_3ea', '1ed_8b_1ea', '1ed_8b_2ea', '1ed_8b_3ea', '1ed_9b_1ea', '1ed_9b_2ea', '1ed_9b_3ea', '2ed_10b_1ea', '2ed_10b_2ea', '2ed_10b_3ea', '2ed_11b_1ea', '2ed_11b_2ea', '2ed_11b_3ea', '2ed_12b_1ea', '2ed_12b_2ea', '2ed_12b_3ea', '2ed_13b_1ea', '2ed_13b_2ea', '2ed_13b_3ea', '2ed_14b_1ea', '2ed_14b_2ea', '2ed_14b_3ea', '2ed_15b_1ea', '2ed_15b_2ea', '2ed_15b_3ea', '2ed_16b_1ea', '2ed_16b_2ea', '2ed_16b_3ea', '2ed_1b_1ea', '2ed_1b_2ea', '2ed_1b_3ea', '2ed_2b_1ea', '2ed_2b_2ea', '2ed_2b_3ea', '2ed_3b_1ea', '2ed_3b_2ea', '2ed_3b_3ea', '2ed_4b_1ea', '2ed_4b_2ea', '2ed_4b_3ea', '2ed_5b_1ea', '2ed_5b_2ea', '2ed_5b_3ea', '2ed_6b_1ea', '2ed_6b_2ea', '2ed_6b_3ea', '2ed_7b_1ea', '2ed_7b_2ea', '2ed_7b_3ea', '2ed_8b_1ea', '2ed_8b_2ea', '2ed_8b_3ea', '2ed_9b_1ea', '2ed_9b_2ea', '2ed_9b_3ea', '3ed_10b_1ea', '3ed_10b_2ea', '3ed_10b_3ea', '3ed_11b_1ea', '3ed_11b_2ea', '3ed_11b_3ea', '3ed_12b_1ea', '3ed_12b_2ea', '3ed_12b_3ea', '3ed_13b_1ea', '3ed_13b_2ea', '3ed_13b_3ea', '3ed_14b_2ea', '3ed_14b_3ea', '3ed_15b_1ea', '3ed_15b_2ea', '3ed_15b_3ea', '3ed_16b_1ea', '3ed_16b_2ea', '3ed_16b_3ea', '3ed_1b_1ea', '3ed_1b_2ea', '3ed_1b_3ea', '3ed_2b_1ea', '3ed_2b_2ea', '3ed_2b_3ea', '3ed_3b_1ea', '3ed_3b_2ea', '3ed_3b_3ea', '3ed_4b_1ea', '3ed_4b_2ea', '3ed_4b_3ea', '3ed_5b_1ea', '3ed_5b_2ea', '3ed_5b_3ea', '3ed_6b_1ea', '3ed_6b_2ea', '3ed_6b_3ea', '3ed_7b_1ea', '3ed_7b_2ea', '3ed_7b_3ea', '3ed_8b_1ea', '3ed_8b_2ea', '3ed_8b_3ea', '3ed_9b_1ea', '3ed_9b_2ea', '3ed_9b_3ea', '5ed_10b_1ea', '5ed_10b_2ea', '5ed_10b_3ea', '5ed_11b_1ea', '5ed_11b_2ea', '5ed_11b_3ea', '5ed_12b_1ea', '5ed_12b_2ea', '5ed_12b_3ea', '5ed_13b_1ea', '5ed_13b_2ea', '5ed_13b_3ea', '5ed_14b_1ea', '5ed_14b_2ea', '5ed_14b_3ea', '5ed_15b_1ea', '5ed_15b_2ea', '5ed_15b_3ea', '5ed_16b_2ea', '5ed_16b_3ea', '5ed_1b_1ea', '5ed_1b_2ea', '5ed_1b_3ea', '5ed_2b_1ea', '5ed_2b_2ea', '5ed_2b_3ea', '5ed_3b_2ea', '5ed_3b_3ea', '5ed_4b_1ea', '5ed_4b_2ea', '5ed_4b_3ea', '5ed_5b_1ea', '5ed_5b_2ea', '5ed_5b_3ea', '5ed_6b_1ea', '5ed_6b_2ea', '5ed_6b_3ea', '5ed_7b_1ea', '5ed_7b_2ea', '5ed_7b_3ea', '5ed_8b_1ea', '5ed_8b_2ea', '5ed_8b_3ea', '5ed_9b_1ea', '5ed_9b_2ea', '5ed_9b_3ea', '6ed_10b_1ea', '6ed_10b_2ea', '6ed_10b_3ea', '6ed_11b_1ea', '6ed_11b_2ea', '6ed_11b_3ea', '6ed_12b_1ea', '6ed_12b_3ea', '6ed_13b_1ea', '6ed_13b_2ea', '6ed_13b_3ea', '6ed_14b_1ea', '6ed_14b_2ea', '6ed_14b_3ea', '6ed_15b_1ea', '6ed_15b_2ea', '6ed_15b_3ea', '6ed_16b_1ea', '6ed_16b_2ea', '6ed_16b_3ea', '6ed_1b_1ea', '6ed_1b_2ea', '6ed_1b_3ea', '6ed_2b_1ea', '6ed_2b_2ea', '6ed_2b_3ea', '6ed_3b_1ea', '6ed_3b_2ea', '6ed_3b_3ea', '6ed_4b_1ea', '6ed_4b_2ea', '6ed_4b_3ea', '6ed_5b_1ea', '6ed_5b_2ea', '6ed_5b_3ea', '6ed_6b_1ea', '6ed_6b_2ea', '6ed_6b_3ea', '6ed_7b_1ea', '6ed_7b_2ea', '6ed_7b_3ea', '6ed_8b_1ea', '6ed_8b_2ea', '6ed_8b_3ea', '6ed_9b_1ea', '6ed_9b_2ea', '6ed_9b_3ea', '7ed_10b_1ea', '7ed_10b_2ea', '7ed_10b_3ea', '7ed_11b_1ea', '7ed_11b_2ea', '7ed_11b_3ea', '7ed_12b_2ea', '7ed_12b_3ea', '7ed_13b_1ea', '7ed_13b_2ea', '7ed_13b_3ea', '7ed_14b_1ea', '7ed_14b_2ea', '7ed_14b_3ea', '7ed_15b_1ea', '7ed_15b_2ea', '7ed_15b_3ea', '7ed_16b_1ea', '7ed_16b_2ea', '7ed_16b_3ea', '7ed_1b_1ea', '7ed_1b_2ea', '7ed_1b_3ea', '7ed_2b_1ea', '7ed_2b_2ea', '7ed_2b_3ea', '7ed_3b_1ea', '7ed_3b_2ea', '7ed_3b_3ea', '7ed_4b_1ea', '7ed_4b_2ea', '7ed_4b_3ea', '7ed_5b_1ea', '7ed_5b_2ea', '7ed_5b_3ea', '7ed_6b_1ea', '7ed_6b_2ea', '7ed_6b_3ea', '7ed_7b_1ea', '7ed_7b_2ea', '7ed_7b_3ea', '7ed_8b_1ea', '7ed_8b_2ea', '7ed_8b_3ea', '7ed_9b_1ea', '7ed_9b_2ea', '7ed_9b_3ea', 'TPA2_10b_1ea', 'TPA2_10b_2ea', 'TPA2_10b_3ea', 'TPA2_11b_1ea', 'TPA2_11b_2ea', 'TPA2_11b_3ea', 'TPA2_12b_1ea', 'TPA2_12b_2ea', 'TPA2_12b_3ea', 'TPA2_13b_1ea', 'TPA2_13b_2ea', 'TPA2_13b_3ea', 'TPA2_14b_1ea', 'TPA2_14b_2ea', 'TPA2_14b_3ea', 'TPA2_15b_1ea', 'TPA2_15b_2ea', 'TPA2_15b_3ea', 'TPA2_16b_1ea', 'TPA2_16b_2ea', 'TPA2_16b_3ea', 'TPA2_1b_1ea', 'TPA2_1b_2ea', 'TPA2_1b_3ea', 'TPA2_2b_1ea', 'TPA2_2b_2ea', 'TPA2_2b_3ea', 'TPA2_3b_1ea', 'TPA2_3b_2ea', 'TPA2_3b_3ea', 'TPA2_4b_1ea', 'TPA2_4b_2ea', 'TPA2_4b_3ea', 'TPA2_5b_1ea', 'TPA2_5b_2ea', 'TPA2_5b_3ea', 'TPA2_6b_1ea', 'TPA2_6b_2ea', 'TPA2_6b_3ea', 'TPA2_7b_1ea', 'TPA2_7b_2ea', 'TPA2_7b_3ea', 'TPA2_8b_1ea', 'TPA2_8b_2ea', 'TPA2_8b_3ea', 'TPA2_9b_1ea', 'TPA2_9b_2ea', 'TPA2_9b_3ea']
-    #monitor_jobs1 = ['1ed_10b_1ea', '1ed_10b_2ea', '1ed_10b_3ea', '1ed_11b_1ea', '1ed_11b_2ea', '1ed_11b_3ea', '1ed_12b_1ea', '1ed_12b_2ea', '1ed_12b_3ea', '1ed_13b_1ea', '1ed_13b_2ea', '1ed_13b_3ea', '1ed_14b_1ea', '1ed_14b_2ea', '1ed_14b_3ea', '1ed_15b_1ea', '1ed_15b_2ea', '1ed_15b_3ea', '1ed_16b_1ea', '1ed_16b_2ea', '1ed_16b_3ea', '1ed_1b_2ea', '1ed_1b_3ea', '1ed_2b_1ea', '1ed_2b_2ea', '1ed_2b_3ea', '1ed_3b_1ea', '1ed_3b_2ea', '1ed_3b_3ea', '1ed_4b_1ea', '1ed_4b_2ea', '1ed_4b_3ea', '1ed_5b_1ea', '1ed_5b_2ea', '1ed_5b_3ea', '1ed_6b_1ea', '1ed_6b_2ea', '1ed_6b_3ea', '1ed_7b_1ea', '1ed_7b_2ea', '1ed_7b_3ea', '1ed_8b_1ea', '1ed_8b_2ea', '1ed_8b_3ea', '1ed_9b_1ea', '1ed_9b_2ea', '1ed_9b_3ea', '2ed_10b_1ea', '2ed_10b_2ea', '2ed_10b_3ea', '2ed_11b_1ea', '2ed_11b_2ea', '2ed_11b_3ea', '2ed_12b_1ea', '2ed_12b_2ea', '2ed_12b_3ea', '2ed_13b_1ea', '2ed_13b_2ea', '2ed_13b_3ea', '2ed_14b_1ea', '2ed_14b_2ea', '2ed_14b_3ea', '2ed_15b_1ea', '2ed_15b_2ea', '2ed_15b_3ea', '2ed_16b_1ea', '2ed_16b_2ea', '2ed_16b_3ea', '2ed_1b_1ea', '2ed_1b_2ea', '2ed_1b_3ea', '2ed_2b_1ea', '2ed_2b_2ea', '2ed_2b_3ea', '2ed_3b_1ea', '2ed_3b_2ea', '2ed_3b_3ea', '2ed_4b_1ea', '2ed_4b_2ea', '2ed_4b_3ea', '2ed_5b_1ea', '2ed_5b_2ea', '2ed_5b_3ea', '2ed_6b_1ea', '2ed_6b_2ea', '2ed_6b_3ea', '2ed_7b_1ea', '2ed_7b_2ea', '2ed_7b_3ea', '2ed_8b_1ea', '2ed_8b_2ea', '2ed_8b_3ea', '2ed_9b_1ea', '2ed_9b_2ea', '2ed_9b_3ea', '3ed_10b_1ea', '3ed_10b_2ea', '3ed_10b_3ea', '3ed_11b_1ea', '3ed_11b_2ea', '3ed_11b_3ea', '3ed_12b_1ea', '3ed_12b_2ea', '3ed_12b_3ea', '3ed_13b_1ea', '3ed_13b_2ea', '3ed_13b_3ea', '3ed_14b_2ea', '3ed_14b_3ea', '3ed_15b_1ea', '3ed_15b_2ea', '3ed_15b_3ea', '3ed_16b_1ea', '3ed_16b_2ea', '3ed_16b_3ea', '3ed_1b_1ea', '3ed_1b_2ea', '3ed_1b_3ea', '3ed_2b_1ea', '3ed_2b_2ea', '3ed_2b_3ea', '3ed_3b_1ea', '3ed_3b_2ea', '3ed_3b_3ea', '3ed_4b_1ea', '3ed_4b_2ea', '3ed_4b_3ea', '3ed_5b_1ea', '3ed_5b_2ea', '3ed_5b_3ea', '3ed_6b_1ea', '3ed_6b_2ea', '3ed_6b_3ea', '3ed_7b_1ea', '3ed_7b_2ea', '3ed_7b_3ea', '3ed_8b_1ea', '3ed_8b_2ea', '3ed_8b_3ea', '3ed_9b_1ea', '3ed_9b_2ea', '3ed_9b_3ea', '5ed_10b_1ea', '5ed_10b_2ea', '5ed_10b_3ea', '5ed_11b_1ea', '5ed_11b_2ea', '5ed_11b_3ea', '5ed_12b_1ea', '5ed_12b_2ea', '5ed_12b_3ea', '5ed_13b_1ea', '5ed_13b_2ea', '5ed_13b_3ea', '5ed_14b_1ea', '5ed_14b_2ea', '5ed_14b_3ea', '5ed_15b_1ea', '5ed_15b_2ea', '5ed_15b_3ea', '5ed_16b_2ea', '5ed_16b_3ea', '5ed_1b_1ea', '5ed_1b_2ea', '5ed_1b_3ea', '5ed_2b_1ea', '5ed_2b_2ea', '5ed_2b_3ea', '5ed_3b_2ea', '5ed_3b_3ea', '5ed_4b_1ea', '5ed_4b_2ea', '5ed_4b_3ea', '5ed_5b_1ea', '5ed_5b_2ea', '5ed_5b_3ea', '5ed_6b_1ea', '5ed_6b_2ea', '5ed_6b_3ea', '5ed_7b_1ea', '5ed_7b_2ea', '5ed_7b_3ea', '5ed_8b_1ea', '5ed_8b_2ea', '5ed_8b_3ea', '5ed_9b_1ea', '5ed_9b_2ea', '5ed_9b_3ea', '6ed_10b_1ea', '6ed_10b_2ea', '6ed_10b_3ea', '6ed_11b_1ea', '6ed_11b_2ea', '6ed_11b_3ea', '6ed_12b_1ea', '6ed_12b_3ea', '6ed_13b_1ea', '6ed_13b_2ea', '6ed_13b_3ea', '6ed_14b_1ea', '6ed_14b_2ea', '6ed_14b_3ea', '6ed_15b_1ea', '6ed_15b_2ea', '6ed_15b_3ea', '6ed_16b_1ea', '6ed_16b_2ea', '6ed_16b_3ea', '6ed_1b_1ea', '6ed_1b_2ea', '6ed_1b_3ea', '6ed_2b_1ea', '6ed_2b_2ea', '6ed_2b_3ea', '6ed_3b_1ea', '6ed_3b_2ea', '6ed_3b_3ea', '6ed_4b_1ea', '6ed_4b_2ea', '6ed_4b_3ea', '6ed_5b_1ea', '6ed_5b_2ea', '6ed_5b_3ea', '6ed_6b_1ea', '6ed_6b_2ea', '6ed_6b_3ea', '6ed_7b_1ea', '6ed_7b_2ea', '6ed_7b_3ea', '6ed_8b_1ea', '6ed_8b_2ea', '6ed_8b_3ea', '6ed_9b_1ea', '6ed_9b_2ea', '6ed_9b_3ea', '7ed_10b_1ea', '7ed_10b_2ea', '7ed_10b_3ea', '7ed_11b_1ea', '7ed_11b_2ea', '7ed_11b_3ea', '7ed_12b_2ea', '7ed_12b_3ea', '7ed_13b_1ea', '7ed_13b_2ea', '7ed_13b_3ea', '7ed_14b_1ea', '7ed_14b_2ea', '7ed_14b_3ea', '7ed_15b_1ea', '7ed_15b_2ea', '7ed_15b_3ea', '7ed_16b_1ea', '7ed_16b_2ea', '7ed_16b_3ea', '7ed_1b_1ea', '7ed_1b_2ea', '7ed_1b_3ea', '7ed_2b_1ea', '7ed_2b_2ea', '7ed_2b_3ea', '7ed_3b_1ea', '7ed_3b_2ea', '7ed_3b_3ea', '7ed_4b_1ea', '7ed_4b_2ea', '7ed_4b_3ea', '7ed_5b_1ea', '7ed_5b_2ea', '7ed_5b_3ea', '7ed_6b_1ea', '7ed_6b_2ea', '7ed_6b_3ea', '7ed_7b_1ea', '7ed_7b_2ea', '7ed_7b_3ea', '7ed_8b_1ea', '7ed_8b_2ea', '7ed_8b_3ea', '7ed_9b_1ea', '7ed_9b_2ea', '7ed_9b_3ea', 'TPA2_10b_1ea', 'TPA2_10b_2ea', 'TPA2_10b_3ea', 'TPA2_11b_1ea', 'TPA2_11b_2ea', 'TPA2_11b_3ea', 'TPA2_12b_1ea', 'TPA2_12b_2ea', 'TPA2_12b_3ea', 'TPA2_13b_1ea', 'TPA2_13b_2ea', 'TPA2_13b_3ea', 'TPA2_14b_1ea', 'TPA2_14b_2ea', 'TPA2_14b_3ea', 'TPA2_15b_1ea', 'TPA2_15b_2ea', 'TPA2_15b_3ea', 'TPA2_16b_1ea', 'TPA2_16b_2ea', 'TPA2_16b_3ea', 'TPA2_1b_1ea', 'TPA2_1b_2ea', 'TPA2_1b_3ea', 'TPA2_2b_1ea', 'TPA2_2b_2ea', 'TPA2_2b_3ea', 'TPA2_3b_1ea', 'TPA2_3b_2ea', 'TPA2_3b_3ea', 'TPA2_4b_1ea', 'TPA2_4b_2ea', 'TPA2_4b_3ea', 'TPA2_5b_1ea', 'TPA2_5b_2ea', 'TPA2_5b_3ea', 'TPA2_6b_1ea', 'TPA2_6b_2ea', 'TPA2_6b_3ea', 'TPA2_7b_1ea', 'TPA2_7b_2ea', 'TPA2_7b_3ea', 'TPA2_8b_1ea', 'TPA2_8b_2ea', 'TPA2_8b_3ea', 'TPA2_9b_1ea', 'TPA2_9b_2ea', 'TPA2_9b_3ea']
-    #monitor_jobs2 = ['7ed_6b_3ea', '7ed_7b_1ea', '7ed_7b_2ea', '7ed_7b_3ea', '7ed_8b_1ea', '7ed_8b_2ea', '7ed_8b_3ea', '7ed_9b_1ea', '7ed_9b_2ea', '7ed_9b_3ea', 'TPA2_10b_1ea', 'TPA2_10b_2ea', 'TPA2_10b_3ea', 'TPA2_11b_1ea', 'TPA2_11b_2ea', 'TPA2_11b_3ea', 'TPA2_12b_1ea', 'TPA2_12b_2ea', 'TPA2_12b_3ea', 'TPA2_13b_1ea', 'TPA2_13b_2ea', 'TPA2_13b_3ea', 'TPA2_14b_1ea', 'TPA2_14b_2ea', 'TPA2_14b_3ea', 'TPA2_15b_1ea', 'TPA2_15b_2ea', 'TPA2_15b_3ea', 'TPA2_16b_1ea', 'TPA2_16b_2ea', 'TPA2_16b_3ea', 'TPA2_1b_1ea', 'TPA2_1b_2ea', 'TPA2_1b_3ea', 'TPA2_2b_1ea', 'TPA2_2b_2ea', 'TPA2_2b_3ea', 'TPA2_3b_1ea', 'TPA2_3b_2ea', 'TPA2_3b_3ea', 'TPA2_4b_1ea', 'TPA2_4b_2ea', 'TPA2_4b_3ea', 'TPA2_5b_1ea', 'TPA2_5b_2ea', 'TPA2_5b_3ea', 'TPA2_6b_1ea', 'TPA2_6b_2ea', 'TPA2_6b_3ea', 'TPA2_7b_1ea', 'TPA2_7b_2ea', 'TPA2_7b_3ea', 'TPA2_8b_1ea', 'TPA2_8b_2ea', 'TPA2_8b_3ea', 'TPA2_9b_1ea', 'TPA2_9b_2ea', 'TPA2_9b_3ea', '7ed_4b_3ea', '7ed_5b_1ea', '7ed_5b_3ea', '7ed_6b_1ea', '7ed_6b_2ea']
-    #monitor_jobs = [i for i in monitor_jobs1 if i not in monitor_jobs2]
-    #monitor_jobs = ['1ed_10b_1ea', '1ed_10b_2ea', '1ed_10b_3ea', '1ed_11b_1ea', '1ed_11b_2ea', '1ed_11b_3ea', '1ed_12b_1ea', '1ed_12b_2ea', '1ed_12b_3ea', '1ed_13b_1ea', '1ed_13b_2ea', '1ed_13b_3ea', '1ed_14b_1ea', '1ed_14b_2ea', '1ed_14b_3ea', '1ed_15b_1ea', '1ed_15b_2ea', '1ed_15b_3ea', '1ed_16b_1ea', '1ed_16b_2ea', '1ed_16b_3ea', '1ed_1b_2ea', '1ed_1b_3ea', '1ed_2b_1ea', '1ed_2b_2ea', '1ed_2b_3ea', '1ed_3b_1ea', '1ed_3b_2ea', '1ed_3b_3ea', '1ed_4b_1ea', '1ed_4b_2ea', '1ed_4b_3ea', '1ed_5b_1ea', '1ed_5b_2ea', '1ed_5b_3ea', '1ed_6b_1ea', '1ed_6b_2ea', '1ed_6b_3ea', '1ed_7b_1ea', '1ed_7b_2ea', '1ed_7b_3ea', '1ed_8b_1ea', '1ed_8b_2ea', '1ed_8b_3ea', '1ed_9b_1ea', '1ed_9b_2ea', '1ed_9b_3ea', '2ed_10b_1ea', '2ed_10b_2ea', '2ed_10b_3ea', '2ed_11b_1ea', '2ed_11b_2ea', '2ed_11b_3ea', '2ed_12b_1ea', '2ed_12b_2ea', '2ed_12b_3ea', '2ed_13b_1ea', '2ed_13b_2ea', '2ed_13b_3ea', '2ed_14b_1ea', '2ed_14b_2ea', '2ed_14b_3ea', '2ed_15b_1ea', '2ed_15b_2ea', '2ed_15b_3ea', '2ed_16b_1ea', '2ed_16b_2ea', '2ed_16b_3ea', '2ed_1b_1ea', '2ed_1b_2ea', '2ed_1b_3ea', '2ed_2b_1ea', '2ed_2b_2ea', '2ed_2b_3ea', '2ed_3b_1ea', '2ed_3b_2ea', '2ed_3b_3ea', '2ed_4b_1ea', '2ed_4b_2ea', '2ed_4b_3ea', '2ed_5b_1ea', '2ed_5b_2ea', '2ed_5b_3ea', '2ed_6b_1ea', '2ed_6b_2ea', '2ed_6b_3ea', '2ed_7b_1ea', '2ed_7b_2ea', '2ed_7b_3ea', '2ed_8b_1ea', '2ed_8b_2ea', '2ed_8b_3ea', '2ed_9b_1ea', '2ed_9b_2ea', '2ed_9b_3ea', '3ed_10b_1ea', '3ed_10b_2ea', '3ed_10b_3ea', '3ed_11b_1ea', '3ed_11b_2ea', '3ed_11b_3ea', '3ed_12b_1ea', '3ed_12b_2ea', '3ed_12b_3ea', '3ed_13b_1ea', '3ed_13b_2ea', '3ed_13b_3ea', '3ed_14b_2ea', '3ed_14b_3ea', '3ed_15b_1ea', '3ed_15b_2ea', '3ed_15b_3ea', '3ed_16b_1ea', '3ed_16b_2ea', '3ed_16b_3ea', '3ed_1b_1ea', '3ed_1b_2ea', '3ed_1b_3ea', '3ed_2b_1ea', '3ed_2b_2ea', '3ed_2b_3ea', '3ed_3b_1ea', '3ed_3b_2ea', '3ed_3b_3ea', '3ed_4b_1ea', '3ed_4b_2ea', '3ed_4b_3ea', '3ed_5b_1ea', '3ed_5b_2ea', '3ed_5b_3ea', '3ed_6b_1ea', '3ed_6b_2ea', '3ed_6b_3ea', '3ed_7b_1ea', '3ed_7b_2ea', '3ed_7b_3ea', '3ed_8b_1ea', '3ed_8b_2ea', '3ed_8b_3ea', '3ed_9b_1ea', '3ed_9b_2ea', '3ed_9b_3ea', '5ed_10b_1ea', '5ed_10b_2ea', '5ed_10b_3ea', '5ed_11b_1ea', '5ed_11b_2ea', '5ed_11b_3ea', '5ed_12b_1ea', '5ed_12b_2ea', '5ed_12b_3ea', '5ed_13b_1ea', '5ed_13b_2ea', '5ed_13b_3ea', '5ed_14b_1ea', '5ed_14b_2ea', '5ed_14b_3ea', '5ed_15b_1ea', '5ed_15b_2ea', '5ed_15b_3ea', '5ed_16b_2ea', '5ed_16b_3ea', '5ed_1b_1ea', '5ed_1b_2ea', '5ed_1b_3ea', '5ed_2b_1ea', '5ed_2b_2ea', '5ed_2b_3ea', '5ed_3b_2ea', '5ed_3b_3ea', '5ed_4b_1ea', '5ed_4b_2ea', '5ed_4b_3ea', '5ed_5b_1ea', '5ed_5b_2ea', '5ed_5b_3ea', '5ed_6b_1ea', '5ed_6b_2ea', '5ed_6b_3ea', '5ed_7b_1ea', '5ed_7b_2ea', '5ed_7b_3ea', '5ed_8b_1ea', '5ed_8b_2ea', '5ed_8b_3ea', '5ed_9b_1ea', '5ed_9b_2ea', '5ed_9b_3ea', '6ed_10b_1ea', '6ed_10b_2ea', '6ed_10b_3ea', '6ed_11b_1ea', '6ed_11b_2ea', '6ed_11b_3ea', '6ed_12b_1ea', '6ed_12b_3ea', '6ed_13b_1ea', '6ed_13b_2ea', '6ed_13b_3ea', '6ed_14b_1ea', '6ed_14b_2ea', '6ed_14b_3ea', '6ed_15b_1ea', '6ed_15b_2ea', '6ed_15b_3ea', '6ed_16b_1ea', '6ed_16b_2ea', '6ed_16b_3ea', '6ed_1b_1ea', '6ed_1b_2ea', '6ed_1b_3ea', '6ed_2b_1ea', '6ed_2b_2ea', '6ed_2b_3ea', '6ed_3b_1ea', '6ed_3b_2ea', '6ed_3b_3ea', '6ed_4b_1ea', '6ed_4b_2ea', '6ed_4b_3ea', '6ed_5b_1ea', '6ed_5b_2ea', '6ed_5b_3ea', '6ed_6b_1ea', '6ed_6b_2ea', '6ed_6b_3ea', '6ed_7b_1ea', '6ed_7b_2ea', '6ed_7b_3ea', '6ed_8b_1ea', '6ed_8b_2ea', '6ed_8b_3ea', '6ed_9b_1ea', '6ed_9b_2ea', '6ed_9b_3ea', '7ed_10b_1ea', '7ed_10b_2ea', '7ed_10b_3ea', '7ed_11b_1ea', '7ed_11b_2ea', '7ed_11b_3ea', '7ed_12b_2ea', '7ed_12b_3ea', '7ed_13b_1ea', '7ed_13b_2ea', '7ed_13b_3ea', '7ed_14b_1ea', '7ed_14b_2ea', '7ed_14b_3ea', '7ed_15b_1ea', '7ed_15b_2ea', '7ed_15b_3ea', '7ed_16b_1ea', '7ed_16b_2ea', '7ed_16b_3ea', '7ed_1b_1ea', '7ed_1b_2ea', '7ed_1b_3ea', '7ed_2b_1ea', '7ed_2b_2ea', '7ed_2b_3ea', '7ed_3b_1ea', '7ed_3b_2ea', '7ed_3b_3ea', '7ed_4b_1ea', '7ed_4b_2ea', '7ed_5b_2ea']
-    #print(monitor_jobs)
-    """
+    monitor_jobs = ['1ed_16b_1ea']
+    #monitor_jobs =  ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea', '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea', '2ed_13b_1ea', 'TPA2_14b_3ea', '1ed_3b_2ea', '6ed_16b_1ea', '1ed_11b_1ea', '3ed_13b_2ea', 'TPA2_6b_3ea', '7ed_4b_2ea', '7ed_16b_2ea', '6ed_4b_2ea', '1ed_1b_3ea', '1ed_9b_1ea', '3ed_8b_3ea', '2ed_8b_3ea', 'TPA2_16b_2ea', '3ed_15b_1ea', '7ed_2b_1ea', '6ed_2b_1ea', '7ed_10b_1ea', '5ed_3b_3ea', 'TPA2_8b_2ea', '5ed_10b_3ea', '1ed_15b_3ea', '2ed_6b_2ea', '3ed_6b_2ea', 'TPA2_10b_1ea', '6ed_12b_3ea', '5ed_1b_2ea', '6ed_8b_2ea', '7ed_8b_2ea', 'TPA2_2b_1ea', '2ed_15b_2ea', '5ed_12b_2ea', '6ed_10b_2ea', '1ed_5b_1ea', '2ed_4b_3ea', '3ed_4b_3ea', '6ed_11b_2ea', '1ed_4b_1ea', '2ed_5b_3ea', '3ed_5b_3ea', '1ed_16b_2ea', '5ed_13b_2ea', '2ed_14b_2ea', 'TPA2_3b_1ea', '6ed_9b_2ea', '7ed_9b_2ea', '2ed_7b_2ea', '3ed_7b_2ea', 'TPA2_11b_1ea', '6ed_13b_3ea', '1ed_14b_3ea', '5ed_11b_3ea', '2ed_16b_3ea', 'TPA2_9b_2ea', '7ed_3b_1ea', '6ed_3b_1ea', '7ed_11b_1ea', '5ed_2b_3ea', '3ed_14b_1ea', '1ed_8b_1ea', '3ed_9b_3ea', '2ed_1b_1ea', '3ed_1b_1ea', '2ed_9b_3ea', '7ed_5b_2ea', '6ed_5b_2ea', 'TPA2_7b_3ea', '3ed_12b_2ea', '1ed_10b_1ea', 'TPA2_15b_3ea', '1ed_2b_2ea', '2ed_12b_1ea', '5ed_15b_1ea', '7ed_7b_3ea', '6ed_7b_3ea', '7ed_15b_3ea', '5ed_6b_1ea', 'TPA2_5b_2ea', '3ed_10b_3ea', '3ed_13b_1ea', '6ed_4b_1ea', '7ed_16b_1ea', '7ed_4b_1ea', '5ed_5b_3ea', '2ed_11b_3ea', '5ed_16b_3ea', '1ed_13b_3ea', 'TPA2_16b_1ea', '1ed_9b_2ea', '6ed_14b_3ea', '5ed_7b_2ea', 'TPA2_4b_1ea', '2ed_13b_2ea', '5ed_14b_2ea', '1ed_11b_2ea', '6ed_16b_2ea', '1ed_3b_1ea', '3ed_2b_3ea', '2ed_2b_3ea', 'TPA2_2b_2ea', '7ed_12b_3ea', '7ed_8b_1ea', '6ed_8b_1ea', '5ed_1b_1ea', '5ed_9b_3ea', '5ed_12b_1ea', '2ed_15b_1ea', 'TPA2_12b_3ea', '1ed_5b_2ea', '6ed_10b_1ea', '3ed_15b_2ea', 'TPA2_8b_1ea', '7ed_10b_2ea', '6ed_2b_2ea', '7ed_2b_2ea', '1ed_7b_3ea', 'TPA2_10b_2ea', '3ed_6b_1ea', '2ed_6b_1ea', '1ed_6b_3ea', 'TPA2_11b_2ea', '3ed_7b_1ea', '2ed_7b_1ea', '7ed_11b_2ea', '6ed_3b_2ea', '7ed_3b_2ea', 'TPA2_9b_1ea', 'TPA2_1b_3ea', '3ed_14b_2ea', '1ed_16b_1ea', 'TPA2_13b_3ea', '1ed_4b_2ea', '6ed_11b_1ea', '2ed_14b_1ea', '5ed_13b_1ea', '6ed_1b_3ea', '7ed_13b_3ea', '7ed_9b_1ea', '6ed_9b_1ea', '7ed_1b_3ea', '5ed_8b_3ea', 'TPA2_3b_2ea', '3ed_16b_3ea', '1ed_2b_1ea', '3ed_3b_3ea', '2ed_3b_3ea', '1ed_10b_2ea', '5ed_15b_2ea', '2ed_12b_2ea', 'TPA2_5b_1ea', '5ed_6b_2ea', '3ed_1b_2ea', '2ed_1b_2ea', '1ed_8b_2ea', '6ed_15b_3ea', '1ed_12b_3ea', '2ed_10b_3ea', '6ed_5b_1ea', '7ed_5b_1ea', '5ed_4b_3ea']
+
+    #monitor_jobs =  ['3ed_12b_1ea', '3ed_8b_1ea', '2ed_8b_1ea', '6ed_14b_2ea', '1ed_1b_1ea', '1ed_9b_3ea', '1ed_13b_2ea', '5ed_16b_2ea', '2ed_11b_2ea', 'TPA2_6b_1ea', '5ed_5b_2ea', '6ed_16b_3ea', '2ed_2b_2ea', 'TPA2_14b_1ea', '3ed_2b_2ea', '1ed_11b_3ea', '5ed_14b_3ea', '2ed_13b_3ea', '5ed_7b_3ea', '7ed_6b_1ea', '7ed_14b_1ea', '6ed_6b_1ea', '3ed_11b_1ea', '2ed_4b_1ea', 'TPA2_12b_2ea', '3ed_4b_1ea', '1ed_5b_3ea', '7ed_12b_2ea', '5ed_9b_2ea', 'TPA2_2b_3ea', '1ed_15b_1ea', '1ed_7b_2ea', '6ed_12b_1ea', 'TPA2_10b_3ea', '5ed_10b_1ea', '5ed_3b_1ea', '7ed_2b_3ea', '7ed_10b_3ea', '6ed_2b_3ea', '3ed_15b_3ea', '3ed_14b_3ea', 'TPA2_1b_2ea', '5ed_2b_1ea', '7ed_3b_3ea', '7ed_11b_3ea', '6ed_3b_3ea', '5ed_11b_1ea', '2ed_16b_1ea', '1ed_6b_2ea', '6ed_13b_1ea', 'TPA2_11b_3ea', '1ed_14b_1ea', '3ed_16b_2ea', 'TPA2_3b_3ea', '7ed_1b_2ea', '6ed_1b_2ea', '7ed_13b_2ea', '5ed_8b_2ea', '2ed_5b_1ea', 'TPA2_13b_2ea', '3ed_5b_1ea', '1ed_4b_3ea', '3ed_10b_1ea', '5ed_6b_3ea', '7ed_7b_1ea', '7ed_15b_1ea', '6ed_7b_1ea', '2ed_12b_3ea', '5ed_15b_3ea', '1ed_10b_3ea', '2ed_3b_2ea', 'TPA2_15b_1ea', '3ed_3b_2ea', '5ed_4b_2ea', 'TPA2_7b_1ea', '2ed_10b_2ea', '1ed_12b_2ea', '3ed_9b_1ea', '2ed_1b_3ea', '3ed_1b_3ea', '2ed_9b_1ea', '6ed_15b_2ea', '1ed_8b_3ea', '3ed_2b_1ea', 'TPA2_14b_2ea', '2ed_2b_1ea', '1ed_3b_3ea', '6ed_6b_2ea', '7ed_14b_2ea', '7ed_6b_2ea', 'TPA2_4b_3ea', '3ed_11b_2ea', '1ed_13b_1ea', '1ed_1b_2ea', '6ed_14b_1ea', '2ed_8b_2ea', 'TPA2_16b_3ea', '3ed_8b_2ea', '2ed_11b_1ea', '5ed_16b_1ea', '5ed_5b_1ea', '7ed_16b_3ea', '6ed_4b_3ea', '7ed_4b_3ea', 'TPA2_6b_2ea', '3ed_13b_3ea', '3ed_6b_3ea', '2ed_6b_3ea', '6ed_12b_2ea', '1ed_7b_1ea', '1ed_15b_2ea', '5ed_10b_2ea', 'TPA2_8b_3ea', '5ed_3b_2ea', '6ed_10b_3ea', '3ed_4b_2ea', 'TPA2_12b_1ea', '2ed_4b_2ea', '5ed_12b_3ea', '2ed_15b_3ea', '5ed_1b_3ea', '5ed_9b_1ea', '7ed_12b_1ea', '7ed_8b_3ea', '6ed_8b_3ea', '3ed_16b_1ea', '5ed_8b_1ea', '7ed_13b_1ea', '6ed_1b_1ea', '7ed_9b_3ea', '6ed_9b_3ea', '7ed_1b_1ea', '2ed_14b_3ea', '5ed_13b_3ea', '1ed_16b_3ea', '6ed_11b_3ea', '3ed_5b_2ea', 'TPA2_13b_1ea', '2ed_5b_2ea', '5ed_2b_2ea', 'TPA2_9b_3ea', 'TPA2_1b_1ea', '2ed_16b_2ea', 'tin_results', '5ed_11b_2ea', '1ed_14b_2ea', '3ed_7b_3ea', '2ed_7b_3ea', '6ed_13b_2ea', '1ed_6b_1ea', '3ed_12b_3ea', 'TPA2_7b_2ea', '5ed_4b_1ea', '6ed_5b_3ea', '7ed_5b_3ea', '2ed_10b_1ea', '6ed_15b_1ea', '2ed_9b_2ea', '3ed_9b_2ea', '1ed_12b_1ea', '3ed_10b_2ea', 'TPA2_5b_3ea', '6ed_7b_2ea', '7ed_15b_2ea', '7ed_7b_2ea', '3ed_3b_1ea', 'TPA2_15b_2ea', '2ed_3b_1ea', '1ed_2b_3ea']
+
+
     #print(monitor_jobs)
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           cluster
+                           cluster, route='results', add_methods=add_methods
                            )
+    """
     """
     gather_general_smiles(monitor_jobs)
     '''
