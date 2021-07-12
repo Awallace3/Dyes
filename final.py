@@ -235,7 +235,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
     
     min_delay = min_delay * 60
-    cluster_list = glob.glob("%s/*" % route)
+    #cluster_list = glob.glob("%s/*" % route)
     #print(cluster_list)
     complete = []
     resubmissions = []
@@ -246,8 +246,10 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     calculations_complete = False
     # comment change directory below in production
     os.chdir(route)
+    
     for i in range(number_delays):
         # time.sleep(min_delay)
+        print(i)
         for num, j in enumerate(monitor_jobs):
             #print(j)
             os.chdir(j)
@@ -297,20 +299,22 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 #print(resubmissions)
             elif complete[num] == 2:
                 pos = complete[num] - 2
+                #print(pos)
+                #print(add_methods)
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                    add_methods["method"][pos], add_methods['basis_set'][pos],
+                    add_methods["methods"][pos], add_methods['basis_set'][pos],
                     add_methods["mem_com"], add_methods["mem_pbs"],
                     resubmissions, delay, cluster, j
                 )
                 
              
             pos = complete[num] - 2
-            dir_name = add_methods['method'][pos].lower()
+            dir_name = add_methods['methods'][pos].lower()
             mexc_check_out = glob.glob("%s/mexc.o*" % dir_name)
             mexc_check_out_complete = glob.glob('%s/*_o*' % dir_name)
-            if complete[num] < 3 and len(mexc_check_out) == len(mexc_check_out_complete):
-                add_excitation_data(dir_name, 'mexc', add_methods['method'][pos], add_methods['basis_set'][pos])
+            if complete[num] < 3 and len(mexc_check_out) >0 and len (mexc_check_out_complete) > 0:
+                add_excitation_data(dir_name, 'mexc', add_methods['methods'][pos], add_methods['basis_set'][pos])
             
             mexc_check = []
             os.chdir('..')
@@ -413,7 +417,7 @@ def main():
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           cluster
+                           cluster, route='results', add_methods=add_methods
                            )
     """
     """
