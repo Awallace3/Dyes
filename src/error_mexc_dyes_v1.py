@@ -516,7 +516,7 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     data='', dir_name=dir_name, solvent='', 
                     outName=outName
                     )
-    path = '%s' % baseName
+    path = '%s' % dir_name
     qsub(path)
     """
     gaussianInputFiles(output_num, method_opt, 
