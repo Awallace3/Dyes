@@ -2,10 +2,6 @@ import os
 import glob
 import error_mexc_dyes_v1
 
-
-
-
-
 def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseName='mexc'):
 	add_methods_length = len(add_methods['methods'])
 	if add_methods_length != len(add_methods['basis_sets']) and add_methods_length != len(add_methods['mem_com']) and add_methods_length != len(add_methods['mem_pbs']) and add_methods_length != len(add_methods['solvents']):
@@ -36,7 +32,7 @@ def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseNam
 								imaginary=False, geomDirName=i, xyzSmiles=False
 	)
 	with open('tmp.txt', 'r') as fp:
-		xyz_carts = fp.readlines()
+		xyz_carts = fp.read()
 	for i in range(len(add_methods['methods'])):
 		if add_methods['solvents'] != '':
 			dir_name = ('%s_%s_%s' % (add_methods['methods'][i], add_methods['basis_sets'][i].replace("(", "").replace(")", ""), add_methods['solvents'][i])).lower()
@@ -47,14 +43,16 @@ def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseNam
 		else:
 			os.mkdir(dir_name)
 			print(dir_name)
-			solvent = 'SCRF=(Solvent=%s)' % (add_methods['solvents'][i])
+			if add_methods['solvents'][i] != '':
+				solvent = 'SCRF=(Solvent=%s)' % (add_methods['solvents'][i])
+			else:
+				solvent = ''
 			error_mexc_dyes_v1.gaussianInputFiles(
 				'0', add_methods['methods'][i], add_methods['basis_sets'][i],
 				add_methods['mem_com'][i], add_methods['mem_pbs'][i],
-				cluster, baseName, 'TD(NStates=10)', '', dir_name, 
+				cluster, baseName, 'TD(NStates=10)', xyz_carts, dir_name, 
 				solvent, outName
-				)
-			q_path = "%s" % (dir_name)
+			)
 			error_mexc_dyes_v1.qsub(dir_name)
 
 	return
@@ -62,13 +60,14 @@ def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseNam
 def main():
 	add_methods = {
 		"methods" : ["B3LYP", 'B3LYP', 'M062X', 'M062X' ],
-		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)" ],
+		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)",  "6-311G(d,p)" ],
 		"solvents" : ["Dichloromethane", "", 'Dichloromethane', "" ], 
 		"mem_com" : ["1600", "1600", "1600", "1600" ],
 		"mem_pbs" : ["10", "10", "10", "10" ],
 		
 	}
 	path = '../testing_results/test_functionals/AP25/b3lyp/new_geom'
+	#path = '../testing_results/test_functionals/XY1/GO'
 	specifc_file_gen(path, add_methods)
 
 

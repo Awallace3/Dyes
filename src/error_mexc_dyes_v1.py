@@ -41,8 +41,10 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
             if solvent == '':
+                #print('no solvent')
                 fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
             else:
+                #print(solvent, 'exists')
                 fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
 
             fp.write("\n\n")
@@ -80,8 +82,14 @@ def gaussianInputFiles(output_num, method_opt,
     elif cluster == 'seq':
         with open('%s/%s.com' % (dir_name, baseName), 'w') as fp:
             fp.write('%mem=8gb\n')
-            fp.write("#N %s/%s %s\n" % (method_opt, basis_set_opt, procedure) )
-            fp.write("\n")
+            if solvent == '':
+                #print('no solvent')
+                fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
+            else:
+                #print(solvent, 'exists')
+                fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
+
+            fp.write("\n\n")
             fp.write("Name \n")
             fp.write("\n")
             fp.write(charges + "\n")
