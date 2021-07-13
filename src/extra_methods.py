@@ -93,6 +93,5 @@ def main():
 	
 	specifc_file_gen(path, add_methods, chem_package="CFOUR")
 
-
 if __name__ == "__main__":
 	main()
