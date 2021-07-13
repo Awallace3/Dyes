@@ -180,7 +180,7 @@ def CFOUR_input_files(
             fp.write('\n\n')
             fp.write("*CFOUR(CHARGE=0,REFERENCE=RHF,SPHERICAL=ON,BASIS=%s\n" % basis_set)
             fp.write("LINDEP_TOL=7,LINEQ_CONV=7,SCF_CONV=6,SCF_MAXCYC=250\n")
-            fp.write("CALC=%s,EXCITE=EOMEE,ESTATE_SYM=5\nCOORDS=CARTESIAN\n" % method) 
+            fp.write("CALC=%s,EXCITE=EOMEE,ESTATE_SYM=5\nESTATE_PROP=EXPECTATION\nCOORDS=CARTESIAN\n" % method) 
             fp.write("FROZEN_CORE=ON,ABCDTYPE=AOBASIS\nCONVERGENCE=7,MEMORY_SIZE=%s,MEM_UNIT=GB)\n" % mem_ZMAT)
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/csh\n#\n#PBS -N %s\n" % baseName)
