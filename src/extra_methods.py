@@ -72,16 +72,16 @@ def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseNam
 
 def main():
 	add_methods = {
-		"methods" : ["B3LYP", 'B3LYP', 'M062X', 'M062X', 'BHandHLYP', 'BHandHLYP' ],
-		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)",  "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)" ],
-		"solvents" : ["Dichloromethane", "", 'Dichloromethane', "", 'Dichloromethane', "",  ], 
-		"mem_com" : ["1600", "1600", "1600", "1600", "1600", "1600"  ],
-		"mem_pbs" : ["10", "10", "10", "10", "10", "10" ],
+		"methods" : ["B3LYP", 'B3LYP', 'M062X', 'M062X', 'BHandHLYP', 'BHandHLYP', 'VSXC', "VSXC", "N12", "N12" ],
+		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)",  "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)" , "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
+		"solvents" : ["Dichloromethane", "", 'Dichloromethane', "", 'Dichloromethane', "", 'Dichloromethane', "", 'Dichloromethane', "", ], 
+		"mem_com" : ["1600", "1600", "1600", "1600", "1600", "1600" ,"1600", "1600","1600", "1600"   ],
+		"mem_pbs" : ["10", "10", "10", "10", "10", "10" , "10", "10", "10", "10" ],
 	}
 	path = '../testing_results/test_functionals/AP25/b3lyp/new_geom'
 	#path = '../testing_results/test_functionals/XY1/GO'
 	
-	#specifc_file_gen(path, add_methods, chem_package="Gaussian")
+	specifc_file_gen(path, add_methods, chem_package="Gaussian")
 
 	add_methods = {
 		"methods" : [ "CC2" ],
@@ -91,7 +91,7 @@ def main():
 		"mem_pbs" : [ "16" ],
 	}
 	
-	specifc_file_gen(path, add_methods, chem_package="CFOUR")
+	#specifc_file_gen(path, add_methods, chem_package="CFOUR")
 
 if __name__ == "__main__":
 	main()

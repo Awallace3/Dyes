@@ -1,7 +1,6 @@
 | Name | Method    | Exc1 |
 |------+-----------+------|
 | AP25 | B3LYP     |      |
-| AP25 | B3LYP PCM |      |
 | AP25 | B3LYP DCM |      |
 | AP25 | VSXR?     |      |
 | AP25 | M06-2X    |      |
@@ -9,3 +8,21 @@
 cas-mp2 => more costly but benchmark
 cis => consistent crap => shift it
 CC2 => PSI4** 
+
+Methods list w/ DCM
+     1.B3LYP
+     2.PBE0
+     3.CAM-B3LYP
+     4.M06X2
+     5.BHandHLYP
+Molecule list
+     1.AP25
+     2.XY1
+     3.
+     4.
+     5.
+
+Meeting Recap:
+	1. try two other dyes (porins popular in the field but Dr. Delcamp not willing to make)
+	2. VSXC is for redder dyes and keeps trend of vertical excitation peaks for dyes (for the most part)
+	3. 
