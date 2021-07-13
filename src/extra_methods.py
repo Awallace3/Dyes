@@ -47,7 +47,7 @@ def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseNam
 		else:
 			os.mkdir(dir_name)
 			print(dir_name)
-			solvent = 'SCRF=%s' % (add_methods['solvents'][i])
+			solvent = 'SCRF=(Solvent=%s)' % (add_methods['solvents'][i])
 			error_mexc_dyes_v1.gaussianInputFiles(
 				'0', add_methods['methods'][i], add_methods['basis_sets'][i],
 				add_methods['mem_com'][i], add_methods['mem_pbs'][i],
@@ -61,11 +61,11 @@ def specifc_file_gen(path, add_methods, cluster='seq', outName='mexc_o', baseNam
 
 def main():
 	add_methods = {
-		"methods" : ["B3LYP", 'B3LYP', 'M06-2X'],
-		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
-		"solvents" : ["PCM", "DCM", ''], 
-		"mem_com" : ["1600", "1600", "1600" ],
-		"mem_pbs" : ["10", "10","10"],
+		"methods" : ["B3LYP", 'B3LYP', 'M062X', 'M062X' ],
+		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)" ],
+		"solvents" : ["Dichloromethane", "", 'Dichloromethane', "" ], 
+		"mem_com" : ["1600", "1600", "1600", "1600" ],
+		"mem_pbs" : ["10", "10", "10", "10" ],
 		
 	}
 	path = '../testing_results/test_functionals/AP25/b3lyp/new_geom'

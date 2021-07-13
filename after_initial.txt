@@ -6,3 +6,6 @@
 | AP25 | VSXR?     |      |
 | AP25 | M06-2X    |      |
 | XY1  | M06-2X    |      |
+cas-mp2 => more costly but benchmark
+cis => consistent crap => shift it
+CC2 => PSI4** 
