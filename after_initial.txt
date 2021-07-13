@@ -1,0 +1,8 @@
+| Name | Method    | Exc1 |
+|------+-----------+------|
+| AP25 | B3LYP     |      |
+| AP25 | B3LYP PCM |      |
+| AP25 | B3LYP DCM |      |
+| AP25 | VSXR?     |      |
+| AP25 | M06-2X    |      |
+| XY1  | M06-2X    |      |

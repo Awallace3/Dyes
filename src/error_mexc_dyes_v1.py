@@ -45,7 +45,7 @@ def gaussianInputFiles(output_num, method_opt,
             else:
                 fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
 
-            fp.write("\n")
+            fp.write("\n\n")
             fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
             fp.write("\n")
             fp.write(charges + "\n")
@@ -60,7 +60,7 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write("#PBS -q r410\n")
             fp.write("#PBS -W umask=022\n")
             fp.write(
-                "#PBS -l nodes=1:ppn=4\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
+                "#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(
                 "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
             fp.write(
@@ -124,7 +124,7 @@ def conv_num(string):
     return li
 
 
-def clean_many_txt(geomDirName):
+def clean_many_txt(geomDirName, xyzSmiles=True):
     """ This will replace the numerical forms of the elements as their letters numbered in order """
 
     f = open('tmp.txt', 'r')
@@ -161,8 +161,8 @@ def clean_many_txt(geomDirName):
         f.write(line)
         length += 1
     f.close()
-
-    xyzToSmiles(length, xyzToMolLst, geomDirName)
+    if xyzSmiles:
+        xyzToSmiles(length, xyzToMolLst, geomDirName)
 
 
 
@@ -269,7 +269,9 @@ def freq_hf_zero(lines, filename):
         return freqs[0], HFs[0], HFs[1], zeros[0]
 
 
-def find_geom(lines, error, filename, imaginary, geomDirName):
+def find_geom(lines, error, filename, imaginary, geomDirName,
+    xyzSmiles=True
+):
     print("Opening..." + filename)
     found = False
     geom_size = 0
@@ -376,9 +378,9 @@ def find_geom(lines, error, filename, imaginary, geomDirName):
                fmt="%s")
     
     if not imaginary:
-        clean_many_txt(geomDirName)
+        clean_many_txt(geomDirName, xyzSmiles)
     elif error:
-        clean_many_txt(geomDirName)
+        clean_many_txt(geomDirName, xyzSmiles)
     
 def xyzToSmiles(length, xyz, geomDirName):
     with open('molecule.xyz', 'w') as fp:
@@ -474,7 +476,7 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
-    print(resetDirNum)
+    #print(resetDirNum)
     os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = 'qsub %s' % pbs_file
@@ -482,7 +484,7 @@ def qsub(path='.'):
     failure = subprocess.call(cmd, shell=True)
     if path != '.':
         for i in range(resetDirNum):
-            print('dir changed')
+            #print('dir changed')
             os.chdir("..")
 
 
