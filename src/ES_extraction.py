@@ -33,3 +33,6 @@ def ES_extraction(path):
     #print('scaling:',occVal, virtVal)
     return occVal, virtVal
 #ES_extraction('../ES/ES.out')
+
+if __name__ == "__main__":
+    ES_extraction()

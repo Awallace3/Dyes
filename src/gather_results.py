@@ -221,6 +221,50 @@ def score_piece(df):
                 allowed_dict[i[0]] = False
     print(allowed_dict)
     
+def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
+    df = {
+        "Name": [],
+    }
+    for i in method_basis_set:
+        df[i] = []
+    df = pd.DataFrame(df)
+    #print(df)
+    for i1, r1 in df_molecules.iterrows():
+        #print(r1['name'])
+        #print(df.Name)
+        #print(r1['name'] in df.Name)
+        """
+        method_basis_set_lst = ['-' for i in method_basis_set]
+        method_basis_set_lst.insert(0, r1['name'])
+        df.loc[len(df)] = method_basis_set_lst
+        Names = pd.Series(df['Name'])
+        print(df)
+        print(r1['name'])
+        print(df['Name'])
+        print()
+        
+        break
+        """
+        if r1['name'] not in df['Name'].values:
+            method_basis_set_lst = [i for i in method_basis_set]
+            
+            for n, j in enumerate(method_basis_set_lst):
+                #print(j, r1['method_basis_set'])
+                if str(j) == str(r1['method_basis_set']):
+                    method_basis_set_lst[n] = r1['nm']
+            method_basis_set_lst.insert(0, r1['name'])
+            df.loc[len(df)] = method_basis_set_lst
+        else:
+            #df.ix[df['id'] == 12, ['uid','gid']] = ['IN','IN-1']
+            for j in method_basis_set_lst:
+                if str(j) == r1['method_basis_set']:
+                    
+                    df.loc[df['Name'] == r1['name'], [j]] = [r1['nm']]  
+            pass
+
+    #nm = df.sort_values([method_basis_set[0]], ascending=(False))
+    return df
+    
 
 def main():
     
@@ -233,20 +277,22 @@ def main():
         print("need to be in src, results or Dyes directory")
     # need to add a 
     df_molecules = json_pandas_molecule()
-    
-    
+
+    #print(df_molecules.head(20)) 
+    methods_basissets = ['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
+    df = df_molecules_to_df_method_basisset(df_molecules, methods_basissets)
+    df.to_csv("out3.csv", index=False)
+    """
     #name_nm = name_nm_df (df_molecules)
     #df = name_nm_osci_LUMO_df(df_molecules)
     df = name_nm_osci_LUMO_exc_df(df_molecules)
 
-    #score_pieces(df)
-    """
     df_molecules = score_structures(df_molecules)
     df_molecules = df_molecules.sort_values(['nm'], ascending=False)
     df_molecules.to_csv('out2.csv')
-    """
     score_piece(df_molecules)
 
+    """
 
 # criteria
 # nm : greatest          ::: Higher
