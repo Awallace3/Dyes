@@ -249,7 +249,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     
     for i in range(number_delays):
         # time.sleep(min_delay)
-        print(i)
+        #print(i)
         for num, j in enumerate(monitor_jobs):
             #print(j)
             os.chdir(j)
@@ -264,7 +264,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
                 #if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
                 if complete[num] < 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
-                    print('{0} entered mexc checkpoint 2'.format(num+1))
+                    #print('{0} entered mexc checkpoint 2'.format(num+1))
                     
                     occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
                     mol = Molecule()
@@ -289,12 +289,12 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 #if complete[num] >= 2
 
 
-            print(complete[num])
+            #print(complete[num])
             if complete[num] < 1:
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                    resubmissions, delay, cluster, j
+                    resubmissions, delay, cluster, j, xyzSmiles=False
                 )
                 #print(resubmissions)
             elif complete[num] == 2:
@@ -306,7 +306,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     add_methods["methods"][pos], add_methods['basis_set'][pos],
                     add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
-                    resubmissions, delay, cluster, j
+                    resubmissions, delay, cluster, j, xyzSmiles=False
                 )
                 
              
@@ -320,6 +320,8 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     add_excitation_data(dir_name, 'mexc', add_methods['methods'][pos], add_methods['basis_set'][pos])
             
             mexc_check = []
+            if complete[num] < 2:
+                print(complete[num], i)
             os.chdir('..')
         stage = 0
         for k in range(len(complete)):
@@ -336,6 +338,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         print('Completion List\n', complete, '\n')
         print('delay %d' % (i))
         time.sleep(min_delay)
+    
     os.chdir("..")
     return complete
 

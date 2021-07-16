@@ -632,7 +632,7 @@ def main(index,
          method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
          method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
          resubmissions, delay,
-         cluster, geomDirName
+         cluster, geomDirName, xyzSmiles=True
          ):
 
     out_files = glob.glob("*.out*")
@@ -697,7 +697,9 @@ def main(index,
         else:
             cmd = "qsub mexc.pbs"
             find_geom(lines, error=False, filename=filename,
-                        imaginary=imaginary, geomDirName=geomDirName)
+                        imaginary=imaginary, geomDirName=geomDirName
+                        , xyzSmiles=xyzSmiles
+                        )
             '''
             freq, hf_1, hf_2, zero_point = freq_hf_zero(
                 lines, filename=filename)
