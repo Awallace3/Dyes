@@ -303,7 +303,7 @@ def freq_hf_zero(lines, filename):
 def find_geom(lines, error, filename, imaginary, geomDirName,
     xyzSmiles=True, numberedClean=True
 ):
-    print("Opening..." + filename)
+    #print("Opening..." + filename)
     found = False
     geom_size = 0
     geom_list = []
@@ -326,7 +326,7 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
             break
     geom_size = len(clean_geom_size)
     if error == True:
-        print("Error == True")
+        #print("Error == True")
         pop_2 = "Population analysis using the SCF Density."
         pops = []
         pop_2_test = False
@@ -337,7 +337,7 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                 if len(pops) == 2:
                     pop_2_test = True
         if pop_2_test == True:
-            print(pop_2_test, "occuring")
+            #print(pop_2_test, "occuring")
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
@@ -348,9 +348,9 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                 for num, line in enumerate(search, 1):
                     if geom_end_pops in line:
                         orientation.append(num - 1)
-            print("if")
+            #print("if")
         else:
-            print('else')
+            #print('else')
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
@@ -361,7 +361,7 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                     if geom_end in line:
                         orientation.append(num - 2)
     else:
-        print("No error")
+        #print("No error")
 
         with open(filename) as search:
             for num, line in enumerate(search, 1):
@@ -637,7 +637,7 @@ def main(index,
 
     out_files = glob.glob("*.out*")
     out_completion = glob.glob("mex_o.*")
-    print(out_files)
+    #print(out_files)
     if len(out_files) > 0:
 
         filename = out_files[-1]
@@ -653,10 +653,10 @@ def main(index,
             if delay == 0:
                 resubmissions[index] = output_num
         if len(out_completion) != len(out_files):
-            print("Not finished yet")
+            #print("Not finished yet")
             return True, resubmissions
         if resubmissions[index] > output_num:
-            print("Awaiting queue")
+            #print("Awaiting queue")
             return True, resubmissions
 
         f = open(filename, 'r')
@@ -671,13 +671,15 @@ def main(index,
             for num, line in enumerate(search, 1):
                 if word_error in line:
                     error = True
+        print(error, "ERROR")
         cmd = "qsub mex.pbs"
         if error == True:
+            print("Error")
             find_geom(lines, error=True, filename=filename,
                         imaginary=imaginary, geomDirName=geomDirName)
             make_input_files_no_constraints(
                 output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
-            os.system("qsub mex.pbs")
+            #os.system("qsub mex.pbs")
             failure = subprocess.call(cmd, shell=True)
             resubmissions[index] += 1
             return False, resubmissions

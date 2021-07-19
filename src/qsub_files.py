@@ -2,6 +2,7 @@ from operator import sub
 import os
 import glob
 import subprocess
+from typing import Tuple
 
 def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs"):
     os.chdir(path_to_input_dirs)
@@ -15,7 +16,8 @@ def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs"):
 #qsubFiles('../inputs')
 
 def broken_resubmit(path_results, resubmit):
-    resubmit = [ "TPA2_4b_2ea",
+    """
+    "TPA2_4b_2ea",
     "7ed_6b_3ea",
     "TPA2_14b_3ea",
     "TPA2_6b_3ea",
@@ -28,6 +30,8 @@ def broken_resubmit(path_results, resubmit):
     "7ed_9b_2ea",
     "TPA2_11b_1ea",
     "TPA2_9b_2ea",
+    """
+    resubmit = [ 
     "3ed_14b_1ea",
     "2ed_9b_3ea",
     "7ed_5b_2ea",
@@ -104,4 +108,19 @@ def broken_resubmit(path_results, resubmit):
         subprocess.call(cmd, shell=True)
         os.chdir("..")
         os.chdir("..")
+def fix_broken(resubmit, path_results='../results'):
+    os.chdir(path_results)
+    for i in resubmit:
+        os.chdir(i)
+        out_files = glob.glob("*.out*")
+        out_completion = glob.glob("mex_o.*")
+        if len(out_files) == 0 and len(out_completion) == 0:
+            cmd = 'qsub mex.pbs'
+            subprocess.call(cmd, shell=True)
+        elif len(out_files) >= 1 and len(out_completion) == 1:
+            cmd = 'touch name_o.o100000'
+            subprocess.call(cmd, shell=True)
+            
+        os.chdir("..")
+
 broken_resubmit('../results')
