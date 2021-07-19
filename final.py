@@ -273,6 +273,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
 
 
             if complete[num] < 1:
+                print("directory for", j)
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,

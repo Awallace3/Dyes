@@ -40834,6 +40834,16 @@
             "localName": "7ed_5b_2ea",
             "name": "7ed_5b_2ea",
             "parts": "7ed::5b::2ea"
+        },
+        {
+            "HOMO": 0,
+            "LUMO": 0,
+            "SMILES": "",
+            "excitations": [],
+            "generalSMILES": "N(c1ccccc1)c1c2c(nn(CC)n2)c(cc1)c1ccc([C])cc1.[C][C].[CH].[N].[O].[O].[H]",
+            "localName": "3ed_14b_1ea",
+            "name": "3ed_14b_1ea",
+            "parts": "3ed::14b::1ea"
         }
     ]
 }

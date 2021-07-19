@@ -484,7 +484,7 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
         gaussianInputFiles(output_num, method_opt, 
                     basis_set_opt, mem_com_opt, 
                     mem_pbs_opt, cluster, 
-                    baseName='mex', procedure='OPT' 
+                    baseName='./', procedure='OPT' 
                     )
 
 def qsub(path='.'):
@@ -650,6 +650,7 @@ def main(index,
                     error = True
         cmd = "qsub mex.pbs"
         if error == True:
+            print("ERROR == TRUE")
             find_geom(lines, error=True, filename=filename,
                         imaginary=imaginary, geomDirName=geomDirName)
             make_input_files_no_constraints(
@@ -672,6 +673,7 @@ def main(index,
             resubmissions[index] += 1
             return False, resubmissions
         else:
+            print("ELSE")
             cmd = "qsub mexc.pbs"
             find_geom(lines, error=False, filename=filename,
                         imaginary=imaginary, geomDirName=geomDirName
