@@ -51,7 +51,6 @@ def permutationDict(localStructuresDict):
         pre_perm = pre_perm + [value]
 
     post_perm = list(itertools.product(*pre_perm))
-    #print(post_perm[0])        
     
     return post_perm
 
@@ -72,7 +71,6 @@ def smilesRingCleanUp(f, s, t):
     smi2 = smi2.replace("1", "5")
     smi2 = smi2.replace("2", "4")
     line = smi1 + "." + smi2 + "." + smi3
-    #print("line:", line)
 
     return line, name, formalName
 
@@ -82,8 +80,6 @@ def generateMolecules (smiles_tuple_list,
                 mem_com_opt, mem_pbs_opt, cluster): 
     #if not os.path.exists("inputs"):
     #    os.mkdir('inputs')
-    #print(number_locals)
-    #print(smiles_tuple_list)
     xyzDict = {}
     monitor_jobs = []
     if not os.path.exists('results'):
@@ -137,7 +133,6 @@ def generateMolecules (smiles_tuple_list,
             if n > 1:
                 carts_cleaned.append(i)
                 invalid = False
-            #print(i)
         if invalid:
             print("invalid line{0}".format(num), line)
             invalid = True
@@ -170,8 +165,6 @@ def generateMolecules (smiles_tuple_list,
         monitor_jobs.append(name)
         print(monitor_jobs)
     os.chdir("..")
-    #print(xyzDict)
-    #print(name+";;;"+formalName)
     return monitor_jobs
 
 
@@ -179,7 +172,6 @@ def submitOpt(monitor_jobs):
     os.chdir('results')
     for i in monitor_jobs:
         os.chdir(i)
-        print('qsub in %s' % i)
         cmd = 'qsub mex.pbs'
         subprocess.call(cmd, shell=True)
         os.chdir("..")
@@ -227,16 +219,13 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
         
     mol_lst = MoleculeList()
     if os.path.exists('results.json'):
-        print("exists")
         mol_lst.setData("results.json")
     else:
-        print("does not exist")
         mol_lst.sendToFile("results.json")
 
     
     min_delay = min_delay * 60
     #cluster_list = glob.glob("%s/*" % route)
-    #print(cluster_list)
     complete = []
     resubmissions = []
     for i in range(len(monitor_jobs)):
@@ -249,22 +238,17 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     
     for i in range(number_delays):
         # time.sleep(min_delay)
-        #print(i)
         for num, j in enumerate(monitor_jobs):
-            #print(j)
             os.chdir(j)
             delay = i
             mexc_check = glob.glob("mexc")
-            # print(mexc_check)
             if len(mexc_check) > 0:
-                #print('{0} entered mexc checkpoint 1'.format(num+1))
                 complete[num] = 1
                 mexc_check_out = glob.glob("mexc/mexc.o*")
                 mexc_check_out_complete = glob.glob('mexc/*_o*')
 
                 #if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
                 if complete[num] < 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
-                    #print('{0} entered mexc checkpoint 2'.format(num+1))
                     
                     occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
                     mol = Molecule()
@@ -281,7 +265,6 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                     mol_lst = MoleculeList()
                     mol_lst.setData("../../results.json")
                     mol_lst.updateMolecule(mol)
-                    #print(mol_lst)
                     mol_lst.sendToFile('../../results.json')
                     
                     complete[num] = 2
@@ -289,19 +272,14 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 #if complete[num] >= 2
 
 
-            #print(complete[num])
             if complete[num] < 1:
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster, j, xyzSmiles=False
                 )
-                #print(resubmissions)
             elif complete[num] == 2:
                 pos = complete[num] - 2
-                #print(pos)
-                #print(add_methods)
-                #print('entering error_mexc')
                 action, resubmissions = error_mexc_dyes_v1.main(
                     num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                     add_methods["methods"][pos], add_methods['basis_set'][pos],
@@ -311,7 +289,6 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 
              
             pos = complete[num] - 2
-            #print(pos)
             if pos >= 0:
                 dir_name = add_methods['methods'][pos].lower()
                 mexc_check_out = glob.glob("%s/mexc.o*" % dir_name)
@@ -375,7 +352,6 @@ def gather_general_smiles(monitor_jobs):
 
 def check_add_methods(add_methods, funct_name):
     ln = len(add_methods['methods'])
-    print(add_methods)
     if ln == len(add_methods['basis_set']) and ln == len(add_methods['mem_com']) and ln == len(add_methods['mem_pbs']):
         return True 
     else:
@@ -390,8 +366,6 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
     os.chdir(path_results)
     for i in monitor_jobs:
         os.chdir(i)
-        print(os.getcwd())
-        
         occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
         mol = Molecule()
         mol.setData('info.json')
@@ -417,13 +391,10 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
         mol_lst = MoleculeList()
         mol_lst.setData("../../results.json")
         mol_lst.updateMolecule(mol)
-        #print(mol_lst)
         mol_lst.sendToFile('../../results.json')
     
 
         os.chdir("..")
-    print("FAILED:", failed)
-    print(mol)
     return True
 
 def main():
@@ -568,7 +539,6 @@ def main():
     "TPA2_15b_2ea",]
 
 
-    #print(monitor_jobs)
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,

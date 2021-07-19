@@ -60,10 +60,8 @@ def gaussianInputFiles(output_num, method_opt,
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
             if solvent == '':
-                #print('no solvent')
                 fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
             else:
-                #print(solvent, 'exists')
                 fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
 
             fp.write("\n\n")
@@ -102,10 +100,8 @@ def gaussianInputFiles(output_num, method_opt,
         with open('%s/%s.com' % (dir_name, baseName), 'w') as fp:
             fp.write('%mem=8gb\n')
             if solvent == '':
-                #print('no solvent')
                 fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
             else:
-                #print(solvent, 'exists')
                 fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
 
             fp.write("\n\n")
@@ -213,7 +209,6 @@ def i_freq_check(filename):
                     k = k.rstrip()
                     try:
                         k = float(k)
-                        # print(k)
                         if k < 0:
                             imaginary = True
                         freq_clean.append(k)
@@ -230,7 +225,6 @@ def i_freq_check(filename):
 
 
 def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName):
-    # print(freq_clean)
     cnt = 0
     for k in freq_clean:
         if k < 0:
@@ -251,14 +245,12 @@ def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName):
         for k in range(len(i)):
             i[k] = float(i[k])
         imag_values[num] = i
-    # print(imag_values)
     carts = genfromtxt('tmp.txt')
     carts_no_atom = carts[:, 1:4]
     imag_values = np.array(imag_values)
 
     for i in range(len(imag_values[0, :]) // 3):
         carts_no_atom = np.add(carts_no_atom, imag_values[:, i: i+4])
-    # print(carts_no_atom)
     carts[:, 1:4] = carts_no_atom
 
     carts = np.around(carts, 6)
@@ -303,7 +295,6 @@ def freq_hf_zero(lines, filename):
 def find_geom(lines, error, filename, imaginary, geomDirName,
     xyzSmiles=True, numberedClean=True
 ):
-    #print("Opening..." + filename)
     found = False
     geom_size = 0
     geom_list = []
@@ -313,7 +304,6 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                 geom_size = num + 1
                 found = True
             elif found == True and num < geom_size + 200:
-                #print(line, end="")
                 geom_list.append(line)
             elif found == True and line == ' \n':
                 #geom_size = num - geom_size
@@ -326,7 +316,6 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
             break
     geom_size = len(clean_geom_size)
     if error == True:
-        #print("Error == True")
         pop_2 = "Population analysis using the SCF Density."
         pops = []
         pop_2_test = False
@@ -337,7 +326,6 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                 if len(pops) == 2:
                     pop_2_test = True
         if pop_2_test == True:
-            #print(pop_2_test, "occuring")
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
@@ -348,9 +336,7 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                 for num, line in enumerate(search, 1):
                     if geom_end_pops in line:
                         orientation.append(num - 1)
-            #print("if")
         else:
-            #print('else')
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
@@ -361,7 +347,6 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                     if geom_end in line:
                         orientation.append(num - 2)
     else:
-        #print("No error")
 
         with open(filename) as search:
             for num, line in enumerate(search, 1):
@@ -429,14 +414,12 @@ def xyzToSmiles(length, xyz, geomDirName):
     
     os.remove('molecule.xyz')
     """
-    print("\n\n")
     cmd = 'obabel -ixyz molecule.xyz -osmi -molecule.smi'
     err = subprocess.call(cmd, shell=True)
     with open('molecule.smi', 'r') as fp:
         val = fp.readlines()[0]
         val = val.split("charge")
         val = val[0].rstrip()
-    print(val)
 
     mol = Molecule()
     if os.path.exists('info.json'):
@@ -446,7 +429,6 @@ def xyzToSmiles(length, xyz, geomDirName):
         mol_lst = MoleculeList()
         mol_lst.setData("../../results.json")
         mol_lst.updateMolecule(mol)
-        #print(mol_lst)
         mol_lst.sendToFile('../../results.json')
     else:
 
@@ -507,7 +489,6 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
-    #print(resetDirNum)
     os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = 'qsub %s' % pbs_file
@@ -515,7 +496,6 @@ def qsub(path='.'):
     failure = subprocess.call(cmd, shell=True)
     if path != '.':
         for i in range(resetDirNum):
-            #print('dir changed')
             os.chdir("..")
 
 
@@ -637,7 +617,6 @@ def main(index,
 
     out_files = glob.glob("*.out*")
     out_completion = glob.glob("mex_o.*")
-    #print(out_files)
     if len(out_files) > 0:
 
         filename = out_files[-1]
@@ -653,10 +632,8 @@ def main(index,
             if delay == 0:
                 resubmissions[index] = output_num
         if len(out_completion) != len(out_files):
-            #print("Not finished yet")
             return True, resubmissions
         if resubmissions[index] > output_num:
-            #print("Awaiting queue")
             return True, resubmissions
 
         f = open(filename, 'r')
@@ -671,10 +648,8 @@ def main(index,
             for num, line in enumerate(search, 1):
                 if word_error in line:
                     error = True
-        print(error, "ERROR")
         cmd = "qsub mex.pbs"
         if error == True:
-            print("Error")
             find_geom(lines, error=True, filename=filename,
                         imaginary=imaginary, geomDirName=geomDirName)
             make_input_files_no_constraints(
