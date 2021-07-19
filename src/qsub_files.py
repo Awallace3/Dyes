@@ -38,6 +38,15 @@ def fix_broken(resubmit, path_results='../results'):
             cmd = 'touch name_o.o100000'
             print(os.getcwd(), cmd)
             subprocess.call(cmd, shell=True)
+        else:
+            os.chdir("mexc")
+            out_files = glob.glob("*.out*")
+            out_completion = glob.glob("mex_o.*")
+            if len(out_files) == 0 and len(out_completion) == 0:
+                cmd = 'qsub mexc.pbs'
+                print(os.getcwd(), cmd)
+                subprocess.call(cmd, shell=True)
+            
 
         os.chdir("..")
 
@@ -97,10 +106,18 @@ def fix_mex(resubmit):
 "3ed_10b_2ea",
 "6ed_7b_2ea",
 """
+# Case 2:
+"""
+"3ed_14b_1ea",
+"7ed_5b_2ea",
+"1ed_1b_1ea",
+"5ed_3b_1ea",
+"5ed_16b_1ea",
+"6ed_12b_2ea",
+"7ed_12b_1ea",
+"""
 
 resubmit = [ 
-    "3ed_14b_1ea",
-    "7ed_5b_2ea",
     "TPA2_7b_3ea",
     "TPA2_15b_3ea",
     "7ed_7b_3ea",
@@ -118,14 +135,12 @@ resubmit = [
     "TPA2_3b_2ea",
     "TPA2_5b_1ea",
     "7ed_5b_1ea",
-    "1ed_1b_1ea",
     "TPA2_6b_1ea",
     "TPA2_14b_1ea",
     "7ed_6b_1ea",
     "TPA2_12b_2ea",
     "TPA2_2b_3ea",
     "TPA2_10b_3ea",
-    "5ed_3b_1ea",
     "TPA2_1b_2ea",
     "7ed_11b_3ea",
     "TPA2_11b_3ea",
@@ -137,13 +152,10 @@ resubmit = [
     "7ed_6b_2ea",
     "TPA2_4b_3ea",
     "TPA2_16b_3ea",
-    "5ed_16b_1ea",
     "7ed_4b_3ea",
     "TPA2_6b_2ea",
-    "6ed_12b_2ea",
     "TPA2_8b_3ea",
     "TPA2_12b_1ea",
-    "7ed_12b_1ea",
     "7ed_8b_3ea",
     "7ed_9b_3ea",
     "TPA2_13b_1ea",
