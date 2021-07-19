@@ -76,29 +76,32 @@ def fix_mex(resubmit):
         os.chdir("..")
 
 def fix_mexc(resubmit):
-    os.chdir("../calc_zone")
+    os.chdir("../results")
     for i in resubmit:
         print(i)
-        os.chdir(i+"/mexc")
-        
-        out_files = glob.glob("*.out*")
-        out_completion = glob.glob("mexc_o.*")
-        len_file = len(out_files)
-        len_complete = len(out_completion)
-        #print("len_complete", len(out_completion), "len_outfiles", len(out_files))
-        if len_complete > len_file:
-            for i in range(len_complete-len_file):
-                del_o = out_completion.pop()
-                #subprocess.call("echo " + del_o, shell=True)
-                print('rm %s' % del_o)
-                subprocess.call("rm " + del_o, shell=True)
-        elif len_complete < len_file:
-            for i in range((len_file - len_complete)):
-                create_o = "mexc_o.o%s0000" % str(i+15)
-                print('touch %s' % create_o)
-                #subprocess.call("echo " + create_o, shell=True)
-                subprocess.call("touch " + create_o, shell=True)
-        os.chdir("../..")
+        if os.path.exists(i+"/mexc"):
+            os.chdir(i+"/mexc")
+            
+            out_files = glob.glob("*.out*")
+            out_completion = glob.glob("mexc_o.*")
+            len_file = len(out_files)
+            len_complete = len(out_completion)
+            #print("len_complete", len(out_completion), "len_outfiles", len(out_files))
+            if len_complete > len_file:
+                for i in range(len_complete-len_file):
+                    del_o = out_completion.pop()
+                    #subprocess.call("echo " + del_o, shell=True)
+                    print('rm %s' % del_o)
+                    subprocess.call("rm " + del_o, shell=True)
+            elif len_complete < len_file:
+                for i in range((len_file - len_complete)):
+                    create_o = "mexc_o.o%s0000" % str(i+15)
+                    print('touch %s' % create_o)
+                    #subprocess.call("echo " + create_o, shell=True)
+                    subprocess.call("touch " + create_o, shell=True)
+            os.chdir("../..")
+        else:
+            print(i,'does not have mexc')
 """
 "TPA2_4b_2ea",
 "7ed_6b_3ea",
@@ -193,5 +196,5 @@ resubmit = [
 #broken_resubmit('../results')
 
 #fix_broken(resubmit)
-fix_mexc()
+fix_mexc(resubmit)
 fix_mex(resubmit)
