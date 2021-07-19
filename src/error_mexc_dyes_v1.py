@@ -487,9 +487,12 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
                     baseName='./', procedure='OPT' 
                     )
 
+        qsub()
+
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
-    os.chdir(path)
+    if path != '.':
+        os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = 'qsub %s' % pbs_file
     print(os.getcwd(), "cmd", cmd)
