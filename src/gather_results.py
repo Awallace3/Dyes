@@ -245,7 +245,8 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
         
         break
         """
-        if r1['name'] not in df['Name'].values:
+        Names = [str(i) for i in df['Name'].values]
+        if str(r1['name']) not in Names:
             method_basis_set_lst = [i for i in method_basis_set]
             
             for n, j in enumerate(method_basis_set_lst):
@@ -253,15 +254,15 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
                 if str(j) == str(r1['method_basis_set']):
                     method_basis_set_lst[n] = r1['nm']
             method_basis_set_lst.insert(0, r1['name'])
+            #if r1['name'] == "1ed_16b_1ea":
+            #    print(method_basis_set_lst)
             df.loc[len(df)] = method_basis_set_lst
         else:
             #df.ix[df['id'] == 12, ['uid','gid']] = ['IN','IN-1']
-            for j in method_basis_set_lst:
+            for j in method_basis_set:                    
                 if str(j) == r1['method_basis_set']:
-                    
-                    df.loc[df['Name'] == r1['name'], [j]] = [r1['nm']]  
-            pass
-
+                    if r1['exc'] == 1:                        
+                        df.loc[df['Name'] == r1['name'], [j]] = [r1['nm']]  
     #nm = df.sort_values([method_basis_set[0]], ascending=(False))
     return df
     

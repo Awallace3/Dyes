@@ -102,6 +102,7 @@ def fix_mexc(resubmit):
             os.chdir("../..")
         else:
             print(i,'does not have mexc')
+# Case 0:
 """
 "TPA2_4b_2ea",
 "7ed_6b_3ea",
@@ -144,8 +145,9 @@ def fix_mexc(resubmit):
 "7ed_12b_1ea",
 """
 
-resubmit = [ 
-    "TPA2_7b_3ea",
+# Case 3:
+"""
+   "TPA2_7b_3ea",
     "TPA2_15b_3ea",
     "7ed_7b_3ea",
     "TPA2_5b_2ea",
@@ -164,12 +166,10 @@ resubmit = [
     "7ed_5b_1ea",
     "TPA2_6b_1ea",
     "TPA2_14b_1ea",
-    "7ed_6b_1ea",
+    "7ed_6b_1ea"
     "TPA2_12b_2ea",
     "TPA2_2b_3ea",
     "TPA2_10b_3ea",
-    "TPA2_1b_2ea",
-    "7ed_11b_3ea",
     "TPA2_11b_3ea",
     "TPA2_3b_3ea",
     "TPA2_13b_2ea",
@@ -192,9 +192,21 @@ resubmit = [
     "7ed_5b_3ea",
     "TPA2_5b_3ea",
     "7ed_7b_2ea",
-    "TPA2_15b_2ea",]
+    "TPA2_15b_2ea",
+
+"""
+
+# Case 4:
+"""
+    "7ed_11b_3ea",
+    "TPA2_1b_2ea",
+"""
+
+resubmit = [ 
+    ]
+
 #broken_resubmit('../results')
 
-#fix_broken(resubmit)
-fix_mexc(resubmit)
-fix_mex(resubmit)
+fix_broken(resubmit)
+#fix_mexc(resubmit)
+#fix_mex(resubmit)
