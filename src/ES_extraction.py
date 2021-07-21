@@ -17,6 +17,7 @@ def ES_extraction(path):
             virtLst.append(i)
     if len(occLst) == 0 and len(virtLst) == 0:
         print("ES_extraction error: Found no data in %s" % path)
+
         return 0, 0
     occLst = occLst[-1].split('  ')
     virtLst = virtLst[0].split('  ')

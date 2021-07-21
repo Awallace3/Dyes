@@ -183,6 +183,8 @@ def add_excitation_data(
 
     ):
     occVal, virtVal = ES_extraction.ES_extraction('%s/%s.out' % (dir_name, baseName))
+    if occVal == virtVal and occVal == 0:
+        print(j)
     mol = Molecule()
     mol.setData('info.json')
     mol.setHOMO(occVal)
@@ -251,6 +253,8 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
                 if complete[num] < 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
                     
                     occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
+                    if occVal == virtVal and occVal == 0:
+                        print(j)
                     mol = Molecule()
                     mol.setData('info.json')
                     mol.setHOMO(occVal)
@@ -300,6 +304,7 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
             mexc_check = []
             if complete[num] < 2:
                 print(complete[num], i)
+                print(j)
             os.chdir('..')
         stage = 0
         for k in range(len(complete)):
@@ -371,6 +376,8 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
     for i in monitor_jobs:
         os.chdir(i)
         occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
+        if occVal == virtVal and occVal == 0:
+            print(j)
         mol = Molecule()
         mol.setData('info.json')
         mol.setHOMO(occVal)
@@ -521,7 +528,8 @@ def main():
     "7ed_5b_3ea",
     "TPA2_5b_3ea",
     "7ed_7b_2ea",
-    "TPA2_15b_2ea",]
+    "TPA2_15b_2ea",
+    ]
     # Case 2
     monitor_jobs = [
         "3ed_14b_1ea",
@@ -563,6 +571,82 @@ def main():
         "7ed_9b_2ea",
         "TPA2_11b_1ea",
         "TPA2_9b_2ea",
+   ]
+   # All Cases
+    monitor_jobs = [
+        "TPA2_4b_2ea",
+        "7ed_6b_3ea",
+        "TPA2_14b_3ea",
+        "TPA2_6b_3ea",
+        "TPA2_16b_2ea",
+        "TPA2_8b_2ea",
+        "TPA2_10b_1ea",
+        "7ed_8b_2ea",
+        "TPA2_2b_1ea",
+        "TPA2_3b_1ea",
+        "7ed_9b_2ea",
+        "TPA2_11b_1ea",
+        "TPA2_9b_2ea",
+        "2ed_9b_3ea",
+        "TPA2_8b_1ea",
+        "7ed_9b_1ea",
+        "7ed_3b_2ea",
+        "5ed_15b_2ea",
+        "6ed_5b_1ea",
+        "3ed_14b_3ea",
+        "7ed_7b_1ea",
+        "2ed_12b_3ea",
+        "6ed_15b_2ea",
+        "1ed_12b_1ea",
+        "3ed_10b_2ea",
+    "TPA2_7b_3ea",
+    "TPA2_15b_3ea",
+    "7ed_7b_3ea",
+    "TPA2_5b_2ea",
+    "TPA2_16b_1ea",
+    "TPA2_4b_1ea",
+    "TPA2_2b_2ea",
+    "7ed_8b_1ea",
+    "TPA2_12b_3ea",
+    "TPA2_10b_2ea",
+    "TPA2_11b_2ea",
+    "TPA2_9b_1ea",
+    "TPA2_1b_3ea",
+    "TPA2_13b_3ea",
+    "TPA2_3b_2ea",
+    "TPA2_5b_1ea",
+    "7ed_5b_1ea",
+    "TPA2_6b_1ea",
+    "TPA2_14b_1ea",
+    "7ed_6b_1ea",
+    "TPA2_12b_2ea",
+    "TPA2_2b_3ea",
+    "TPA2_10b_3ea",
+    "TPA2_1b_2ea",
+    "7ed_11b_3ea",
+    "TPA2_11b_3ea",
+    "TPA2_3b_3ea",
+    "TPA2_13b_2ea",
+    "TPA2_15b_1ea",
+    "TPA2_7b_1ea",
+    "TPA2_14b_2ea",
+    "7ed_6b_2ea",
+    "TPA2_4b_3ea",
+    "TPA2_16b_3ea",
+    "7ed_4b_3ea",
+    "TPA2_6b_2ea",
+    "TPA2_8b_3ea",
+    "TPA2_12b_1ea",
+    "7ed_8b_3ea",
+    "7ed_9b_3ea",
+    "TPA2_13b_1ea",
+    "TPA2_9b_3ea",
+    "TPA2_1b_1ea",
+    "TPA2_7b_2ea",
+    "7ed_5b_3ea",
+    "TPA2_5b_3ea",
+    "7ed_7b_2ea",
+    "TPA2_15b_2ea",
    ]
  
     complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,

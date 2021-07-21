@@ -198,8 +198,9 @@ def fix_mexc(resubmit):
 
 # Case 4:
 """
-    "7ed_11b_3ea",
+    "7ed_11b_3ea", #delayed on finish
     "TPA2_1b_2ea",
+    ""
 """
 
 resubmit = [ 
