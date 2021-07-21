@@ -3,6 +3,7 @@ import os
 import glob
 import subprocess
 from typing import Tuple
+import json
 
 def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs"):
     os.chdir(path_to_input_dirs)
@@ -14,6 +15,19 @@ def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs"):
         subprocess.call(qsub, shell=True)
         os.chdir("..")
 #qsubFiles('../inputs')
+
+def qsub(path='.'):
+    resetDirNum = len(path.split("/"))
+    if path != '.':
+        os.chdir(path)
+    pbs_file = glob.glob("*.pbs")[0]
+    cmd = 'qsub %s' % pbs_file
+    print(os.getcwd(), "cmd", cmd)
+    failure = subprocess.call(cmd, shell=True)
+    if path != '.':
+        for i in range(resetDirNum):
+            os.chdir("..")
+
 
 def broken_resubmit(path_results, resubmit):
     os.chdir(path_results)
@@ -75,15 +89,15 @@ def fix_mex(resubmit):
                 subprocess.call("touch " + create_o, shell=True)
         os.chdir("..")
 
-def fix_mexc(resubmit):
+def fix_mexc(resubmit, base_dir='mexc', baseName='mexc'):
     os.chdir("../results")
     for i in resubmit:
         print(i)
-        if os.path.exists(i+"/mexc"):
-            os.chdir(i+"/mexc")
+        if os.path.exists("%s/%s" % (i, base_dir)):
+            os.chdir("%s/%s" % (i, base_dir))
             
             out_files = glob.glob("*.out*")
-            out_completion = glob.glob("mexc_o.*")
+            out_completion = glob.glob("*_o*")
             len_file = len(out_files)
             len_complete = len(out_completion)
             #print("len_complete", len(out_completion), "len_outfiles", len(out_files))
@@ -102,6 +116,45 @@ def fix_mexc(resubmit):
             os.chdir("../..")
         else:
             print(i,'does not have mexc')
+def failed_gathered_excitations(failed, dirs_to_check, qsubFailed1=False, path_results='../results'):
+    os.chdir(path_results)
+    complete_dict = {}
+    for i in failed:
+        os.chdir(i)
+        # 0 if no dir, 1 if out file, 2 if cannot read out
+        local_lst = []
+        for j in dirs_to_check:
+            local = {}
+            if not os.path.exists(j):
+                local[j] = 0
+            else:
+                if not os.path.exists("%s/%s" % (j, 'mexc.out')):
+                    local[j] = 1
+                    if qsubFailed1:
+                        qsub("%s" % j)
+                else:
+
+                    out_files = len(glob.glob("%s/*.out*" % j))
+                    out_completion = len(glob.glob("%s/*_o*" % j))
+                    if out_files <= out_completion and out_files > 0:
+                        local[j] = 3
+                    else: 
+                        local[j] = 2 
+            local_lst.append(local)
+        complete_dict[i] = local_lst
+        os.chdir("..")
+    os.chdir("../src")
+    #print(complete_dict)
+    data = json.dumps(complete_dict, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    print(os.getcwd())
+    with open('exc.json', 'w') as fp:
+        fp.write(data)
+        #fp.write("end")
+    #print(data)
+    #print(json.dumps(complete_dict, default=lambda o: o.__dict__,
+    #       sort_keys=True, indent=4))
+
+
 # Case 0:
 """
 "TPA2_4b_2ea",
@@ -208,6 +261,12 @@ resubmit = [
 
 #broken_resubmit('../results')
 
-fix_broken(resubmit)
+#fix_broken(resubmit)
 #fix_mexc(resubmit)
 #fix_mex(resubmit)
+
+dirs_to_check = ['mexc', 'bhandhlyp', 'pbe1pbe']
+failed = ['TPA2_11b_1ea', 'TPA2_11b_1ea', '2ed_9b_3ea', '7ed_5b_2ea', 'TPA2_8b_1ea', '7ed_3b_2ea', '1ed_16b_1ea', '7ed_9b_1ea', '7ed_1b_3ea', '5ed_15b_2ea', '6ed_5b_1ea', '1ed_1b_1ea', '2ed_2b_2ea', '3ed_2b_2ea', '7ed_14b_1ea', '3ed_11b_1ea', '2ed_4b_1ea', '1ed_5b_3ea', '7ed_12b_2ea', '5ed_9b_2ea', '1ed_15b_1ea', '1ed_7b_2ea', '6ed_12b_1ea', '5ed_10b_1ea', '5ed_3b_1ea', '7ed_2b_3ea', '7ed_10b_3ea', '6ed_2b_3ea', '3ed_15b_3ea', '3ed_14b_3ea', '5ed_2b_1ea', '7ed_3b_3ea', '6ed_3b_3ea', '5ed_11b_1ea', '2ed_16b_1ea', '1ed_6b_2ea', '6ed_13b_1ea', '1ed_14b_1ea', '3ed_16b_2ea', '7ed_1b_2ea', '7ed_13b_2ea', '5ed_8b_2ea', '2ed_5b_1ea', '3ed_5b_1ea', '1ed_4b_3ea', '3ed_10b_1ea', '5ed_6b_3ea', '7ed_7b_1ea', '7ed_15b_1ea', '6ed_7b_1ea', '2ed_12b_3ea', '5ed_15b_3ea', '1ed_10b_3ea', '3ed_3b_2ea', '5ed_4b_2ea', '2ed_10b_2ea', '1ed_12b_2ea', '3ed_9b_1ea', '2ed_1b_3ea', '3ed_1b_3ea', '3ed_1b_3ea', '2ed_9b_1ea', '6ed_15b_2ea', '1ed_8b_3ea', '3ed_2b_1ea', '2ed_2b_1ea', '1ed_3b_3ea', '6ed_6b_2ea', '7ed_14b_2ea', '3ed_11b_2ea', '1ed_13b_1ea', '1ed_1b_2ea', '6ed_14b_1ea', '2ed_8b_2ea', '3ed_8b_2ea', '2ed_11b_1ea', '5ed_5b_1ea', '7ed_16b_3ea', '6ed_12b_2ea', '7ed_12b_1ea', '5ed_2b_2ea', '2ed_16b_2ea', '5ed_11b_2ea', '1ed_14b_2ea', '3ed_7b_3ea', '2ed_7b_3ea', '6ed_13b_2ea', '1ed_6b_1ea', '6ed_5b_3ea', '2ed_10b_1ea', '6ed_15b_1ea', '3ed_9b_2ea', '1ed_12b_1ea', '1ed_12b_1ea', '3ed_10b_2ea', '6ed_7b_2ea', '7ed_15b_2ea', '3ed_3b_1ea', '2ed_3b_1ea', '1ed_2b_3ea']
+
+fix_mexc(failed)
+failed_gathered_excitations(failed, dirs_to_check, qsubFailed1=True)
