@@ -73,7 +73,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N %s\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l " % outName)
+            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l " % outName)
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             # r410 node
             fp.write("#PBS -q r410\n")

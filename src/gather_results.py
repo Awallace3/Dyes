@@ -253,6 +253,7 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
                 #print(j, r1['method_basis_set'])
                 if str(j) == str(r1['method_basis_set']):
                     method_basis_set_lst[n] = r1['nm']
+            
             method_basis_set_lst.insert(0, r1['name'])
             #if r1['name'] == "1ed_16b_1ea":
             #    print(method_basis_set_lst)
