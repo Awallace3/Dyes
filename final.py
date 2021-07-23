@@ -612,7 +612,7 @@ def main():
     
     #resubmit_delay_min = 60 * 12
     #resubmit_max_attempts = 5
-    resubmit_delay_min = 2 # 60 * 12
+    resubmit_delay_min = 0.05 # 60 * 12
     resubmit_max_attempts = 15
 
     # geometry optimization options
