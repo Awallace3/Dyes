@@ -22,6 +22,7 @@ def ES_extraction(path):
     occLst = occLst[-1].split('  ')
     virtLst = virtLst[0].split('  ')
     
+    print(occLst, virtLst)
     occVal = float(occLst[-1].replace('\n', "").replace(" ", ""))
     virtVal = float(virtLst[1].replace(" ", ''))
 
