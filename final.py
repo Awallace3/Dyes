@@ -482,7 +482,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                 )
                 print(qsub_dir)
                 if qsub_dir != 'None':
-                    add_qsub_dir(qsub_dir, j)
+                    add_qsub_dir(qsub_dir.lower(), j)
                 for pos in range(add_methods_length):
                     action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
                         num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -492,7 +492,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     )
                     print(pos, os.getcwd())
                     if qsub_dir != "None":
-                        add_qsub_dir(qsub_dir,  j)
+                        add_qsub_dir(qsub_dir.lower(),  j)
             
 
             mexc_check = []
