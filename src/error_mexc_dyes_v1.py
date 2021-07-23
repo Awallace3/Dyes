@@ -151,6 +151,7 @@ def clean_many_txt(geomDirName, xyzSmiles=True, numbered=True):
     """ This will replace the numerical forms of the elements as their letters numbered in order """
 
     f = open('tmp.txt', 'r')
+    """
     a = ['14.0 ','30.0 ' ,
             '16.0 ', '6.0 ', 
             '8.0 ', '1.0 ', 
@@ -162,6 +163,19 @@ def clean_many_txt(geomDirName, xyzSmiles=True, numbered=True):
         '16.0 ': 'S', '30.0 ': 'Zn', 
         '14.0 ': 'Si'
     }
+    """
+    a = ['14.000000 ','30.000000 ' ,
+            '16.000000 ', '6.000000 ',
+            '8.000000 ', '1.000000 ',
+            '7.000000 '
+        ]
+    table = {
+        '6.000000 ': 'C', '8.000000 ': 'O',
+        '1.000000 ': 'H', '7.000000 ': 'N',
+        '16.000000 ': 'S', '30.000000 ': 'Zn',
+        '14.000000 ': 'Si'
+    }
+
 
     xyzToMolLst = []
     lst = []
@@ -257,7 +271,7 @@ def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName):
     """    carts = carts.astype(str)
         carts = carts.tolist() """
     np.savetxt("tmp.txt", carts,
-               fmt="%s")
+               fmt="%f")
 
     clean_many_txt(geomDirName)
 
