@@ -391,9 +391,9 @@ def qsub_to_max(max_queue=100, user=""):
             print('\n',qsub_path,  os.getcwd(), '\n')
             qsub(qsub_path)
             cnt +=1
-    #with open('../qsub_queue', 'w') as fp:
-    #    for i in qsubs:
-    #        fp.write(i)
+    with open('../qsub_queue', 'w') as fp:
+        for i in qsubs:
+            fp.write(i)
     return 1
 
 
