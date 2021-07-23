@@ -378,7 +378,7 @@ def qsub_to_max(max_queue=100, user=""):
     dif = max_queue - current_queue
     if dif > 0:
         cnt = 0
-        while (cnt < dif and len(qsubs) >0):
+        while (cnt < dif and len(qsubs) > 0):
             qsub_path = qsubs.pop(0)
             qsub(qsub_path)
             cnt +=1
@@ -471,7 +471,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster, j, xyzSmiles=True
                 )
-                add_qsub_dir(qsub_dir)
+                add_qsub_dir(qsub_dir, j)
                 for pos in range(add_methods_length):
                     action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
                         num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -479,7 +479,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                         add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
                         resubmissions, delay, cluster, j, xyzSmiles=False
                     )
-                    add_qsub_dir(qsub_dir)
+                    add_qsub_dir(qsub_dir, j)
             
 
             mexc_check = []
@@ -667,7 +667,7 @@ def main():
                            cluster, route='results', add_methods=add_methods
                            )
     """
-    monitor_jobs = ['test_1', 'test_2']
+    monitor_jobs = ['test_1',]
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
