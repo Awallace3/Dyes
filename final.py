@@ -371,9 +371,9 @@ def qsub_to_max(max_queue=100, user=""):
     with open("../qsub_queue", 'r') as fp:
         qsubs = fp.readlines()
 
-    cmd = "qstat -u \"r%s\" > qsub_len" % user
+    cmd = "qstat -u \"r%s\" > ../qsub_len" % user
     subprocess.call(cmd, shell=True)
-    with open('qsub_len', 'r') as fp:
+    with open('../qsub_len', 'r') as fp:
         current_queue = len(fp.readlines())-5
     dif = max_queue - current_queue
     if dif > 0:
