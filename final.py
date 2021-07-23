@@ -360,9 +360,9 @@ def add_qsub_dir(qsub_dir, geom_dir):
     if qsub_dir == 'None':
         return 0
     elif qsub_dir == './':
-        qsub_path = geom_dir
+        qsub_path = geom_dir + '\n'
     else:
-        qsub_path = "%s/%s" % (geom_dir, qsub_dir)
+        qsub_path = "%s/%s\n" % (geom_dir, qsub_dir)
     print(os.getcwd(), qsub_path, '../../qsub_queue')
     with open('../../qsub_queue', 'a') as fp:
         fp.write(qsub_path)
