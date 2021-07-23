@@ -285,11 +285,11 @@ def main():
         
 
 
-    """
     # df_method_baisset set 3 lines below
     methods_basissets = ['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
     df = df_molecules_to_df_method_basisset(df_molecules, methods_basissets)
     df.to_csv("out3.csv", index=False)
+    """
     """
     
     """
@@ -298,10 +298,12 @@ def main():
     df = name_nm_osci_LUMO_exc_df(df_molecules)
     """
 
+    """
     df_molecules = score_structures(df_molecules)
     df_molecules = df_molecules.sort_values(['nm'], ascending=False)
     df_molecules.to_csv('out2.csv')
     #score_piece(df_molecules)
+    """
 
 
 # criteria

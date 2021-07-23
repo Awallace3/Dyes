@@ -67,9 +67,114 @@
                         0.12465
                     ],
                     "osci": 0.0099
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 532.61,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        -0.16802,
+                        143,
+                        144,
+                        0.66291,
+                        143,
+                        145,
+                        -0.14268
+                    ],
+                    "osci": 0.9986
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 372.0,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        0.16934,
+                        142,
+                        145,
+                        -0.26766,
+                        143,
+                        144,
+                        0.17117,
+                        143,
+                        145,
+                        0.58246,
+                        143,
+                        146,
+                        -0.1183
+                    ],
+                    "osci": 0.3707
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 357.13,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        0.63689,
+                        143,
+                        144,
+                        0.11376,
+                        143,
+                        145,
+                        -0.22269
+                    ],
+                    "osci": 0.2498
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 627.27,
+                    "orbital_Numbers": [
+                        143,
+                        144,
+                        0.69764,
+                        143,
+                        145,
+                        0.10556
+                    ],
+                    "osci": 0.8127
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 469.63,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        -0.33699,
+                        142,
+                        145,
+                        -0.11452,
+                        143,
+                        144,
+                        -0.10835,
+                        143,
+                        145,
+                        0.59455
+                    ],
+                    "osci": 0.054
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 430.47,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        0.609,
+                        143,
+                        145,
+                        0.34594
+                    ],
+                    "osci": 0.3945
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "1ed_1b_1ea",
             "name": "1ed_1b_1ea",
             "parts": "1ed::1b::1ea"
@@ -245,7 +350,7 @@
                     "osci": 0.0112
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(C=C(C#N)C(=O)O)cc2)c1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c1",
             "localName": "1ed_10b_1ea",
             "name": "1ed_10b_1ea",
             "parts": "1ed::10b::1ea"
@@ -761,7 +866,7 @@
                     "osci": 0.0331
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1c2OCCOc2c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1c2OCCOc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_11b_1ea",
             "name": "1ed_11b_1ea",
             "parts": "1ed::11b::1ea"
@@ -1659,7 +1764,7 @@
                     "osci": 0.4119
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1cc2c(cc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1cc2c(cc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "1ed_13b_1ea",
             "name": "1ed_13b_1ea",
             "parts": "1ed::13b::1ea"
@@ -2172,7 +2277,7 @@
                     "osci": 0.0035
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_14b_1ea",
             "name": "1ed_14b_1ea",
             "parts": "1ed::14b::1ea"
@@ -2655,7 +2760,7 @@
                     "osci": 0.6473
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(c2nonc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(c2nonc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_15b_1ea",
             "name": "1ed_15b_1ea",
             "parts": "1ed::15b::1ea"
@@ -2986,10 +3091,64 @@
             "parts": "1ed::15b::3ea"
         },
         {
-            "HOMO": 0,
-            "LUMO": 0,
+            "HOMO": 2.1584843329499996,
+            "LUMO": -1.2365496362,
             "SMILES": "",
             "excitations": [
+                {
+                    "exc": 1,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 662.36,
+                    "orbital_Numbers": [
+                        143,
+                        145,
+                        -0.13737,
+                        144,
+                        145,
+                        0.68174
+                    ],
+                    "osci": 0.7912
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 400.23,
+                    "orbital_Numbers": [
+                        143,
+                        145,
+                        0.45588,
+                        143,
+                        146,
+                        -0.20512,
+                        144,
+                        145,
+                        0.14796,
+                        144,
+                        146,
+                        0.43297,
+                        144,
+                        147,
+                        0.13928
+                    ],
+                    "osci": 0.4754
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 381.3,
+                    "orbital_Numbers": [
+                        143,
+                        145,
+                        0.4911,
+                        143,
+                        146,
+                        0.12863,
+                        144,
+                        146,
+                        -0.45531
+                    ],
+                    "osci": 0.4778
+                },
                 {
                     "exc": 1,
                     "method_basis_set": "bhandhlyp/6-311G(d,p)",
@@ -3084,7 +3243,7 @@
                     "osci": 0.5815
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)[C@@H]1c2c(C(=[S]1)c1ccc(C=C(C#N)C(=O)O)cc1)nsn2",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_16b_1ea",
             "name": "1ed_16b_1ea",
             "parts": "1ed::16b::1ea"
@@ -3239,7 +3398,7 @@
                     "osci": 0.7766
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)[C@H]1c2c(C(=[S]1)c1ncc(C(=O)O)cc1)nsn2",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)cc1",
             "localName": "1ed_16b_2ea",
             "name": "1ed_16b_2ea",
             "parts": "1ed::16b::2ea"
@@ -3391,7 +3550,7 @@
                     "osci": 0.5579
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)[C@H]1c2c(C(=[S]1)c1ncc(C(=O)O)nc1)nsn2",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)nc1",
             "localName": "1ed_16b_3ea",
             "name": "1ed_16b_3ea",
             "parts": "1ed::16b::3ea"
@@ -3940,7 +4099,7 @@
                     "osci": 0.3628
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2ccc(s2)c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2ccc(s2)c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "1ed_2b_1ea",
             "name": "1ed_2b_1ea",
             "parts": "1ed::2b::1ea"
@@ -4480,7 +4639,7 @@
                     "osci": 0.5544
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)cc1",
             "localName": "1ed_3b_1ea",
             "name": "1ed_3b_1ea",
             "parts": "1ed::3b ::1ea"
@@ -5017,7 +5176,7 @@
                     "osci": 0.5916
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2ccc(c3c2nsn3)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2ccc(c3c2nsn3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "1ed_4b_1ea",
             "name": "1ed_4b_1ea",
             "parts": "1ed::4b::1ea"
@@ -5494,7 +5653,7 @@
                     "osci": 0.0437
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nn(C)nc3c(cc2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nn(C)nc3c(cc2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "1ed_5b_1ea",
             "name": "1ed_5b_1ea",
             "parts": "1ed::5b::1ea"
@@ -5992,7 +6151,7 @@
                     "osci": 0.0162
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1sc2c3c(cc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)n(c2c1)c1ccccc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1sc2c3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "1ed_6b_1ea",
             "name": "1ed_6b_1ea",
             "parts": "1ed::6b::1ea"
@@ -6493,7 +6652,7 @@
                     "osci": 0.2205
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_7b_1ea",
             "name": "1ed_7b_1ea",
             "parts": "1ed::7b::1ea"
@@ -7018,7 +7177,7 @@
                     "osci": 0.0191
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_8b_1ea",
             "name": "1ed_8b_1ea",
             "parts": "1ed::8b::1ea"
@@ -7513,7 +7672,7 @@
                     "osci": 0.1341
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1c2c(cccc2)c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1c2c(cccc2)c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_9b_1ea",
             "name": "1ed_9b_1ea",
             "parts": "1ed::9b::1ea"
@@ -8011,7 +8170,7 @@
                     "osci": 0.4108
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(C=C(C#N)C(=O)O)cc2)c1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c1",
             "localName": "2ed_10b_1ea",
             "name": "2ed_10b_1ea",
             "parts": "2ed::10b::1ea"
@@ -8521,7 +8680,7 @@
                     "osci": 0.2408
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2OCCOc2c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2OCCOc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_11b_1ea",
             "name": "2ed_11b_1ea",
             "parts": "2ed::11b::1ea"
@@ -9028,7 +9187,7 @@
                     "osci": 0.0019
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(n1CC)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(n1CC)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_12b_1ea",
             "name": "2ed_12b_1ea",
             "parts": "2ed::12b::1ea"
@@ -9350,7 +9509,7 @@
                     "osci": 0.1877
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1cc2c(cc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1cc2c(cc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "2ed_13b_1ea",
             "name": "2ed_13b_1ea",
             "parts": "2ed::13b::1ea"
@@ -9851,7 +10010,7 @@
                     "osci": 0.3656
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_14b_1ea",
             "name": "2ed_14b_1ea",
             "parts": "2ed::14b::1ea"
@@ -10319,7 +10478,7 @@
                     "osci": 0.2927
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(c2nonc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(c2nonc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_15b_1ea",
             "name": "2ed_15b_1ea",
             "parts": "2ed::15b::1ea"
@@ -10763,7 +10922,7 @@
                     "osci": 0.17
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)C1=[S][C@H](c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_16b_1ea",
             "name": "2ed_16b_1ea",
             "parts": "2ed::16b::1ea"
@@ -10891,7 +11050,7 @@
                     "osci": 0.4844
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)C1=[S][C@H](c2c1nsn2)c1ncc(C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)cc1",
             "localName": "2ed_16b_2ea",
             "name": "2ed_16b_2ea",
             "parts": "2ed::16b::2ea"
@@ -11070,7 +11229,7 @@
                     "osci": 0.0826
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(c(s1)c1ncc(C(=O)O)nc1)n(n2)[S]",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(c(s1)c1ncc(C(=O)O)nc1)N([N]2)[S]",
             "localName": "2ed_16b_3ea",
             "name": "2ed_16b_3ea",
             "parts": "2ed::16b::3ea"
@@ -11282,7 +11441,7 @@
                     "osci": 0.0779
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2c3nccnc3c(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2c3nccnc3c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "2ed_1b_1ea",
             "name": "2ed_1b_1ea",
             "parts": "2ed::1b::1ea"
@@ -11843,7 +12002,7 @@
                     "osci": 0.0233
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(s2)c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(s2)c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "2ed_2b_1ea",
             "name": "2ed_2b_1ea",
             "parts": "2ed::2b::1ea"
@@ -12362,7 +12521,7 @@
                     "osci": 0.165
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)cc1",
             "localName": "2ed_3b_1ea",
             "name": "2ed_3b_1ea",
             "parts": "2ed::3b ::1ea"
@@ -12431,6 +12590,63 @@
                         0.37437
                     ],
                     "osci": 0.0558
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 421.37,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.21066,
+                        139,
+                        140,
+                        0.623,
+                        139,
+                        141,
+                        0.21323
+                    ],
+                    "osci": 1.609
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 327.93,
+                    "orbital_Numbers": [
+                        137,
+                        140,
+                        0.14083,
+                        138,
+                        140,
+                        0.47485,
+                        139,
+                        141,
+                        0.44167,
+                        139,
+                        143,
+                        0.1562
+                    ],
+                    "osci": 0.0312
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 303.85,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.39351,
+                        138,
+                        141,
+                        -0.22435,
+                        139,
+                        140,
+                        -0.28364,
+                        139,
+                        141,
+                        0.42304
+                    ],
+                    "osci": 0.0931
                 },
                 {
                     "exc": 1,
@@ -12821,7 +13037,7 @@
                     "osci": 0.3019
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(c3c2nsn3)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(c3c2nsn3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "2ed_4b_1ea",
             "name": "2ed_4b_1ea",
             "parts": "2ed::4b::1ea"
@@ -13292,7 +13508,7 @@
                     "osci": 0.3404
                 }
             ],
-            "generalSMILES": "c1ccc(N(c2ccccc2)c2c3nn(C)nc3c(cc2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "c1ccc(N(c2ccccc2)c2c3nn(C)nc3c(cc2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "2ed_5b_1ea",
             "name": "2ed_5b_1ea",
             "parts": "2ed::5b::1ea"
@@ -13763,7 +13979,7 @@
                     "osci": 0.4705
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1sc2c3c(cc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)n(c2c1)c1ccccc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1sc2c3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "2ed_6b_1ea",
             "name": "2ed_6b_1ea",
             "parts": "2ed::6b::1ea"
@@ -14234,7 +14450,7 @@
                     "osci": 0.0017
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_7b_1ea",
             "name": "2ed_7b_1ea",
             "parts": "2ed::7b::1ea"
@@ -14714,7 +14930,7 @@
                     "osci": 0.2883
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_8b_1ea",
             "name": "2ed_8b_1ea",
             "parts": "2ed::8b::1ea"
@@ -15146,7 +15362,7 @@
                     "osci": 0.1918
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(cccc2)c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(cccc2)c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "2ed_9b_1ea",
             "name": "2ed_9b_1ea",
             "parts": "2ed::9b::1ea"
@@ -15447,7 +15663,7 @@
                     "osci": 0.4588
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(C=C(C#N)C(=O)O)cc2)c1",
+            "generalSMILES": "N(c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c1",
             "localName": "3ed_10b_1ea",
             "name": "3ed_10b_1ea",
             "parts": "3ed::10b::1ea"
@@ -15787,7 +16003,7 @@
                     "osci": 0.0858
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1c2OCCOc2c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1c2OCCOc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_11b_1ea",
             "name": "3ed_11b_1ea",
             "parts": "3ed::11b::1ea"
@@ -16252,7 +16468,7 @@
                     "osci": 0.004
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1ccc(n1CC)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1ccc(n1CC)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_12b_1ea",
             "name": "3ed_12b_1ea",
             "parts": "3ed::12b::1ea"
@@ -16720,7 +16936,7 @@
                     "osci": 0.5325
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1cc2c(cc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccccc1)c1cc2c(cc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "3ed_13b_1ea",
             "name": "3ed_13b_1ea",
             "parts": "3ed::13b::1ea"
@@ -17382,7 +17598,7 @@
                     "osci": 0.1615
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1ccc(c2nonc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1ccc(c2nonc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_15b_1ea",
             "name": "3ed_15b_1ea",
             "parts": "3ed::15b::1ea"
@@ -17805,7 +18021,7 @@
                     "osci": 0.0861
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)C1=[S][C@@H](c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_16b_1ea",
             "name": "3ed_16b_1ea",
             "parts": "3ed::16b::1ea"
@@ -17933,7 +18149,7 @@
                     "osci": 0.5526
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)C1=[S][C@@H](c2c1nsn2)c1ncc(C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)cc1",
             "localName": "3ed_16b_2ea",
             "name": "3ed_16b_2ea",
             "parts": "3ed::16b::2ea"
@@ -18070,7 +18286,7 @@
                     "osci": 0.0014
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)C1=[S][C@@H](c2c1nsn2)c1ncc(C(=O)O)nc1",
+            "generalSMILES": "N(c1ccccc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)nc1",
             "localName": "3ed_16b_3ea",
             "name": "3ed_16b_3ea",
             "parts": "3ed::16b::3ea"
@@ -18270,7 +18486,7 @@
                     "osci": 0.0689
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1c2nccnc2c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1c2nccnc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_1b_1ea",
             "name": "3ed_1b_1ea",
             "parts": "3ed::1b::1ea"
@@ -18428,11 +18644,150 @@
             "parts": "3ed::1b::2ea"
         },
         {
-            "HOMO": 0,
-            "LUMO": 0,
+            "HOMO": 2.5114159963999994,
+            "LUMO": -1.9315284090999998,
             "SMILES": "",
-            "excitations": [],
-            "generalSMILES": "N(c1ccccc1)c1c2nccnc2c(s1)c1ncc(C(=O)O)nc1.[H]",
+            "excitations": [
+                {
+                    "exc": 1,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 502.76,
+                    "orbital_Numbers": [
+                        90,
+                        91,
+                        0.69059,
+                        90,
+                        92,
+                        0.11054
+                    ],
+                    "osci": 0.3296
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 346.86,
+                    "orbital_Numbers": [
+                        89,
+                        92,
+                        -0.11374,
+                        90,
+                        91,
+                        -0.10846,
+                        90,
+                        92,
+                        0.67065
+                    ],
+                    "osci": 0.5453
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 332.28,
+                    "orbital_Numbers": [
+                        84,
+                        91,
+                        -0.11187,
+                        86,
+                        91,
+                        0.63203,
+                        86,
+                        92,
+                        0.24228,
+                        86,
+                        95,
+                        0.11614
+                    ],
+                    "osci": 0.0028
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 493.17,
+                    "orbital_Numbers": [
+                        90,
+                        91,
+                        0.69367
+                    ],
+                    "osci": 0.3412
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 341.4,
+                    "orbital_Numbers": [
+                        90,
+                        92,
+                        0.67783
+                    ],
+                    "osci": 0.5725
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 310.36,
+                    "orbital_Numbers": [
+                        84,
+                        91,
+                        0.62263,
+                        84,
+                        92,
+                        0.25908,
+                        84,
+                        95,
+                        0.12151
+                    ],
+                    "osci": 0.0032
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 551.77,
+                    "orbital_Numbers": [
+                        90,
+                        91,
+                        0.69243,
+                        90,
+                        92,
+                        0.13261
+                    ],
+                    "osci": 0.2429
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 383.65,
+                    "orbital_Numbers": [
+                        90,
+                        91,
+                        -0.13497,
+                        90,
+                        92,
+                        0.67623,
+                        90,
+                        93,
+                        -0.10062
+                    ],
+                    "osci": 0.5159
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 356.33,
+                    "orbital_Numbers": [
+                        85,
+                        91,
+                        -0.11781,
+                        87,
+                        91,
+                        0.67022,
+                        87,
+                        92,
+                        0.15175
+                    ],
+                    "osci": 0.0022
+                }
+            ],
+            "generalSMILES": "N(c1ccccc1)c1c2nccnc2c(s1)c1ncc(C(=O)O)nc1",
             "localName": "3ed_1b_3ea",
             "name": "3ed_1b_3ea",
             "parts": "3ed::1b::3ea"
@@ -18605,7 +18960,7 @@
                     "osci": 0.0815
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1ccc(s1)c1ccc(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1ccc(s1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_2b_1ea",
             "name": "3ed_2b_1ea",
             "parts": "3ed::2b::1ea"
@@ -19133,7 +19488,7 @@
                     "osci": 0.0688
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1ccc(s1)c1ccc(c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccccc1)c1ccc(s1)c1ccc(c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "3ed_3b_1ea",
             "name": "3ed_3b_1ea",
             "parts": "3ed::3b ::1ea"
@@ -19649,7 +20004,7 @@
                     "osci": 0.1153
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1ccc(c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1ccc(c2c1nsn2)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_4b_1ea",
             "name": "3ed_4b_1ea",
             "parts": "3ed::4b::1ea"
@@ -20105,7 +20460,7 @@
                     "osci": 0.1981
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1c2nn(C)nc2c(cc1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1c2nn(C)nc2c(cc1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_5b_1ea",
             "name": "3ed_5b_1ea",
             "parts": "3ed::5b::1ea"
@@ -20567,7 +20922,7 @@
                     "osci": 0.5349
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1sc2c3c(cc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)n(c2c1)c1ccccc1",
+            "generalSMILES": "N(c1ccccc1)c1sc2c3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "3ed_6b_1ea",
             "name": "3ed_6b_1ea",
             "parts": "3ed::6b::1ea"
@@ -21053,7 +21408,7 @@
                     "osci": 0.0165
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1ccc(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_7b_1ea",
             "name": "3ed_7b_1ea",
             "parts": "3ed::7b::1ea"
@@ -21503,7 +21858,7 @@
                     "osci": 0.1304
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_8b_1ea",
             "name": "3ed_8b_1ea",
             "parts": "3ed::8b::1ea"
@@ -21965,7 +22320,7 @@
                     "osci": 0.1227
                 }
             ],
-            "generalSMILES": "N(c1ccccc1)c1c2c(cccc2)c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccccc1)c1c2c(cccc2)c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "3ed_9b_1ea",
             "name": "3ed_9b_1ea",
             "parts": "3ed::9b::1ea"
@@ -22415,7 +22770,7 @@
                     "osci": 0.0148
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2sc3c(n(CC)c4c3sc(c4)c3ccc(C=C(C#N)C(=O)O)cc3)c2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2sc3c(n(CC)c4c3sc(c4)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)c2)cc1",
             "localName": "5ed_10b_1ea",
             "name": "5ed_10b_1ea",
             "parts": "5ed::10b::1ea"
@@ -22850,7 +23205,7 @@
                     "osci": 0.1572
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3OCCOc3c(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3OCCOc3c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_11b_1ea",
             "name": "5ed_11b_1ea",
             "parts": "5ed::11b::1ea"
@@ -23321,7 +23676,7 @@
                     "osci": 0.0257
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(n2CC)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(n2CC)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_12b_1ea",
             "name": "5ed_12b_1ea",
             "parts": "5ed::12b::1ea"
@@ -23804,7 +24159,7 @@
                     "osci": 0.3536
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2cc3c(cc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2cc3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)cc1",
             "localName": "5ed_13b_1ea",
             "name": "5ed_13b_1ea",
             "parts": "5ed::13b::1ea"
@@ -24326,7 +24681,7 @@
                     "osci": 0.2301
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3c(nn(CC)n3)c(cc2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3c(nn(CC)n3)c(cc2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_14b_1ea",
             "name": "5ed_14b_1ea",
             "parts": "5ed::14b::1ea"
@@ -24821,7 +25176,7 @@
                     "osci": 0.6095
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3nonc23)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3nonc23)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_15b_1ea",
             "name": "5ed_15b_1ea",
             "parts": "5ed::15b::1ea"
@@ -25128,7 +25483,7 @@
                     "osci": 0.7576
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)[C@H]2c3c(C(=[S]2)c2ncc(C(=O)O)cc2)nsn3)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)C2=C3C(=NS[N]3)[C](S2)c2ncc(C(=O)O)cc2)cc1",
             "localName": "5ed_16b_2ea",
             "name": "5ed_16b_2ea",
             "parts": "5ed::16b::2ea"
@@ -25286,7 +25641,7 @@
                     "osci": 0.5506
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)[C@H]2c3c(C(=[S]2)c2ncc(C(=O)O)nc2)nsn3)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)C2=C3C(=NS[N]3)[C](S2)c2ncc(C(=O)O)nc2)cc1",
             "localName": "5ed_16b_3ea",
             "name": "5ed_16b_3ea",
             "parts": "5ed::16b::3ea"
@@ -25465,7 +25820,7 @@
                     "osci": 0.3819
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3c(c(s2)c2ccc(C=C(C#N)C(=O)O)cc2)nccn3)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3c(c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)nccn3)cc1",
             "localName": "5ed_1b_1ea",
             "name": "5ed_1b_1ea",
             "parts": "5ed::1b::1ea"
@@ -25993,7 +26348,7 @@
                     "osci": 0.2918
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3ccc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3ccc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)cc1",
             "localName": "5ed_2b_1ea",
             "name": "5ed_2b_1ea",
             "parts": "5ed::2b::1ea"
@@ -26912,7 +27267,7 @@
                     "osci": 0.5953
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3c2nsn3)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3c2nsn3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_4b_1ea",
             "name": "5ed_4b_1ea",
             "parts": "5ed::4b::1ea"
@@ -27362,7 +27717,7 @@
                     "osci": 0.1833
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3nn(C)nc23)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3nn(C)nc23)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_5b_1ea",
             "name": "5ed_5b_1ea",
             "parts": "5ed::5b::1ea"
@@ -27884,7 +28239,7 @@
                     "osci": 0.0211
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2sc3c4c(cc(s4)c4ccc(C=C(C#N)C(=O)O)cc4)n(c3c2)c2ccccc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2sc3c4c(cc(s4)c4ccc(/C=C(\\C#N)/C(=O)O)cc4)n(c3c2)c2ccccc2)cc1",
             "localName": "5ed_6b_1ea",
             "name": "5ed_6b_1ea",
             "parts": "5ed::6b::1ea"
@@ -28373,7 +28728,7 @@
                     "osci": 0.1969
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_7b_1ea",
             "name": "5ed_7b_1ea",
             "parts": "5ed::7b::1ea"
@@ -28797,6 +29152,60 @@
                 },
                 {
                     "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 487.72,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.2309,
+                        175,
+                        176,
+                        0.6435,
+                        175,
+                        177,
+                        -0.12637
+                    ],
+                    "osci": 1.1567
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 359.55,
+                    "orbital_Numbers": [
+                        172,
+                        176,
+                        -0.1399,
+                        174,
+                        176,
+                        0.61524,
+                        174,
+                        177,
+                        -0.14456,
+                        175,
+                        176,
+                        -0.24657
+                    ],
+                    "osci": 0.1839
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 337.36,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.14101,
+                        174,
+                        177,
+                        0.23765,
+                        175,
+                        177,
+                        0.62964
+                    ],
+                    "osci": 0.0623
+                },
+                {
+                    "exc": 1,
                     "method_basis_set": "PBE1PBE/6-311G(d,p)",
                     "nm": 631.36,
                     "orbital_Numbers": [
@@ -28835,7 +29244,7 @@
                     "osci": 0.0267
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2sc(c3cc(C(=O)OC)sc23)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2sc(c3cc(C(=O)OC)sc23)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_8b_1ea",
             "name": "5ed_8b_1ea",
             "parts": "5ed::8b::1ea"
@@ -29315,7 +29724,7 @@
                     "osci": 0.1814
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3c(cccc3)c(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2c3c(cccc3)c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)cc1",
             "localName": "5ed_9b_1ea",
             "name": "5ed_9b_1ea",
             "parts": "5ed::9b::1ea"
@@ -29789,7 +30198,7 @@
                     "osci": 0.3243
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(C=C(C#N)C(=O)O)cc2)c1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c1",
             "localName": "6ed_10b_1ea",
             "name": "6ed_10b_1ea",
             "parts": "6ed::10b::1ea"
@@ -30305,7 +30714,7 @@
                     "osci": 0.0219
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2OCCOc2c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2OCCOc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_11b_1ea",
             "name": "6ed_11b_1ea",
             "parts": "6ed::11b::1ea"
@@ -30806,7 +31215,7 @@
                     "osci": 0.0034
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(n1CC)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(n1CC)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_12b_1ea",
             "name": "6ed_12b_1ea",
             "parts": "6ed::12b::1ea"
@@ -31137,7 +31546,7 @@
                     "osci": 0.0817
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1cc2c(cc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1cc2c(cc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "6ed_13b_1ea",
             "name": "6ed_13b_1ea",
             "parts": "6ed::13b::1ea"
@@ -31650,7 +32059,7 @@
                     "osci": 0.3025
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_14b_1ea",
             "name": "6ed_14b_1ea",
             "parts": "6ed::14b::1ea"
@@ -32139,7 +32548,7 @@
                     "osci": 0.2697
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2nonc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2nonc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_15b_1ea",
             "name": "6ed_15b_1ea",
             "parts": "6ed::15b::1ea"
@@ -32437,7 +32846,7 @@
                     "osci": 0.1756
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)C1=[S][C@@H](c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)C1=C2C(=NS[N]2)[C](S1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_16b_1ea",
             "name": "6ed_16b_1ea",
             "parts": "6ed::16b::1ea"
@@ -32622,7 +33031,7 @@
                     "osci": 0.0093
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(c(s1)c1ncc(C(=O)O)cc1)n(n2)[S]",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(c(s1)c1ncc(C(=O)O)cc1)N([N]2)[S]",
             "localName": "6ed_16b_2ea",
             "name": "6ed_16b_2ea",
             "parts": "6ed::16b::2ea"
@@ -32807,7 +33216,7 @@
                     "osci": 0.055
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(c(s1)c1ncc(C(=O)O)nc1)n(n2)[S]",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(c(s1)c1ncc(C(=O)O)nc1)N([N]2)[S]",
             "localName": "6ed_16b_3ea",
             "name": "6ed_16b_3ea",
             "parts": "6ed::16b::3ea"
@@ -33001,7 +33410,7 @@
                     "osci": 0.1309
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(c(s1)c1ccc(C=C(C#N)C(=O)O)cc1)nccn2",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1)nccn2",
             "localName": "6ed_1b_1ea",
             "name": "6ed_1b_1ea",
             "parts": "6ed::1b::1ea"
@@ -33535,7 +33944,7 @@
                     "osci": 0.0179
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "6ed_2b_1ea",
             "name": "6ed_2b_1ea",
             "parts": "6ed::2b::1ea"
@@ -34069,7 +34478,7 @@
                     "osci": 0.0355
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2ccc(c3ccc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)s1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2ccc(c3ccc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)s1",
             "localName": "6ed_3b_1ea",
             "name": "6ed_3b_1ea",
             "parts": "6ed::3b ::1ea"
@@ -34606,7 +35015,7 @@
                     "osci": 0.2218
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2c1nsn2)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_4b_1ea",
             "name": "6ed_4b_1ea",
             "parts": "6ed::4b::1ea"
@@ -35402,7 +35811,7 @@
                     "osci": 0.4593
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1sc2c3c(cc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)n(c2c1)c1ccccc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1sc2c3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "6ed_6b_1ea",
             "name": "6ed_6b_1ea",
             "parts": "6ed::6b::1ea"
@@ -35936,7 +36345,7 @@
                     "osci": 0.0276
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_7b_1ea",
             "name": "6ed_7b_1ea",
             "parts": "6ed::7b::1ea"
@@ -36228,7 +36637,7 @@
                     "osci": 0.3115
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_8b_1ea",
             "name": "6ed_8b_1ea",
             "parts": "6ed::8b::1ea"
@@ -36663,7 +37072,7 @@
                     "osci": 0.2228
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(cccc2)c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1c2c(cccc2)c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_9b_1ea",
             "name": "6ed_9b_1ea",
             "parts": "6ed::9b::1ea"
@@ -37122,7 +37531,7 @@
                     "osci": 0.3481
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(C=C(C#N)C(=O)O)cc2)c1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c1",
             "localName": "7ed_10b_1ea",
             "name": "7ed_10b_1ea",
             "parts": "7ed::10b::1ea"
@@ -37626,7 +38035,7 @@
                     "osci": 0.0103
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1c2OCCOc2c(s1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1c2OCCOc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_11b_1ea",
             "name": "7ed_11b_1ea",
             "parts": "7ed::11b::1ea"
@@ -38231,7 +38640,7 @@
                     "osci": 0.0367
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1cc2c(cc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1cc2c(cc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "7ed_13b_1ea",
             "name": "7ed_13b_1ea",
             "parts": "7ed::13b::1ea"
@@ -38744,7 +39153,7 @@
                     "osci": 0.1839
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_14b_1ea",
             "name": "7ed_14b_1ea",
             "parts": "7ed::14b::1ea"
@@ -39215,7 +39624,7 @@
                     "osci": 0.1363
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2nonc12)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2nonc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_15b_1ea",
             "name": "7ed_15b_1ea",
             "parts": "7ed::15b::1ea"
@@ -39653,7 +40062,7 @@
                     "osci": 0.2048
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)C1=[S][C@@H](c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)C1=C2C(=NS[N]2)[C](S1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_16b_1ea",
             "name": "7ed_16b_1ea",
             "parts": "7ed::16b::1ea"
@@ -39784,7 +40193,7 @@
                     "osci": 0.7255
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)C1=[S][C@@H](c2c1nsn2)c1ncc(C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)cc1",
             "localName": "7ed_16b_2ea",
             "name": "7ed_16b_2ea",
             "parts": "7ed::16b::2ea"
@@ -39921,7 +40330,7 @@
                     "osci": 0.4464
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)C1=[S][C@@H](c2c1nsn2)c1ncc(C(=O)O)nc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)nc1",
             "localName": "7ed_16b_3ea",
             "name": "7ed_16b_3ea",
             "parts": "7ed::16b::3ea"
@@ -40118,7 +40527,7 @@
                     "osci": 0.1377
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(c(s1)c1ccc(C=C(C#N)C(=O)O)cc1)nccn2",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1)nccn2",
             "localName": "7ed_1b_1ea",
             "name": "7ed_1b_1ea",
             "parts": "7ed::1b::1ea"
@@ -40276,10 +40685,107 @@
             "parts": "7ed::1b::2ea"
         },
         {
-            "HOMO": 0,
-            "LUMO": 0,
+            "HOMO": 2.3173988213499994,
+            "LUMO": -2.03248264745,
             "SMILES": "",
-            "excitations": [],
+            "excitations": [
+                {
+                    "exc": 1,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 513.58,
+                    "orbital_Numbers": [
+                        98,
+                        99,
+                        0.68685,
+                        98,
+                        100,
+                        0.10735
+                    ],
+                    "osci": 0.3626
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 352.81,
+                    "orbital_Numbers": [
+                        97,
+                        100,
+                        0.15633,
+                        98,
+                        99,
+                        -0.11053,
+                        98,
+                        100,
+                        0.66114
+                    ],
+                    "osci": 0.5726
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 330.86,
+                    "orbital_Numbers": [
+                        91,
+                        99,
+                        -0.11432,
+                        94,
+                        99,
+                        0.63265,
+                        94,
+                        100,
+                        0.24017,
+                        94,
+                        103,
+                        0.12227
+                    ],
+                    "osci": 0.0028
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 503.27,
+                    "orbital_Numbers": [
+                        98,
+                        99,
+                        0.69145
+                    ],
+                    "osci": 0.3727
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 347.07,
+                    "orbital_Numbers": [
+                        97,
+                        100,
+                        0.13242,
+                        98,
+                        100,
+                        0.67028
+                    ],
+                    "osci": 0.5983
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 309.25,
+                    "orbital_Numbers": [
+                        91,
+                        99,
+                        -0.10005,
+                        92,
+                        99,
+                        0.62366,
+                        92,
+                        100,
+                        0.25628,
+                        92,
+                        103,
+                        0.12693
+                    ],
+                    "osci": 0.0032
+                }
+            ],
             "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(c(s1)c1ncc(C(=O)O)nc1)nccn2",
             "localName": "7ed_1b_3ea",
             "name": "7ed_1b_3ea",
@@ -40459,7 +40965,7 @@
                     "osci": 0.132
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)s1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "7ed_2b_1ea",
             "name": "7ed_2b_1ea",
             "parts": "7ed::2b::1ea"
@@ -40996,7 +41502,7 @@
                     "osci": 0.1391
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2ccc(c3ccc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)s1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2ccc(c3ccc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)s1",
             "localName": "7ed_3b_1ea",
             "name": "7ed_3b_1ea",
             "parts": "7ed::3b ::1ea"
@@ -41357,7 +41863,7 @@
                     "osci": 0.1107
                 }
             ],
-            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2c1nsn2)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2c1nsn2)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_4b_1ea",
             "name": "7ed_4b_1ea",
             "parts": "7ed::4b::1ea"
@@ -41646,7 +42152,7 @@
                     "osci": 0.0098
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2c1nsn2)c1ncc(C(=O)O)nc1",
             "localName": "7ed_4b_3ea",
             "name": "7ed_4b_3ea",
             "parts": "7ed::4b::3ea"
@@ -41813,7 +42319,7 @@
                     "osci": 0.1669
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2nn(C)nc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_5b_1ea",
             "name": "7ed_5b_1ea",
             "parts": "7ed::5b::1ea"
@@ -41959,7 +42465,7 @@
                     "osci": 0.0014
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2nn(C)nc12)c1ncc(C(=O)O)nc1",
             "localName": "7ed_5b_3ea",
             "name": "7ed_5b_3ea",
             "parts": "7ed::5b::3ea"
@@ -42132,7 +42638,7 @@
                     "osci": 0.4096
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1sc2c3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "7ed_6b_1ea",
             "name": "7ed_6b_1ea",
             "parts": "7ed::6b::1ea"
@@ -42296,7 +42802,7 @@
                     "osci": 0.0439
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1sc2c3c(cc(s3)c3ncc(C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "7ed_6b_2ea",
             "name": "7ed_6b_2ea",
             "parts": "7ed::6b::2ea"
@@ -42529,9 +43035,114 @@
                         -0.12777
                     ],
                     "osci": 0.1144
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 410.84,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        0.15305,
+                        98,
+                        99,
+                        0.66746,
+                        98,
+                        100,
+                        0.13613
+                    ],
+                    "osci": 1.339
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 288.74,
+                    "orbital_Numbers": [
+                        96,
+                        99,
+                        -0.21285,
+                        97,
+                        99,
+                        0.51887,
+                        98,
+                        100,
+                        -0.3682,
+                        98,
+                        103,
+                        0.11402
+                    ],
+                    "osci": 0.0404
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 283.69,
+                    "orbital_Numbers": [
+                        93,
+                        99,
+                        0.11774,
+                        97,
+                        99,
+                        0.35598,
+                        98,
+                        99,
+                        -0.18988,
+                        98,
+                        100,
+                        0.49165,
+                        98,
+                        103,
+                        -0.1504
+                    ],
+                    "osci": 0.1305
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 489.02,
+                    "orbital_Numbers": [
+                        98,
+                        99,
+                        0.70535
+                    ],
+                    "osci": 0.9852
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 346.88,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        0.67533,
+                        98,
+                        100,
+                        0.19175
+                    ],
+                    "osci": 0.4006
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 321.61,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        -0.18531,
+                        98,
+                        100,
+                        0.6363,
+                        98,
+                        102,
+                        0.1434,
+                        98,
+                        103,
+                        -0.10559
+                    ],
+                    "osci": 0.0912
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_7b_1ea",
             "name": "7ed_7b_1ea",
             "parts": "7ed::7b::1ea"
@@ -42707,7 +43318,7 @@
                     "osci": 0.0176
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(s1)c1ncc(C(=O)O)cc1",
             "localName": "7ed_7b_2ea",
             "name": "7ed_7b_2ea",
             "parts": "7ed::7b::2ea"
@@ -42865,7 +43476,7 @@
                     "osci": 0.0017
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(s1)c1ncc(C(=O)O)nc1",
             "localName": "7ed_7b_3ea",
             "name": "7ed_7b_3ea",
             "parts": "7ed::7b::3ea"
@@ -43020,7 +43631,7 @@
                     "osci": 0.2259
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_8b_1ea",
             "name": "7ed_8b_1ea",
             "parts": "7ed::8b::1ea"
@@ -43309,7 +43920,7 @@
                     "osci": 0.1429
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1sc(c2cc(C(=O)OC)sc12)c1ncc(C(=O)O)nc1",
             "localName": "7ed_8b_3ea",
             "name": "7ed_8b_3ea",
             "parts": "7ed::8b::3ea"
@@ -43372,9 +43983,90 @@
                         0.10987
                     ],
                     "osci": 0.0382
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 460.65,
+                    "orbital_Numbers": [
+                        111,
+                        112,
+                        0.66404,
+                        111,
+                        113,
+                        0.19608
+                    ],
+                    "osci": 0.9864
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 354.14,
+                    "orbital_Numbers": [
+                        111,
+                        112,
+                        -0.17556,
+                        111,
+                        113,
+                        0.6587
+                    ],
+                    "osci": 0.0622
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 323.05,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.62279,
+                        110,
+                        113,
+                        0.28486
+                    ],
+                    "osci": 0.0427
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 539.91,
+                    "orbital_Numbers": [
+                        111,
+                        112,
+                        0.70159
+                    ],
+                    "osci": 0.8059
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 414.96,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.13424,
+                        111,
+                        113,
+                        0.68012
+                    ],
+                    "osci": 0.0204
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 406.52,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.68502,
+                        111,
+                        113,
+                        -0.14234
+                    ],
+                    "osci": 0.105
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(cccc2)c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_9b_1ea",
             "name": "7ed_9b_1ea",
             "parts": "7ed::9b::1ea"
@@ -43636,7 +44328,7 @@
                     "osci": 0.0129
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1c2c(cccc2)c(s1)c1ncc(C(=O)O)nc1",
             "localName": "7ed_9b_3ea",
             "name": "7ed_9b_3ea",
             "parts": "7ed::9b::3ea"
@@ -43809,7 +44501,7 @@
                     "osci": 0.0109
                 }
             ],
-            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(C=C(C#N)C(=O)O)cc2)c1",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc2c(n(CC)c3c2sc(c3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c1",
             "localName": "TPA2_10b_1ea",
             "name": "TPA2_10b_1ea",
             "parts": "TPA2::10b::1ea"
@@ -43955,7 +44647,7 @@
                     "osci": 0.0303
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc2c(n(CC)c3c2sc(c3)c2ncc(C(=O)O)cc2)c1",
             "localName": "TPA2_10b_2ea",
             "name": "TPA2_10b_2ea",
             "parts": "TPA2::10b::2ea"
@@ -44122,7 +44814,7 @@
                     "osci": 0.269
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc2c(n(CC)c3c2sc(c3)c2ncc(C(=O)O)nc2)c1",
             "localName": "TPA2_10b_3ea",
             "name": "TPA2_10b_3ea",
             "parts": "TPA2::10b::3ea"
@@ -44200,9 +44892,105 @@
                         -0.11688
                     ],
                     "osci": 0.1793
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 436.95,
+                    "orbital_Numbers": [
+                        160,
+                        162,
+                        0.24176,
+                        161,
+                        162,
+                        0.63164,
+                        161,
+                        163,
+                        0.17056
+                    ],
+                    "osci": 1.6391
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 325.43,
+                    "orbital_Numbers": [
+                        157,
+                        162,
+                        0.11569,
+                        158,
+                        162,
+                        -0.13824,
+                        160,
+                        162,
+                        0.6108,
+                        161,
+                        162,
+                        -0.23298
+                    ],
+                    "osci": 0.1598
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 305.75,
+                    "orbital_Numbers": [
+                        160,
+                        163,
+                        0.12011,
+                        161,
+                        162,
+                        -0.18769,
+                        161,
+                        163,
+                        0.63248,
+                        161,
+                        167,
+                        -0.10566
+                    ],
+                    "osci": 0.2179
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 553.23,
+                    "orbital_Numbers": [
+                        161,
+                        162,
+                        0.70425
+                    ],
+                    "osci": 0.9445
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 404.88,
+                    "orbital_Numbers": [
+                        160,
+                        162,
+                        0.68396,
+                        161,
+                        163,
+                        0.16225
+                    ],
+                    "osci": 0.7144
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 366.23,
+                    "orbital_Numbers": [
+                        158,
+                        162,
+                        0.647,
+                        161,
+                        163,
+                        -0.25952
+                    ],
+                    "osci": 0.0574
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2OCCOc2c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_11b_1ea",
             "name": "TPA2_11b_1ea",
             "parts": "TPA2::11b::1ea"
@@ -44375,7 +45163,7 @@
                     "osci": 0.035
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2OCCOc2c(s1)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_11b_2ea",
             "name": "TPA2_11b_2ea",
             "parts": "TPA2::11b::2ea"
@@ -44560,7 +45348,7 @@
                     "osci": 0.4285
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2OCCOc2c(s1)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_11b_3ea",
             "name": "TPA2_11b_3ea",
             "parts": "TPA2::11b::3ea"
@@ -44709,7 +45497,7 @@
                     "osci": 0.0003
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(n1CC)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_12b_1ea",
             "name": "TPA2_12b_1ea",
             "parts": "TPA2::12b::1ea"
@@ -44876,7 +45664,7 @@
                     "osci": 0.0028
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(n1CC)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_12b_2ea",
             "name": "TPA2_12b_2ea",
             "parts": "TPA2::12b::2ea"
@@ -45064,7 +45852,7 @@
                     "osci": 0.7594
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(n1CC)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_12b_3ea",
             "name": "TPA2_12b_3ea",
             "parts": "TPA2::12b::3ea"
@@ -45234,7 +46022,7 @@
                     "osci": 0.4291
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1cc2c(cc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)s1",
             "localName": "TPA2_13b_1ea",
             "name": "TPA2_13b_1ea",
             "parts": "TPA2::13b::1ea"
@@ -45398,7 +46186,7 @@
                     "osci": 0.0857
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1cc2c(cc(s2)c2ncc(C(=O)O)cc2)s1",
             "localName": "TPA2_13b_2ea",
             "name": "TPA2_13b_2ea",
             "parts": "TPA2::13b::2ea"
@@ -45580,7 +46368,7 @@
                     "osci": 0.6262
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1cc2c(cc(s2)c2ncc(C(=O)O)nc2)s1",
             "localName": "TPA2_13b_3ea",
             "name": "TPA2_13b_3ea",
             "parts": "TPA2::13b::3ea"
@@ -45753,7 +46541,7 @@
                     "osci": 0.0183
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2c(nn(CC)n2)c(cc1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_14b_1ea",
             "name": "TPA2_14b_1ea",
             "parts": "TPA2::14b::1ea"
@@ -45914,7 +46702,7 @@
                     "osci": 0.0116
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2c(nn(CC)n2)c(cc1)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_14b_2ea",
             "name": "TPA2_14b_2ea",
             "parts": "TPA2::14b::2ea"
@@ -46248,7 +47036,7 @@
                     "osci": 0.5619
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(c2nonc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_15b_1ea",
             "name": "TPA2_15b_1ea",
             "parts": "TPA2::15b::1ea"
@@ -46415,7 +47203,7 @@
                     "osci": 0.0101
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(c2nonc12)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_15b_2ea",
             "name": "TPA2_15b_2ea",
             "parts": "TPA2::15b::2ea"
@@ -46585,7 +47373,7 @@
                     "osci": 0.014
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(c2nonc12)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_15b_3ea",
             "name": "TPA2_15b_3ea",
             "parts": "TPA2::15b::3ea"
@@ -46749,7 +47537,7 @@
                     "osci": 0.7387
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2c(c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1)N([N]2)[S]",
             "localName": "TPA2_16b_1ea",
             "name": "TPA2_16b_1ea",
             "parts": "TPA2::16b::1ea"
@@ -46907,7 +47695,7 @@
                     "osci": 0.0137
                 }
             ],
-            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)[C@@H]1c2c(C(=[S]1)c1ncc(C(=O)O)cc1)nsn2",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_16b_2ea",
             "name": "TPA2_16b_2ea",
             "parts": "TPA2::16b::2ea"
@@ -47062,7 +47850,7 @@
                     "osci": 0.1107
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)C1=C2C(=NS[N]2)[C](S1)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_16b_3ea",
             "name": "TPA2_16b_3ea",
             "parts": "TPA2::16b::3ea"
@@ -47238,7 +48026,7 @@
                     "osci": 0.3895
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_1b_1ea",
             "name": "TPA2_1b_1ea",
             "parts": "TPA2::1b::1ea"
@@ -47405,7 +48193,7 @@
                     "osci": 0.4864
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(C(=O)O)cn2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_1b_2ea",
             "name": "TPA2_1b_2ea",
             "parts": "TPA2::1b::2ea"
@@ -47584,7 +48372,7 @@
                     "osci": 0.3578
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2c3nccnc3c(s2)c2ncc(C(=O)O)nc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_1b_3ea",
             "name": "TPA2_1b_3ea",
             "parts": "TPA2::1b::3ea"
@@ -47766,7 +48554,7 @@
                     "osci": 0.315
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(s2)c2ccc(C=C(C#N)C(=O)O)cc2)c2ccc(OC)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(s2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_2b_1ea",
             "name": "TPA2_2b_1ea",
             "parts": "TPA2::2b::1ea"
@@ -47939,7 +48727,7 @@
                     "osci": 0.0856
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(s2)c2ccc(C(=O)O)cn2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_2b_2ea",
             "name": "TPA2_2b_2ea",
             "parts": "TPA2::2b::2ea"
@@ -48133,7 +48921,7 @@
                     "osci": 0.0202
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(s2)c2ncc(C(=O)O)nc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_2b_3ea",
             "name": "TPA2_2b_3ea",
             "parts": "TPA2::2b::3ea"
@@ -48315,7 +49103,7 @@
                     "osci": 0.4348
                 }
             ],
-            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(C=C(C#N)C(=O)O)cc3)s2)c2ccc(OC)cc2)cc1",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)s2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_3b_1ea",
             "name": "TPA2_3b_1ea",
             "parts": "TPA2::3b ::1ea"
@@ -48503,7 +49291,7 @@
                     "osci": 0.1254
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ccc(C(=O)O)cn3)s2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_3b_2ea",
             "name": "TPA2_3b_2ea",
             "parts": "TPA2::3b ::2ea"
@@ -48703,7 +49491,7 @@
                     "osci": 0.1246
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(s2)c2ccc(c3ccc(s3)c3ncc(C(=O)O)nc3)s2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_3b_3ea",
             "name": "TPA2_3b_3ea",
             "parts": "TPA2::3b ::3ea"
@@ -48867,7 +49655,7 @@
                     "osci": 0.6215
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(c3c2nsn3)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_4b_1ea",
             "name": "TPA2_4b_1ea",
             "parts": "TPA2::4b::1ea"
@@ -49162,7 +49950,7 @@
                     "osci": 0.3442
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2ccc(c3c2nsn3)c2ncc(C(=O)O)nc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_4b_3ea",
             "name": "TPA2_4b_3ea",
             "parts": "TPA2::4b::3ea"
@@ -49326,7 +50114,7 @@
                     "osci": 0.1373
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2c3nn(C)nc3c(cc2)c2ccc(/C=C(\\C#N)/C(=O)O)cc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_5b_1ea",
             "name": "TPA2_5b_1ea",
             "parts": "TPA2::5b::1ea"
@@ -49481,7 +50269,7 @@
                     "osci": 0.033
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2c3nn(C)nc3c(cc2)c2ccc(C(=O)O)cn2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_5b_2ea",
             "name": "TPA2_5b_2ea",
             "parts": "TPA2::5b::2ea"
@@ -49642,7 +50430,7 @@
                     "osci": 0.5355
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(cc2)c2c3nn(C)nc3c(cc2)c2ncc(C(=O)O)nc2)c2ccc(OC)cc2)cc1",
             "localName": "TPA2_5b_3ea",
             "name": "TPA2_5b_3ea",
             "parts": "TPA2::5b::3ea"
@@ -49815,7 +50603,7 @@
                     "osci": 0.017
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc2c3c(cc(s3)c3ccc(/C=C(\\C#N)/C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "TPA2_6b_1ea",
             "name": "TPA2_6b_1ea",
             "parts": "TPA2::6b::1ea"
@@ -49964,7 +50752,7 @@
                     "osci": 0.0549
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc2c3c(cc(s3)c3ncc(C(=O)O)cc3)n(c2c1)c1ccccc1",
             "localName": "TPA2_6b_2ea",
             "name": "TPA2_6b_2ea",
             "parts": "TPA2::6b::2ea"
@@ -50298,7 +51086,7 @@
                     "osci": 0.0196
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_7b_1ea",
             "name": "TPA2_7b_1ea",
             "parts": "TPA2::7b::1ea"
@@ -50465,7 +51253,7 @@
                     "osci": 0.01
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(s1)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_7b_2ea",
             "name": "TPA2_7b_2ea",
             "parts": "TPA2::7b::2ea"
@@ -50644,7 +51432,7 @@
                     "osci": 0.568
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1ccc(s1)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_7b_3ea",
             "name": "TPA2_7b_3ea",
             "parts": "TPA2::7b::3ea"
@@ -50713,9 +51501,93 @@
                         0.57548
                     ],
                     "osci": 0.0429
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 471.0,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.24687,
+                        175,
+                        176,
+                        0.6356,
+                        175,
+                        177,
+                        -0.12716
+                    ],
+                    "osci": 1.2173
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 352.05,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.61,
+                        174,
+                        177,
+                        -0.13481,
+                        175,
+                        176,
+                        -0.25371
+                    ],
+                    "osci": 0.1259
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 328.47,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.10173,
+                        174,
+                        177,
+                        0.25693,
+                        175,
+                        177,
+                        0.62479
+                    ],
+                    "osci": 0.0247
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 601.84,
+                    "orbital_Numbers": [
+                        175,
+                        176,
+                        0.70425
+                    ],
+                    "osci": 0.7109
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 452.44,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.69678
+                    ],
+                    "osci": 0.4149
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 416.49,
+                    "orbital_Numbers": [
+                        175,
+                        177,
+                        0.68814
+                    ],
+                    "osci": 0.0043
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc(c2cc(C(=O)OC)sc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_8b_1ea",
             "name": "TPA2_8b_1ea",
             "parts": "TPA2::8b::1ea"
@@ -51058,7 +51930,7 @@
                     "osci": 0.011
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1sc(c2cc(C(=O)OC)sc12)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_8b_3ea",
             "name": "TPA2_8b_3ea",
             "parts": "TPA2::8b::3ea"
@@ -51213,7 +52085,7 @@
                     "osci": 0.1797
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2c(cccc2)c(s1)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "TPA2_9b_1ea",
             "name": "TPA2_9b_1ea",
             "parts": "TPA2::9b::1ea"
@@ -51380,7 +52252,7 @@
                     "osci": 0.0442
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2c(cccc2)c(s1)c1ncc(C(=O)O)cc1",
             "localName": "TPA2_9b_2ea",
             "name": "TPA2_9b_2ea",
             "parts": "TPA2::9b::2ea"
@@ -51523,7 +52395,7 @@
                     "osci": 0.0117
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(cc1)N(c1cccc(OC)c1)c1ccc(cc1)c1c2c(cccc2)c(s1)c1ncc(C(=O)O)nc1",
             "localName": "TPA2_9b_3ea",
             "name": "TPA2_9b_3ea",
             "parts": "TPA2::9b::3ea"
@@ -51583,9 +52455,87 @@
                         0.60843
                     ],
                     "osci": 0.038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 379.76,
+                    "orbital_Numbers": [
+                        133,
+                        135,
+                        0.49562,
+                        134,
+                        135,
+                        0.47529
+                    ],
+                    "osci": 1.2532
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 314.08,
+                    "orbital_Numbers": [
+                        133,
+                        135,
+                        -0.4746,
+                        134,
+                        135,
+                        0.5054
+                    ],
+                    "osci": 0.0278
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 277.07,
+                    "orbital_Numbers": [
+                        133,
+                        137,
+                        -0.18566,
+                        134,
+                        136,
+                        0.38116,
+                        134,
+                        137,
+                        0.51199
+                    ],
+                    "osci": 0.1103
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 475.21,
+                    "orbital_Numbers": [
+                        134,
+                        135,
+                        0.70326
+                    ],
+                    "osci": 0.3282
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 416.79,
+                    "orbital_Numbers": [
+                        133,
+                        135,
+                        0.70063
+                    ],
+                    "osci": 0.6932
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 320.09,
+                    "orbital_Numbers": [
+                        132,
+                        135,
+                        0.69848
+                    ],
+                    "osci": 0.0063
                 }
             ],
-            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(n1CC)c1ccc(C=C(C#N)C(=O)O)cc1",
+            "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(n1CC)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "1ed_12b_1ea",
             "name": "1ed_12b_1ea",
             "parts": "1ed::12b::1ea"
@@ -51648,9 +52598,99 @@
                         -0.29234
                     ],
                     "osci": 0.0038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 350.29,
+                    "orbital_Numbers": [
+                        100,
+                        102,
+                        -0.15161,
+                        101,
+                        102,
+                        0.67723
+                    ],
+                    "osci": 0.7583
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 296.17,
+                    "orbital_Numbers": [
+                        100,
+                        103,
+                        -0.25572,
+                        101,
+                        103,
+                        0.64127
+                    ],
+                    "osci": 0.0441
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 280.58,
+                    "orbital_Numbers": [
+                        93,
+                        102,
+                        0.12726,
+                        93,
+                        103,
+                        0.12484,
+                        95,
+                        102,
+                        0.61892,
+                        95,
+                        103,
+                        0.2059
+                    ],
+                    "osci": 0.0073
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 418.03,
+                    "orbital_Numbers": [
+                        101,
+                        102,
+                        0.70099
+                    ],
+                    "osci": 0.4285
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 358.99,
+                    "orbital_Numbers": [
+                        100,
+                        103,
+                        0.1022,
+                        101,
+                        103,
+                        0.69158
+                    ],
+                    "osci": 0.0392
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 324.53,
+                    "orbital_Numbers": [
+                        97,
+                        102,
+                        0.60451,
+                        98,
+                        102,
+                        0.16002,
+                        99,
+                        102,
+                        0.27733
+                    ],
+                    "osci": 0.0055
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1ccc(n1CC)c1ncc(C(=O)O)nc1",
             "localName": "2ed_12b_3ea",
             "name": "2ed_12b_3ea",
             "parts": "2ed::12b::3ea"
@@ -51710,9 +52750,87 @@
                         0.17339
                     ],
                     "osci": 0.0293
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 456.59,
+                    "orbital_Numbers": [
+                        110,
+                        111,
+                        0.69276
+                    ],
+                    "osci": 0.5862
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 325.76,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        -0.13287,
+                        110,
+                        112,
+                        0.67062
+                    ],
+                    "osci": 0.0752
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 310.42,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        0.66218,
+                        109,
+                        112,
+                        -0.12963,
+                        110,
+                        112,
+                        0.12031
+                    ],
+                    "osci": 0.0288
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 504.28,
+                    "orbital_Numbers": [
+                        110,
+                        111,
+                        0.69966
+                    ],
+                    "osci": 0.5065
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 385.49,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.69107
+                    ],
+                    "osci": 0.0198
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 359.66,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        0.67828,
+                        110,
+                        113,
+                        -0.11885
+                    ],
+                    "osci": 0.0387
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccccc1)(c1ccccc1)c1c2c(cccc2)c(s1)c1ncc(C(=O)O)nc1",
             "localName": "2ed_9b_3ea",
             "name": "2ed_9b_3ea",
             "parts": "2ed::9b::3ea"
@@ -51778,9 +52896,99 @@
                         0.1504
                     ],
                     "osci": 0.0258
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 390.43,
+                    "orbital_Numbers": [
+                        107,
+                        110,
+                        0.10174,
+                        109,
+                        110,
+                        0.67788,
+                        109,
+                        112,
+                        0.1007
+                    ],
+                    "osci": 1.4005
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 298.25,
+                    "orbital_Numbers": [
+                        108,
+                        110,
+                        0.66985,
+                        109,
+                        111,
+                        -0.10714
+                    ],
+                    "osci": 0.0568
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 285.1,
+                    "orbital_Numbers": [
+                        107,
+                        110,
+                        -0.22492,
+                        107,
+                        112,
+                        -0.11157,
+                        108,
+                        110,
+                        0.13976,
+                        109,
+                        111,
+                        0.49117,
+                        109,
+                        112,
+                        0.33247,
+                        109,
+                        114,
+                        0.12298
+                    ],
+                    "osci": 0.0263
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 436.09,
+                    "orbital_Numbers": [
+                        109,
+                        110,
+                        0.7027
+                    ],
+                    "osci": 1.1924
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 356.13,
+                    "orbital_Numbers": [
+                        108,
+                        110,
+                        0.70137
+                    ],
+                    "osci": 0.0421
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 334.13,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        0.68882
+                    ],
+                    "osci": 0.0336
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccccc1)c1sc2c(n(CC)c3c2sc(c3)c2ncc(C(=O)O)cc2)c1",
             "localName": "3ed_10b_2ea",
             "name": "3ed_10b_2ea",
             "parts": "3ed::10b::2ea"
@@ -51834,9 +53042,99 @@
                         0.66139
                     ],
                     "osci": 0.0397
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 364.43,
+                    "orbital_Numbers": [
+                        94,
+                        95,
+                        0.68684
+                    ],
+                    "osci": 0.9651
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 290.96,
+                    "orbital_Numbers": [
+                        93,
+                        96,
+                        0.11209,
+                        94,
+                        96,
+                        0.66444
+                    ],
+                    "osci": 0.0394
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 289.17,
+                    "orbital_Numbers": [
+                        88,
+                        95,
+                        -0.10639,
+                        90,
+                        95,
+                        0.56066,
+                        90,
+                        96,
+                        -0.3551,
+                        94,
+                        96,
+                        -0.10525
+                    ],
+                    "osci": 0.0038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 405.65,
+                    "orbital_Numbers": [
+                        94,
+                        95,
+                        0.7014
+                    ],
+                    "osci": 0.8317
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 340.46,
+                    "orbital_Numbers": [
+                        92,
+                        95,
+                        0.18831,
+                        94,
+                        96,
+                        0.67085
+                    ],
+                    "osci": 0.0366
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 339.53,
+                    "orbital_Numbers": [
+                        92,
+                        95,
+                        0.61657,
+                        92,
+                        96,
+                        -0.19511,
+                        93,
+                        95,
+                        0.13965,
+                        94,
+                        96,
+                        -0.20224
+                    ],
+                    "osci": 0.0028
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccccc1)c1c2c(nn(CC)n2)c(cc1)c1ncc(C(=O)O)nc1",
             "localName": "3ed_14b_3ea",
             "name": "3ed_14b_3ea",
             "parts": "3ed::14b::3ea"
@@ -51893,9 +53191,102 @@
                         0.21116
                     ],
                     "osci": 0.0352
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 460.7,
+                    "orbital_Numbers": [
+                        141,
+                        143,
+                        0.21962,
+                        142,
+                        143,
+                        0.66172
+                    ],
+                    "osci": 0.944
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 333.16,
+                    "orbital_Numbers": [
+                        139,
+                        143,
+                        -0.16731,
+                        141,
+                        143,
+                        0.63468,
+                        142,
+                        143,
+                        -0.21476
+                    ],
+                    "osci": 0.099
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 291.1,
+                    "orbital_Numbers": [
+                        138,
+                        143,
+                        0.16163,
+                        141,
+                        144,
+                        -0.15117,
+                        142,
+                        144,
+                        -0.31811,
+                        142,
+                        146,
+                        0.49073,
+                        142,
+                        147,
+                        0.23348
+                    ],
+                    "osci": 0.1289
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 585.72,
+                    "orbital_Numbers": [
+                        142,
+                        143,
+                        0.70475
+                    ],
+                    "osci": 0.6386
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 390.66,
+                    "orbital_Numbers": [
+                        141,
+                        143,
+                        0.65573,
+                        142,
+                        144,
+                        0.24008
+                    ],
+                    "osci": 0.1818
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 372.41,
+                    "orbital_Numbers": [
+                        141,
+                        143,
+                        -0.24249,
+                        142,
+                        144,
+                        0.65225
+                    ],
+                    "osci": 0.3153
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3nonc23)c2ncc(C(=O)O)cc2)cc1",
             "localName": "5ed_15b_2ea",
             "name": "5ed_15b_2ea",
             "parts": "5ed::15b::2ea"
@@ -51952,9 +53343,87 @@
                         0.55724
                     ],
                     "osci": 0.2427
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 441.75,
+                    "orbital_Numbers": [
+                        122,
+                        123,
+                        0.68924
+                    ],
+                    "osci": 0.5743
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 304.34,
+                    "orbital_Numbers": [
+                        121,
+                        123,
+                        0.67907
+                    ],
+                    "osci": 0.0742
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 293.68,
+                    "orbital_Numbers": [
+                        121,
+                        124,
+                        -0.19686,
+                        122,
+                        124,
+                        0.64592
+                    ],
+                    "osci": 0.3908
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 510.91,
+                    "orbital_Numbers": [
+                        122,
+                        123,
+                        0.70084
+                    ],
+                    "osci": 0.45
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 359.36,
+                    "orbital_Numbers": [
+                        121,
+                        123,
+                        0.49838,
+                        122,
+                        124,
+                        -0.48654
+                    ],
+                    "osci": 0.0405
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 353.1,
+                    "orbital_Numbers": [
+                        120,
+                        123,
+                        0.22232,
+                        121,
+                        123,
+                        0.46865,
+                        122,
+                        124,
+                        0.46164
+                    ],
+                    "osci": 0.2905
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2nonc12)c1ncc(C(=O)O)cc1",
             "localName": "6ed_15b_2ea",
             "name": "6ed_15b_2ea",
             "parts": "6ed::15b::2ea"
@@ -52023,9 +53492,105 @@
                         -0.22489
                     ],
                     "osci": 0.2135
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 422.95,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.15713,
+                        139,
+                        140,
+                        0.65286,
+                        139,
+                        141,
+                        0.189
+                    ],
+                    "osci": 1.2109
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 317.64,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        0.23235,
+                        139,
+                        140,
+                        -0.12035,
+                        139,
+                        141,
+                        0.63283
+                    ],
+                    "osci": 0.0172
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 301.93,
+                    "orbital_Numbers": [
+                        136,
+                        140,
+                        0.16378,
+                        138,
+                        140,
+                        0.58589,
+                        138,
+                        141,
+                        0.13747,
+                        139,
+                        140,
+                        0.21404,
+                        139,
+                        141,
+                        -0.19318
+                    ],
+                    "osci": 0.2548
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 528.3,
+                    "orbital_Numbers": [
+                        139,
+                        140,
+                        0.70369
+                    ],
+                    "osci": 0.7948
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 384.02,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.1226,
+                        139,
+                        141,
+                        0.68639
+                    ],
+                    "osci": 0.148
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 362.37,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        0.68903,
+                        139,
+                        141,
+                        0.11532
+                    ],
+                    "osci": 0.3099
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(c2nn(C)nc12)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "6ed_5b_1ea",
             "name": "6ed_5b_1ea",
             "parts": "6ed::5b::1ea"
@@ -52094,9 +53659,99 @@
                         -0.27782
                     ],
                     "osci": 0.0173
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 375.64,
+                    "orbital_Numbers": [
+                        112,
+                        114,
+                        0.12247,
+                        113,
+                        114,
+                        0.67203,
+                        113,
+                        118,
+                        -0.10081
+                    ],
+                    "osci": 0.8477
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 281.73,
+                    "orbital_Numbers": [
+                        112,
+                        115,
+                        0.12737,
+                        113,
+                        115,
+                        0.45931,
+                        113,
+                        116,
+                        0.45378,
+                        113,
+                        118,
+                        -0.10858
+                    ],
+                    "osci": 0.0424
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 277.17,
+                    "orbital_Numbers": [
+                        112,
+                        114,
+                        0.13175,
+                        112,
+                        115,
+                        -0.16767,
+                        113,
+                        115,
+                        -0.41602,
+                        113,
+                        116,
+                        0.48608
+                    ],
+                    "osci": 0.0403
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 435.23,
+                    "orbital_Numbers": [
+                        113,
+                        114,
+                        0.7018
+                    ],
+                    "osci": 0.6815
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 336.45,
+                    "orbital_Numbers": [
+                        113,
+                        115,
+                        0.68919
+                    ],
+                    "osci": 0.0146
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 326.09,
+                    "orbital_Numbers": [
+                        113,
+                        116,
+                        0.69107
+                    ],
+                    "osci": 0.0378
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(s1)c1ncc(C(=O)O)cc1",
             "localName": "6ed_7b_2ea",
             "name": "6ed_7b_2ea",
             "parts": "6ed::7b::2ea"
@@ -52320,9 +53975,111 @@
                         -0.33455
                     ],
                     "osci": 0.0929
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 428.23,
+                    "orbital_Numbers": [
+                        126,
+                        128,
+                        -0.20412,
+                        127,
+                        128,
+                        0.63006,
+                        127,
+                        129,
+                        0.20238
+                    ],
+                    "osci": 1.6653
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 324.43,
+                    "orbital_Numbers": [
+                        125,
+                        128,
+                        0.17957,
+                        126,
+                        128,
+                        0.39955,
+                        127,
+                        129,
+                        0.49469,
+                        127,
+                        130,
+                        0.10628,
+                        127,
+                        131,
+                        0.16561
+                    ],
+                    "osci": 0.0023
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 305.64,
+                    "orbital_Numbers": [
+                        125,
+                        128,
+                        0.1613,
+                        126,
+                        128,
+                        0.45459,
+                        126,
+                        129,
+                        0.18722,
+                        127,
+                        128,
+                        0.27829,
+                        127,
+                        129,
+                        -0.35956
+                    ],
+                    "osci": 0.118
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 505.71,
+                    "orbital_Numbers": [
+                        127,
+                        128,
+                        0.70062
+                    ],
+                    "osci": 1.147
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 384.23,
+                    "orbital_Numbers": [
+                        126,
+                        128,
+                        0.5323,
+                        127,
+                        129,
+                        0.43827
+                    ],
+                    "osci": 0.6707
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 372.58,
+                    "orbital_Numbers": [
+                        126,
+                        128,
+                        -0.45108,
+                        127,
+                        129,
+                        0.53463
+                    ],
+                    "osci": 0.0018
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2ccc(c3ccc(s3)c3ncc(C(=O)O)cc3)s2)s1",
             "localName": "7ed_3b_2ea",
             "name": "7ed_3b_2ea",
             "parts": "7ed::3b ::2ea"
@@ -52391,9 +54148,99 @@
                         -0.11115
                     ],
                     "osci": 0.0501
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 361.83,
+                    "orbital_Numbers": [
+                        98,
+                        99,
+                        0.68368
+                    ],
+                    "osci": 0.9467
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 274.79,
+                    "orbital_Numbers": [
+                        95,
+                        99,
+                        0.10397,
+                        97,
+                        99,
+                        0.31083,
+                        98,
+                        100,
+                        0.55677,
+                        98,
+                        101,
+                        -0.1683
+                    ],
+                    "osci": 0.1039
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 262.3,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        0.56347,
+                        97,
+                        100,
+                        0.20215,
+                        98,
+                        99,
+                        0.1098,
+                        98,
+                        100,
+                        -0.32013
+                    ],
+                    "osci": 0.0092
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 409.23,
+                    "orbital_Numbers": [
+                        98,
+                        99,
+                        0.69939
+                    ],
+                    "osci": 0.7913
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 320.4,
+                    "orbital_Numbers": [
+                        98,
+                        100,
+                        0.68248,
+                        98,
+                        101,
+                        -0.12595
+                    ],
+                    "osci": 0.064
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 311.72,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        0.66168,
+                        98,
+                        101,
+                        -0.20163
+                    ],
+                    "osci": 0.0817
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(c2nn(C)nc12)c1ncc(C(=O)O)cc1",
             "localName": "7ed_5b_2ea",
             "name": "7ed_5b_2ea",
             "parts": "7ed::5b::2ea"
@@ -52413,7 +54260,7 @@
             "LUMO": 0,
             "SMILES": "",
             "excitations": [],
-            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)C2=[S][C@H](c3c2nsn3)[C])cc1.[C][C].[C][C].[C][C].[C].[N].[O].[O].[C][C].[H].[H].[H].[H].[H].[H]",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)C2=C3C(=NS[N]3)[C](S2)[C])cc1.[C][C].[C][C].[C][C].[C].[N].[O].[O].[C][C].[H].[H].[H].[H].[H].[H]",
             "localName": "5ed_16b_1ea",
             "name": "5ed_16b_1ea",
             "parts": "5ed::16b::1ea"
@@ -52491,9 +54338,114 @@
                         -0.20803
                     ],
                     "osci": 0.2089
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 480.78,
+                    "orbital_Numbers": [
+                        186,
+                        189,
+                        -0.10858,
+                        187,
+                        189,
+                        -0.34995,
+                        187,
+                        190,
+                        -0.10225,
+                        188,
+                        189,
+                        0.51832,
+                        188,
+                        190,
+                        0.25634
+                    ],
+                    "osci": 2.1782
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 372.46,
+                    "orbital_Numbers": [
+                        186,
+                        189,
+                        0.2571,
+                        187,
+                        189,
+                        0.50999,
+                        188,
+                        189,
+                        0.30002,
+                        188,
+                        190,
+                        0.22089,
+                        188,
+                        191,
+                        0.11442
+                    ],
+                    "osci": 0.094
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 368.75,
+                    "orbital_Numbers": [
+                        187,
+                        190,
+                        -0.2279,
+                        188,
+                        189,
+                        -0.35974,
+                        188,
+                        190,
+                        0.51135,
+                        188,
+                        191,
+                        0.18949
+                    ],
+                    "osci": 0.3512
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 649.08,
+                    "orbital_Numbers": [
+                        188,
+                        189,
+                        0.69911
+                    ],
+                    "osci": 0.7158
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 503.45,
+                    "orbital_Numbers": [
+                        187,
+                        189,
+                        0.66084,
+                        188,
+                        190,
+                        0.20705
+                    ],
+                    "osci": 1.2086
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 457.27,
+                    "orbital_Numbers": [
+                        187,
+                        189,
+                        -0.22822,
+                        188,
+                        190,
+                        0.65459
+                    ],
+                    "osci": 0.3541
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "COc1ccc(N(c2ccc(OC)cc2)c2ccc(cc2)c2ccc(c3ccc(c4ccc(s4)c4ccc(/C=C(\\C#N)/C(=O)O)cc4)s3)s2)cc1",
             "localName": "5ed_3b_1ea",
             "name": "5ed_3b_1ea",
             "parts": "5ed::3b ::1ea"
@@ -52562,9 +54514,99 @@
                         0.10261
                     ],
                     "osci": 0.0153
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 347.54,
+                    "orbital_Numbers": [
+                        116,
+                        118,
+                        0.19315,
+                        117,
+                        118,
+                        0.66406,
+                        117,
+                        123,
+                        0.1093
+                    ],
+                    "osci": 0.6535
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 280.29,
+                    "orbital_Numbers": [
+                        116,
+                        119,
+                        -0.18106,
+                        116,
+                        120,
+                        -0.10994,
+                        117,
+                        119,
+                        -0.3594,
+                        117,
+                        120,
+                        0.53163
+                    ],
+                    "osci": 0.0097
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 277.83,
+                    "orbital_Numbers": [
+                        116,
+                        119,
+                        0.2838,
+                        117,
+                        119,
+                        0.47348,
+                        117,
+                        120,
+                        0.39199
+                    ],
+                    "osci": 0.0293
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 440.14,
+                    "orbital_Numbers": [
+                        117,
+                        118,
+                        0.70337
+                    ],
+                    "osci": 0.2964
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 347.99,
+                    "orbital_Numbers": [
+                        116,
+                        119,
+                        -0.12784,
+                        117,
+                        119,
+                        0.69303
+                    ],
+                    "osci": 0.0008
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 321.39,
+                    "orbital_Numbers": [
+                        117,
+                        120,
+                        0.69573
+                    ],
+                    "osci": 0.0181
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)(c1ccc(OC)cc1)c1ccc(n1CC)c1ncc(C(=O)O)cc1",
             "localName": "6ed_12b_2ea",
             "name": "6ed_12b_2ea",
             "parts": "6ed::12b::2ea"
@@ -52624,9 +54666,93 @@
                         0.30335
                     ],
                     "osci": 0.0038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 386.4,
+                    "orbital_Numbers": [
+                        101,
+                        103,
+                        0.26992,
+                        102,
+                        103,
+                        0.63795
+                    ],
+                    "osci": 0.9767
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 306.28,
+                    "orbital_Numbers": [
+                        98,
+                        103,
+                        0.14588,
+                        101,
+                        103,
+                        0.62094,
+                        102,
+                        103,
+                        -0.27858
+                    ],
+                    "osci": 0.1876
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 270.7,
+                    "orbital_Numbers": [
+                        97,
+                        103,
+                        0.5457,
+                        101,
+                        104,
+                        0.25702,
+                        102,
+                        104,
+                        0.32897
+                    ],
+                    "osci": 0.0041
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 503.41,
+                    "orbital_Numbers": [
+                        102,
+                        103,
+                        0.70524
+                    ],
+                    "osci": 0.3576
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 389.56,
+                    "orbital_Numbers": [
+                        101,
+                        103,
+                        0.70449
+                    ],
+                    "osci": 0.5546
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 314.29,
+                    "orbital_Numbers": [
+                        99,
+                        103,
+                        -0.17133,
+                        100,
+                        103,
+                        0.68256
+                    ],
+                    "osci": 0.0086
                 }
             ],
-            "generalSMILES": "",
+            "generalSMILES": "N(c1ccc(OC)cc1)c1ccc(n1CC)c1ccc(/C=C(\\C#N)/C(=O)O)cc1",
             "localName": "7ed_12b_1ea",
             "name": "7ed_12b_1ea",
             "parts": "7ed::12b::1ea"
