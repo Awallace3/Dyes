@@ -363,7 +363,8 @@ def add_qsub_dir(qsub_dir, geom_dir):
         qsub_path = geom_dir
     else:
         qsub_path = "%s/%s" % (geom_dir, qsub_dir)
-    with open('../qsub_queue', 'a') as fp:
+    print(os.getcwd(), qsub_path, '../../qsub_queue')
+    with open('../../qsub_queue', 'a') as fp:
         fp.write(qsub_path)
     return 1
 
@@ -373,6 +374,7 @@ def qsub_to_max(max_queue=100, user=""):
 
     cmd = "qstat -u \"r%s\" > ../qsub_len" % user
     subprocess.call(cmd, shell=True)
+    print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
     with open('../qsub_len', 'r') as fp:
         current_queue = len(fp.readlines())-5
     dif = max_queue - current_queue
