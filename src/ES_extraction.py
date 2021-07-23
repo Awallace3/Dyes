@@ -19,13 +19,19 @@ def ES_extraction(path):
         print("ES_extraction error: Found no data in %s" % path)
 
         return 0, 0
-    occLst = occLst[-1].split('  ')
-    virtLst = virtLst[0].split('  ')
+    
+    for i in range(2,10):
+        k = ' ' * i
+        occLst[-1] = occLst[-1].replace(k, " ")
+        virtLst[0] = occLst[0].replace(k, ' ')
+    occLst = occLst[-1].split(' ')
+    virtLst = virtLst[0].split(' ')
     
     print(occLst, virtLst)
     print(occLst[-1].replace('\n', "").replace(" ", ""), virtLst[1].replace(" ", '') )
-    occVal = float(occLst[-1].replace('\n', "").replace(" ", "").replace(' ', ''))
-    virtVal = float(virtLst[1].replace(" ", '').replace(" ", ''))
+    
+    occVal = float(occLst[-1].replace('\n', "").replace(" ", ""))
+    virtVal = float(virtLst[1].replace(" ", ''))
 
     # converted to eV and abs val
     occVal = abs(occVal*27.211385)
