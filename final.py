@@ -388,7 +388,7 @@ def qsub_to_max(max_queue=100, user=""):
         while (cnt < dif and len(qsubs) > 0):
             qsub_path = qsubs.pop(0)
             qsub_path = qsub_path.rstrip().replace("\n", '')
-            print(qsub_path, '\n')
+            print('\n',qsub_path,  os.getcwd(), '\n')
             qsub(qsub_path)
             cnt +=1
     #with open('../qsub_queue', 'w') as fp:
