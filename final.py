@@ -344,25 +344,19 @@ def check_add_methods(add_methods, funct_name):
         return False 
 
 def qsub(path='.'):
-    resetDirNum = len(path.split("/"))
-    if path != '.':
-        os.chdir(path)
-    pbs_file = glob.glob("*.pbs")[0]
+    pbs_file = glob.glob("%s/*.pbs"%path)[0]
     cmd = 'qsub %s' % pbs_file
     print(os.getcwd(), "cmd", cmd)
     failure = subprocess.call(cmd, shell=True)
-    if path != '.':
-        for i in range(resetDirNum):
-            os.chdir("..")
 
 
 def add_qsub_dir(qsub_dir, geom_dir):
     if qsub_dir == 'None':
         return 0
     elif qsub_dir == './':
-        qsub_path = geom_dir + '/\n'
+        qsub_path = geom_dir + '\n'
     else:
-        qsub_path = "%s/%s/\n" % (geom_dir, qsub_dir)
+        qsub_path = "%s/%s\n" % (geom_dir, qsub_dir)
     print(os.getcwd(), qsub_path, '../../qsub_queue')
     with open('../../qsub_queue', 'a') as fp:
         fp.write(qsub_path)
