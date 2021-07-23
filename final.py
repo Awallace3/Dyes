@@ -609,7 +609,7 @@ def main():
     #resubmit_delay_min = 60 * 12
     #resubmit_max_attempts = 5
     resubmit_delay_min = 0.01 # 60 * 12
-    resubmit_max_attempts = 1
+    resubmit_max_attempts = 5
 
     # geometry optimization options
     method_opt = "B3LYP"
