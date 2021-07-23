@@ -67,6 +67,111 @@
                         0.12465
                     ],
                     "osci": 0.0099
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 532.61,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        -0.16802,
+                        143,
+                        144,
+                        0.66291,
+                        143,
+                        145,
+                        -0.14268
+                    ],
+                    "osci": 0.9986
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 372.0,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        0.16934,
+                        142,
+                        145,
+                        -0.26766,
+                        143,
+                        144,
+                        0.17117,
+                        143,
+                        145,
+                        0.58246,
+                        143,
+                        146,
+                        -0.1183
+                    ],
+                    "osci": 0.3707
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 357.13,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        0.63689,
+                        143,
+                        144,
+                        0.11376,
+                        143,
+                        145,
+                        -0.22269
+                    ],
+                    "osci": 0.2498
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 627.27,
+                    "orbital_Numbers": [
+                        143,
+                        144,
+                        0.69764,
+                        143,
+                        145,
+                        0.10556
+                    ],
+                    "osci": 0.8127
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 469.63,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        -0.33699,
+                        142,
+                        145,
+                        -0.11452,
+                        143,
+                        144,
+                        -0.10835,
+                        143,
+                        145,
+                        0.59455
+                    ],
+                    "osci": 0.054
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 430.47,
+                    "orbital_Numbers": [
+                        142,
+                        144,
+                        0.609,
+                        143,
+                        145,
+                        0.34594
+                    ],
+                    "osci": 0.3945
                 }
             ],
             "generalSMILES": "c1ccc(N(c2ccccc2)c2ccc(cc2)c2c3nccnc3c(s2)c2ccc(C=C(C#N)C(=O)O)cc2)cc1",
@@ -2986,10 +3091,64 @@
             "parts": "1ed::15b::3ea"
         },
         {
-            "HOMO": 0,
-            "LUMO": 0,
+            "HOMO": 2.1584843329499996,
+            "LUMO": -1.2365496362,
             "SMILES": "",
             "excitations": [
+                {
+                    "exc": 1,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 662.36,
+                    "orbital_Numbers": [
+                        143,
+                        145,
+                        -0.13737,
+                        144,
+                        145,
+                        0.68174
+                    ],
+                    "osci": 0.7912
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 400.23,
+                    "orbital_Numbers": [
+                        143,
+                        145,
+                        0.45588,
+                        143,
+                        146,
+                        -0.20512,
+                        144,
+                        145,
+                        0.14796,
+                        144,
+                        146,
+                        0.43297,
+                        144,
+                        147,
+                        0.13928
+                    ],
+                    "osci": 0.4754
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "CAM-B3LYP/6-311G(d,p)",
+                    "nm": 381.3,
+                    "orbital_Numbers": [
+                        143,
+                        145,
+                        0.4911,
+                        143,
+                        146,
+                        0.12863,
+                        144,
+                        146,
+                        -0.45531
+                    ],
+                    "osci": 0.4778
+                },
                 {
                     "exc": 1,
                     "method_basis_set": "bhandhlyp/6-311G(d,p)",
@@ -12431,6 +12590,63 @@
                         0.37437
                     ],
                     "osci": 0.0558
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 421.37,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.21066,
+                        139,
+                        140,
+                        0.623,
+                        139,
+                        141,
+                        0.21323
+                    ],
+                    "osci": 1.609
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 327.93,
+                    "orbital_Numbers": [
+                        137,
+                        140,
+                        0.14083,
+                        138,
+                        140,
+                        0.47485,
+                        139,
+                        141,
+                        0.44167,
+                        139,
+                        143,
+                        0.1562
+                    ],
+                    "osci": 0.0312
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 303.85,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.39351,
+                        138,
+                        141,
+                        -0.22435,
+                        139,
+                        140,
+                        -0.28364,
+                        139,
+                        141,
+                        0.42304
+                    ],
+                    "osci": 0.0931
                 },
                 {
                     "exc": 1,
@@ -28797,6 +29013,60 @@
                 },
                 {
                     "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 487.72,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.2309,
+                        175,
+                        176,
+                        0.6435,
+                        175,
+                        177,
+                        -0.12637
+                    ],
+                    "osci": 1.1567
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 359.55,
+                    "orbital_Numbers": [
+                        172,
+                        176,
+                        -0.1399,
+                        174,
+                        176,
+                        0.61524,
+                        174,
+                        177,
+                        -0.14456,
+                        175,
+                        176,
+                        -0.24657
+                    ],
+                    "osci": 0.1839
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 337.36,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.14101,
+                        174,
+                        177,
+                        0.23765,
+                        175,
+                        177,
+                        0.62964
+                    ],
+                    "osci": 0.0623
+                },
+                {
+                    "exc": 1,
                     "method_basis_set": "PBE1PBE/6-311G(d,p)",
                     "nm": 631.36,
                     "orbital_Numbers": [
@@ -42529,6 +42799,111 @@
                         -0.12777
                     ],
                     "osci": 0.1144
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 410.84,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        0.15305,
+                        98,
+                        99,
+                        0.66746,
+                        98,
+                        100,
+                        0.13613
+                    ],
+                    "osci": 1.339
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 288.74,
+                    "orbital_Numbers": [
+                        96,
+                        99,
+                        -0.21285,
+                        97,
+                        99,
+                        0.51887,
+                        98,
+                        100,
+                        -0.3682,
+                        98,
+                        103,
+                        0.11402
+                    ],
+                    "osci": 0.0404
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 283.69,
+                    "orbital_Numbers": [
+                        93,
+                        99,
+                        0.11774,
+                        97,
+                        99,
+                        0.35598,
+                        98,
+                        99,
+                        -0.18988,
+                        98,
+                        100,
+                        0.49165,
+                        98,
+                        103,
+                        -0.1504
+                    ],
+                    "osci": 0.1305
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 489.02,
+                    "orbital_Numbers": [
+                        98,
+                        99,
+                        0.70535
+                    ],
+                    "osci": 0.9852
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 346.88,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        0.67533,
+                        98,
+                        100,
+                        0.19175
+                    ],
+                    "osci": 0.4006
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 321.61,
+                    "orbital_Numbers": [
+                        97,
+                        99,
+                        -0.18531,
+                        98,
+                        100,
+                        0.6363,
+                        98,
+                        102,
+                        0.1434,
+                        98,
+                        103,
+                        -0.10559
+                    ],
+                    "osci": 0.0912
                 }
             ],
             "generalSMILES": "",
@@ -43372,6 +43747,87 @@
                         0.10987
                     ],
                     "osci": 0.0382
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 460.65,
+                    "orbital_Numbers": [
+                        111,
+                        112,
+                        0.66404,
+                        111,
+                        113,
+                        0.19608
+                    ],
+                    "osci": 0.9864
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 354.14,
+                    "orbital_Numbers": [
+                        111,
+                        112,
+                        -0.17556,
+                        111,
+                        113,
+                        0.6587
+                    ],
+                    "osci": 0.0622
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 323.05,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.62279,
+                        110,
+                        113,
+                        0.28486
+                    ],
+                    "osci": 0.0427
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 539.91,
+                    "orbital_Numbers": [
+                        111,
+                        112,
+                        0.70159
+                    ],
+                    "osci": 0.8059
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 414.96,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.13424,
+                        111,
+                        113,
+                        0.68012
+                    ],
+                    "osci": 0.0204
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 406.52,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.68502,
+                        111,
+                        113,
+                        -0.14234
+                    ],
+                    "osci": 0.105
                 }
             ],
             "generalSMILES": "",
@@ -44200,6 +44656,102 @@
                         -0.11688
                     ],
                     "osci": 0.1793
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 436.95,
+                    "orbital_Numbers": [
+                        160,
+                        162,
+                        0.24176,
+                        161,
+                        162,
+                        0.63164,
+                        161,
+                        163,
+                        0.17056
+                    ],
+                    "osci": 1.6391
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 325.43,
+                    "orbital_Numbers": [
+                        157,
+                        162,
+                        0.11569,
+                        158,
+                        162,
+                        -0.13824,
+                        160,
+                        162,
+                        0.6108,
+                        161,
+                        162,
+                        -0.23298
+                    ],
+                    "osci": 0.1598
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 305.75,
+                    "orbital_Numbers": [
+                        160,
+                        163,
+                        0.12011,
+                        161,
+                        162,
+                        -0.18769,
+                        161,
+                        163,
+                        0.63248,
+                        161,
+                        167,
+                        -0.10566
+                    ],
+                    "osci": 0.2179
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 553.23,
+                    "orbital_Numbers": [
+                        161,
+                        162,
+                        0.70425
+                    ],
+                    "osci": 0.9445
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 404.88,
+                    "orbital_Numbers": [
+                        160,
+                        162,
+                        0.68396,
+                        161,
+                        163,
+                        0.16225
+                    ],
+                    "osci": 0.7144
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 366.23,
+                    "orbital_Numbers": [
+                        158,
+                        162,
+                        0.647,
+                        161,
+                        163,
+                        -0.25952
+                    ],
+                    "osci": 0.0574
                 }
             ],
             "generalSMILES": "",
@@ -50713,6 +51265,90 @@
                         0.57548
                     ],
                     "osci": 0.0429
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 471.0,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.24687,
+                        175,
+                        176,
+                        0.6356,
+                        175,
+                        177,
+                        -0.12716
+                    ],
+                    "osci": 1.2173
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 352.05,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.61,
+                        174,
+                        177,
+                        -0.13481,
+                        175,
+                        176,
+                        -0.25371
+                    ],
+                    "osci": 0.1259
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 328.47,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.10173,
+                        174,
+                        177,
+                        0.25693,
+                        175,
+                        177,
+                        0.62479
+                    ],
+                    "osci": 0.0247
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 601.84,
+                    "orbital_Numbers": [
+                        175,
+                        176,
+                        0.70425
+                    ],
+                    "osci": 0.7109
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 452.44,
+                    "orbital_Numbers": [
+                        174,
+                        176,
+                        0.69678
+                    ],
+                    "osci": 0.4149
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 416.49,
+                    "orbital_Numbers": [
+                        175,
+                        177,
+                        0.68814
+                    ],
+                    "osci": 0.0043
                 }
             ],
             "generalSMILES": "",
@@ -51583,6 +52219,84 @@
                         0.60843
                     ],
                     "osci": 0.038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 379.76,
+                    "orbital_Numbers": [
+                        133,
+                        135,
+                        0.49562,
+                        134,
+                        135,
+                        0.47529
+                    ],
+                    "osci": 1.2532
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 314.08,
+                    "orbital_Numbers": [
+                        133,
+                        135,
+                        -0.4746,
+                        134,
+                        135,
+                        0.5054
+                    ],
+                    "osci": 0.0278
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 277.07,
+                    "orbital_Numbers": [
+                        133,
+                        137,
+                        -0.18566,
+                        134,
+                        136,
+                        0.38116,
+                        134,
+                        137,
+                        0.51199
+                    ],
+                    "osci": 0.1103
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 475.21,
+                    "orbital_Numbers": [
+                        134,
+                        135,
+                        0.70326
+                    ],
+                    "osci": 0.3282
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 416.79,
+                    "orbital_Numbers": [
+                        133,
+                        135,
+                        0.70063
+                    ],
+                    "osci": 0.6932
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 320.09,
+                    "orbital_Numbers": [
+                        132,
+                        135,
+                        0.69848
+                    ],
+                    "osci": 0.0063
                 }
             ],
             "generalSMILES": "c1(ccc(cc1)N(c1ccccc1)c1ccccc1)c1ccc(n1CC)c1ccc(C=C(C#N)C(=O)O)cc1",
@@ -51648,6 +52362,96 @@
                         -0.29234
                     ],
                     "osci": 0.0038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 350.29,
+                    "orbital_Numbers": [
+                        100,
+                        102,
+                        -0.15161,
+                        101,
+                        102,
+                        0.67723
+                    ],
+                    "osci": 0.7583
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 296.17,
+                    "orbital_Numbers": [
+                        100,
+                        103,
+                        -0.25572,
+                        101,
+                        103,
+                        0.64127
+                    ],
+                    "osci": 0.0441
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 280.58,
+                    "orbital_Numbers": [
+                        93,
+                        102,
+                        0.12726,
+                        93,
+                        103,
+                        0.12484,
+                        95,
+                        102,
+                        0.61892,
+                        95,
+                        103,
+                        0.2059
+                    ],
+                    "osci": 0.0073
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 418.03,
+                    "orbital_Numbers": [
+                        101,
+                        102,
+                        0.70099
+                    ],
+                    "osci": 0.4285
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 358.99,
+                    "orbital_Numbers": [
+                        100,
+                        103,
+                        0.1022,
+                        101,
+                        103,
+                        0.69158
+                    ],
+                    "osci": 0.0392
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 324.53,
+                    "orbital_Numbers": [
+                        97,
+                        102,
+                        0.60451,
+                        98,
+                        102,
+                        0.16002,
+                        99,
+                        102,
+                        0.27733
+                    ],
+                    "osci": 0.0055
                 }
             ],
             "generalSMILES": "",
@@ -51710,6 +52514,84 @@
                         0.17339
                     ],
                     "osci": 0.0293
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 456.59,
+                    "orbital_Numbers": [
+                        110,
+                        111,
+                        0.69276
+                    ],
+                    "osci": 0.5862
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 325.76,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        -0.13287,
+                        110,
+                        112,
+                        0.67062
+                    ],
+                    "osci": 0.0752
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 310.42,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        0.66218,
+                        109,
+                        112,
+                        -0.12963,
+                        110,
+                        112,
+                        0.12031
+                    ],
+                    "osci": 0.0288
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 504.28,
+                    "orbital_Numbers": [
+                        110,
+                        111,
+                        0.69966
+                    ],
+                    "osci": 0.5065
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 385.49,
+                    "orbital_Numbers": [
+                        110,
+                        112,
+                        0.69107
+                    ],
+                    "osci": 0.0198
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 359.66,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        0.67828,
+                        110,
+                        113,
+                        -0.11885
+                    ],
+                    "osci": 0.0387
                 }
             ],
             "generalSMILES": "",
@@ -51778,6 +52660,96 @@
                         0.1504
                     ],
                     "osci": 0.0258
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 390.43,
+                    "orbital_Numbers": [
+                        107,
+                        110,
+                        0.10174,
+                        109,
+                        110,
+                        0.67788,
+                        109,
+                        112,
+                        0.1007
+                    ],
+                    "osci": 1.4005
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 298.25,
+                    "orbital_Numbers": [
+                        108,
+                        110,
+                        0.66985,
+                        109,
+                        111,
+                        -0.10714
+                    ],
+                    "osci": 0.0568
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 285.1,
+                    "orbital_Numbers": [
+                        107,
+                        110,
+                        -0.22492,
+                        107,
+                        112,
+                        -0.11157,
+                        108,
+                        110,
+                        0.13976,
+                        109,
+                        111,
+                        0.49117,
+                        109,
+                        112,
+                        0.33247,
+                        109,
+                        114,
+                        0.12298
+                    ],
+                    "osci": 0.0263
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 436.09,
+                    "orbital_Numbers": [
+                        109,
+                        110,
+                        0.7027
+                    ],
+                    "osci": 1.1924
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 356.13,
+                    "orbital_Numbers": [
+                        108,
+                        110,
+                        0.70137
+                    ],
+                    "osci": 0.0421
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 334.13,
+                    "orbital_Numbers": [
+                        109,
+                        111,
+                        0.68882
+                    ],
+                    "osci": 0.0336
                 }
             ],
             "generalSMILES": "",
@@ -51834,6 +52806,96 @@
                         0.66139
                     ],
                     "osci": 0.0397
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 364.43,
+                    "orbital_Numbers": [
+                        94,
+                        95,
+                        0.68684
+                    ],
+                    "osci": 0.9651
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 290.96,
+                    "orbital_Numbers": [
+                        93,
+                        96,
+                        0.11209,
+                        94,
+                        96,
+                        0.66444
+                    ],
+                    "osci": 0.0394
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 289.17,
+                    "orbital_Numbers": [
+                        88,
+                        95,
+                        -0.10639,
+                        90,
+                        95,
+                        0.56066,
+                        90,
+                        96,
+                        -0.3551,
+                        94,
+                        96,
+                        -0.10525
+                    ],
+                    "osci": 0.0038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 405.65,
+                    "orbital_Numbers": [
+                        94,
+                        95,
+                        0.7014
+                    ],
+                    "osci": 0.8317
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 340.46,
+                    "orbital_Numbers": [
+                        92,
+                        95,
+                        0.18831,
+                        94,
+                        96,
+                        0.67085
+                    ],
+                    "osci": 0.0366
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 339.53,
+                    "orbital_Numbers": [
+                        92,
+                        95,
+                        0.61657,
+                        92,
+                        96,
+                        -0.19511,
+                        93,
+                        95,
+                        0.13965,
+                        94,
+                        96,
+                        -0.20224
+                    ],
+                    "osci": 0.0028
                 }
             ],
             "generalSMILES": "",
@@ -51893,6 +52955,99 @@
                         0.21116
                     ],
                     "osci": 0.0352
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 460.7,
+                    "orbital_Numbers": [
+                        141,
+                        143,
+                        0.21962,
+                        142,
+                        143,
+                        0.66172
+                    ],
+                    "osci": 0.944
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 333.16,
+                    "orbital_Numbers": [
+                        139,
+                        143,
+                        -0.16731,
+                        141,
+                        143,
+                        0.63468,
+                        142,
+                        143,
+                        -0.21476
+                    ],
+                    "osci": 0.099
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 291.1,
+                    "orbital_Numbers": [
+                        138,
+                        143,
+                        0.16163,
+                        141,
+                        144,
+                        -0.15117,
+                        142,
+                        144,
+                        -0.31811,
+                        142,
+                        146,
+                        0.49073,
+                        142,
+                        147,
+                        0.23348
+                    ],
+                    "osci": 0.1289
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 585.72,
+                    "orbital_Numbers": [
+                        142,
+                        143,
+                        0.70475
+                    ],
+                    "osci": 0.6386
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 390.66,
+                    "orbital_Numbers": [
+                        141,
+                        143,
+                        0.65573,
+                        142,
+                        144,
+                        0.24008
+                    ],
+                    "osci": 0.1818
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 372.41,
+                    "orbital_Numbers": [
+                        141,
+                        143,
+                        -0.24249,
+                        142,
+                        144,
+                        0.65225
+                    ],
+                    "osci": 0.3153
                 }
             ],
             "generalSMILES": "",
@@ -51952,6 +53107,84 @@
                         0.55724
                     ],
                     "osci": 0.2427
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 441.75,
+                    "orbital_Numbers": [
+                        122,
+                        123,
+                        0.68924
+                    ],
+                    "osci": 0.5743
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 304.34,
+                    "orbital_Numbers": [
+                        121,
+                        123,
+                        0.67907
+                    ],
+                    "osci": 0.0742
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 293.68,
+                    "orbital_Numbers": [
+                        121,
+                        124,
+                        -0.19686,
+                        122,
+                        124,
+                        0.64592
+                    ],
+                    "osci": 0.3908
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 510.91,
+                    "orbital_Numbers": [
+                        122,
+                        123,
+                        0.70084
+                    ],
+                    "osci": 0.45
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 359.36,
+                    "orbital_Numbers": [
+                        121,
+                        123,
+                        0.49838,
+                        122,
+                        124,
+                        -0.48654
+                    ],
+                    "osci": 0.0405
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 353.1,
+                    "orbital_Numbers": [
+                        120,
+                        123,
+                        0.22232,
+                        121,
+                        123,
+                        0.46865,
+                        122,
+                        124,
+                        0.46164
+                    ],
+                    "osci": 0.2905
                 }
             ],
             "generalSMILES": "",
@@ -52023,6 +53256,102 @@
                         -0.22489
                     ],
                     "osci": 0.2135
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 422.95,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.15713,
+                        139,
+                        140,
+                        0.65286,
+                        139,
+                        141,
+                        0.189
+                    ],
+                    "osci": 1.2109
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 317.64,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        0.23235,
+                        139,
+                        140,
+                        -0.12035,
+                        139,
+                        141,
+                        0.63283
+                    ],
+                    "osci": 0.0172
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 301.93,
+                    "orbital_Numbers": [
+                        136,
+                        140,
+                        0.16378,
+                        138,
+                        140,
+                        0.58589,
+                        138,
+                        141,
+                        0.13747,
+                        139,
+                        140,
+                        0.21404,
+                        139,
+                        141,
+                        -0.19318
+                    ],
+                    "osci": 0.2548
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 528.3,
+                    "orbital_Numbers": [
+                        139,
+                        140,
+                        0.70369
+                    ],
+                    "osci": 0.7948
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 384.02,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        -0.1226,
+                        139,
+                        141,
+                        0.68639
+                    ],
+                    "osci": 0.148
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 362.37,
+                    "orbital_Numbers": [
+                        138,
+                        140,
+                        0.68903,
+                        139,
+                        141,
+                        0.11532
+                    ],
+                    "osci": 0.3099
                 }
             ],
             "generalSMILES": "",
@@ -52094,6 +53423,96 @@
                         -0.27782
                     ],
                     "osci": 0.0173
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 375.64,
+                    "orbital_Numbers": [
+                        112,
+                        114,
+                        0.12247,
+                        113,
+                        114,
+                        0.67203,
+                        113,
+                        118,
+                        -0.10081
+                    ],
+                    "osci": 0.8477
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 281.73,
+                    "orbital_Numbers": [
+                        112,
+                        115,
+                        0.12737,
+                        113,
+                        115,
+                        0.45931,
+                        113,
+                        116,
+                        0.45378,
+                        113,
+                        118,
+                        -0.10858
+                    ],
+                    "osci": 0.0424
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 277.17,
+                    "orbital_Numbers": [
+                        112,
+                        114,
+                        0.13175,
+                        112,
+                        115,
+                        -0.16767,
+                        113,
+                        115,
+                        -0.41602,
+                        113,
+                        116,
+                        0.48608
+                    ],
+                    "osci": 0.0403
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 435.23,
+                    "orbital_Numbers": [
+                        113,
+                        114,
+                        0.7018
+                    ],
+                    "osci": 0.6815
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 336.45,
+                    "orbital_Numbers": [
+                        113,
+                        115,
+                        0.68919
+                    ],
+                    "osci": 0.0146
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 326.09,
+                    "orbital_Numbers": [
+                        113,
+                        116,
+                        0.69107
+                    ],
+                    "osci": 0.0378
                 }
             ],
             "generalSMILES": "",
@@ -52320,6 +53739,108 @@
                         -0.33455
                     ],
                     "osci": 0.0929
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 428.23,
+                    "orbital_Numbers": [
+                        126,
+                        128,
+                        -0.20412,
+                        127,
+                        128,
+                        0.63006,
+                        127,
+                        129,
+                        0.20238
+                    ],
+                    "osci": 1.6653
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 324.43,
+                    "orbital_Numbers": [
+                        125,
+                        128,
+                        0.17957,
+                        126,
+                        128,
+                        0.39955,
+                        127,
+                        129,
+                        0.49469,
+                        127,
+                        130,
+                        0.10628,
+                        127,
+                        131,
+                        0.16561
+                    ],
+                    "osci": 0.0023
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 305.64,
+                    "orbital_Numbers": [
+                        125,
+                        128,
+                        0.1613,
+                        126,
+                        128,
+                        0.45459,
+                        126,
+                        129,
+                        0.18722,
+                        127,
+                        128,
+                        0.27829,
+                        127,
+                        129,
+                        -0.35956
+                    ],
+                    "osci": 0.118
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 505.71,
+                    "orbital_Numbers": [
+                        127,
+                        128,
+                        0.70062
+                    ],
+                    "osci": 1.147
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 384.23,
+                    "orbital_Numbers": [
+                        126,
+                        128,
+                        0.5323,
+                        127,
+                        129,
+                        0.43827
+                    ],
+                    "osci": 0.6707
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 372.58,
+                    "orbital_Numbers": [
+                        126,
+                        128,
+                        -0.45108,
+                        127,
+                        129,
+                        0.53463
+                    ],
+                    "osci": 0.0018
                 }
             ],
             "generalSMILES": "",
@@ -52491,6 +54012,111 @@
                         -0.20803
                     ],
                     "osci": 0.2089
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 480.78,
+                    "orbital_Numbers": [
+                        186,
+                        189,
+                        -0.10858,
+                        187,
+                        189,
+                        -0.34995,
+                        187,
+                        190,
+                        -0.10225,
+                        188,
+                        189,
+                        0.51832,
+                        188,
+                        190,
+                        0.25634
+                    ],
+                    "osci": 2.1782
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 372.46,
+                    "orbital_Numbers": [
+                        186,
+                        189,
+                        0.2571,
+                        187,
+                        189,
+                        0.50999,
+                        188,
+                        189,
+                        0.30002,
+                        188,
+                        190,
+                        0.22089,
+                        188,
+                        191,
+                        0.11442
+                    ],
+                    "osci": 0.094
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 368.75,
+                    "orbital_Numbers": [
+                        187,
+                        190,
+                        -0.2279,
+                        188,
+                        189,
+                        -0.35974,
+                        188,
+                        190,
+                        0.51135,
+                        188,
+                        191,
+                        0.18949
+                    ],
+                    "osci": 0.3512
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 649.08,
+                    "orbital_Numbers": [
+                        188,
+                        189,
+                        0.69911
+                    ],
+                    "osci": 0.7158
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 503.45,
+                    "orbital_Numbers": [
+                        187,
+                        189,
+                        0.66084,
+                        188,
+                        190,
+                        0.20705
+                    ],
+                    "osci": 1.2086
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 457.27,
+                    "orbital_Numbers": [
+                        187,
+                        189,
+                        -0.22822,
+                        188,
+                        190,
+                        0.65459
+                    ],
+                    "osci": 0.3541
                 }
             ],
             "generalSMILES": "",
@@ -52562,6 +54188,96 @@
                         0.10261
                     ],
                     "osci": 0.0153
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 347.54,
+                    "orbital_Numbers": [
+                        116,
+                        118,
+                        0.19315,
+                        117,
+                        118,
+                        0.66406,
+                        117,
+                        123,
+                        0.1093
+                    ],
+                    "osci": 0.6535
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 280.29,
+                    "orbital_Numbers": [
+                        116,
+                        119,
+                        -0.18106,
+                        116,
+                        120,
+                        -0.10994,
+                        117,
+                        119,
+                        -0.3594,
+                        117,
+                        120,
+                        0.53163
+                    ],
+                    "osci": 0.0097
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 277.83,
+                    "orbital_Numbers": [
+                        116,
+                        119,
+                        0.2838,
+                        117,
+                        119,
+                        0.47348,
+                        117,
+                        120,
+                        0.39199
+                    ],
+                    "osci": 0.0293
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 440.14,
+                    "orbital_Numbers": [
+                        117,
+                        118,
+                        0.70337
+                    ],
+                    "osci": 0.2964
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 347.99,
+                    "orbital_Numbers": [
+                        116,
+                        119,
+                        -0.12784,
+                        117,
+                        119,
+                        0.69303
+                    ],
+                    "osci": 0.0008
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 321.39,
+                    "orbital_Numbers": [
+                        117,
+                        120,
+                        0.69573
+                    ],
+                    "osci": 0.0181
                 }
             ],
             "generalSMILES": "",
@@ -52624,6 +54340,90 @@
                         0.30335
                     ],
                     "osci": 0.0038
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 386.4,
+                    "orbital_Numbers": [
+                        101,
+                        103,
+                        0.26992,
+                        102,
+                        103,
+                        0.63795
+                    ],
+                    "osci": 0.9767
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 306.28,
+                    "orbital_Numbers": [
+                        98,
+                        103,
+                        0.14588,
+                        101,
+                        103,
+                        0.62094,
+                        102,
+                        103,
+                        -0.27858
+                    ],
+                    "osci": 0.1876
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "bhandhlyp/6-311G(d,p)",
+                    "nm": 270.7,
+                    "orbital_Numbers": [
+                        97,
+                        103,
+                        0.5457,
+                        101,
+                        104,
+                        0.25702,
+                        102,
+                        104,
+                        0.32897
+                    ],
+                    "osci": 0.0041
+                },
+                {
+                    "exc": 1,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 503.41,
+                    "orbital_Numbers": [
+                        102,
+                        103,
+                        0.70524
+                    ],
+                    "osci": 0.3576
+                },
+                {
+                    "exc": 2,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 389.56,
+                    "orbital_Numbers": [
+                        101,
+                        103,
+                        0.70449
+                    ],
+                    "osci": 0.5546
+                },
+                {
+                    "exc": 3,
+                    "method_basis_set": "PBE1PBE/6-311G(d,p)",
+                    "nm": 314.29,
+                    "orbital_Numbers": [
+                        99,
+                        103,
+                        -0.17133,
+                        100,
+                        103,
+                        0.68256
+                    ],
+                    "osci": 0.0086
                 }
             ],
             "generalSMILES": "",
