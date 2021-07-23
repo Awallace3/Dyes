@@ -344,7 +344,10 @@ def check_add_methods(add_methods, funct_name):
         return False 
 
 def qsub(path='.'):
-    pbs_file = glob.glob("%s/*.pbs"%path)[0]
+    print("qsub to check", path)
+    pbs_file = glob.glob("%s/*.pbs"%path)
+    if len(pbs_file) > 0:
+        pbs_file = pbs_file[0]
     cmd = 'qsub %s' % pbs_file
     print(os.getcwd(), "cmd", cmd)
     failure = subprocess.call(cmd, shell=True)
