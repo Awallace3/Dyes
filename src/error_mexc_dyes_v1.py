@@ -391,7 +391,7 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
 
     out_file = "tmp.txt"
     np.savetxt(out_file, new_geom,
-               fmt="%s")
+               fmt="%f")
     
     if not imaginary:
         clean_many_txt(geomDirName, xyzSmiles, numberedClean)
