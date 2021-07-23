@@ -343,14 +343,21 @@ def check_add_methods(add_methods, funct_name):
         print("\nadd_methods must have values that have lists of the same length.\nTerminating %s before start\n" % funct_name)
         return False 
 
+
 def qsub(path='.'):
-    print("qsub to check", path)
-    pbs_file = glob.glob("%s/*.pbs"%path)
-    if len(pbs_file) > 0:
-        pbs_file = pbs_file[0]
+    print('qsub dir', path)
+    resetDirNum = len(path.split("/"))
+    if path != '.':
+        os.chdir(path)
+    pbs_file = glob.glob("*.pbs")[0]
     cmd = 'qsub %s' % pbs_file
     print(os.getcwd(), "cmd", cmd)
     failure = subprocess.call(cmd, shell=True)
+    if path != '.':
+        for i in range(resetDirNum):
+            os.chdir("..")
+
+
 
 
 def add_qsub_dir(qsub_dir, geom_dir):
