@@ -489,6 +489,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                         add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
                         resubmissions, delay, cluster, j, xyzSmiles=False
                     )
+                    print(pos, os.getcwd())
                     if qsub_dir != "None":
                         add_qsub_dir(qsub_dir,  j)
             
