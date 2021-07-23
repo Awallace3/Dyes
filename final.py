@@ -472,7 +472,9 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster, j, xyzSmiles=True
                 )
-                add_qsub_dir(qsub_dir, j)
+                print(qsub_dir)
+                if qsub_dir != 'None':
+                    add_qsub_dir(qsub_dir, j)
                 for pos in range(add_methods_length):
                     action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
                         num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -480,7 +482,8 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                         add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
                         resubmissions, delay, cluster, j, xyzSmiles=False
                     )
-                    add_qsub_dir(qsub_dir, j)
+                    if qsub_dir != "None":
+                        add_qsub_dir(qsub_dir,  j)
             
 
             mexc_check = []
@@ -609,8 +612,8 @@ def main():
     
     #resubmit_delay_min = 60 * 12
     #resubmit_max_attempts = 5
-    resubmit_delay_min = 0.01 # 60 * 12
-    resubmit_max_attempts = 5
+    resubmit_delay_min = 2 # 60 * 12
+    resubmit_max_attempts = 15
 
     # geometry optimization options
     method_opt = "B3LYP"
