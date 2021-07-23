@@ -12,6 +12,7 @@ import subprocess
 
 sys.path.insert(1, './src') # this adds src to python path at runtime for modules
 import error_mexc_dyes_v1
+import error_mexc_dyes_v2
 import ES_extraction
 from absorpt import absorpt
 from molecule_json import Molecule
@@ -159,6 +160,8 @@ def generateMolecules (smiles_tuple_list,
                     baseName='mex', procedure='OPT', data=data,
                     dir_name=name
         )
+
+        # need to add qsub here for v2
 
         mol_lst.addMolecule(mol)
         mol_lst.sendToFile("../results.json")
@@ -331,6 +334,181 @@ def jobResubmit(monitor_jobs, min_delay, number_delays,
     os.chdir("..")
     return complete
 
+
+def check_add_methods(add_methods, funct_name):
+    ln = len(add_methods['methods'])
+    if ln == len(add_methods['basis_set']) and ln == len(add_methods['mem_com']) and ln == len(add_methods['mem_pbs']):
+        return True 
+    else:
+        print("\nadd_methods must have values that have lists of the same length.\nTerminating %s before start\n" % funct_name)
+        return False 
+
+def qsub(path='.'):
+    resetDirNum = len(path.split("/"))
+    if path != '.':
+        os.chdir(path)
+    pbs_file = glob.glob("*.pbs")[0]
+    cmd = 'qsub %s' % pbs_file
+    print(os.getcwd(), "cmd", cmd)
+    failure = subprocess.call(cmd, shell=True)
+    if path != '.':
+        for i in range(resetDirNum):
+            os.chdir("..")
+
+
+def add_qsub_dir(qsub_dir, geom_dir):
+    if qsub_dir == 'None':
+        return 0
+    elif qsub_dir == './':
+        qsub_path = geom_dir
+    else:
+        qsub_path = "%s/%s" % (geom_dir, qsub_dir)
+    with open('../qsub_queue', 'a') as fp:
+        fp.write(qsub_path)
+    return 1
+
+def qsub_to_max(max_queue=100, user=""):
+    with open("../qsub_queue", 'r') as fp:
+        qsubs = fp.readlines()
+
+    cmd = "qstat -u \"r%s\" > qsub_len" % user
+    subprocess.call(cmd, shell=True)
+    with open('qsub_len', 'r') as fp:
+        current_queue = len(fp.readlines())-5
+    dif = max_queue - current_queue
+    if dif > 0:
+        cnt = 0
+        while (cnt < dif and len(qsubs) >0):
+            qsub_path = qsubs.pop(0)
+            qsub(qsub_path)
+            cnt +=1
+    with open('../qsub_queue', 'w') as fp:
+        for i in qsubs:
+            fp.write(i)
+    return 1
+
+
+
+def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
+                method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                cluster, route='results',
+                add_methods= {
+                    "methods" : [],
+                    "basis_set" : [],
+                    "mem_com" : [],
+                    "mem_pbs" : []
+                },
+                max_queue=200
+                ):
+    """
+    Modified from jobResubmit above
+    """
+    if not os.path.exists("qsub_queue"):
+        subprocess.call("touch qsub_queue", shell=True)
+    
+    if not check_add_methods(add_methods, "jobResubmit_v2"):
+        return []
+
+    add_methods_length = len(add_methods['methods'])
+    mol_lst = MoleculeList()
+    if os.path.exists('results.json'):
+        mol_lst.setData("results.json")
+    else:
+        mol_lst.sendToFile("results.json")
+
+    
+    min_delay = min_delay * 60
+    #cluster_list = glob.glob("%s/*" % route)
+    complete = []
+    resubmissions = []
+    for i in range(len(monitor_jobs)):
+        complete.append(0)
+        resubmissions.append(2)
+        #resubmissions.append(resubmission_max)
+    calculations_complete = False
+    # comment change directory below in production
+    os.chdir(route)
+    
+    for i in range(number_delays):
+        # time.sleep(min_delay)
+        for num, j in enumerate(monitor_jobs):
+            os.chdir(j)
+            delay = i
+            mexc_check = glob.glob("mexc")
+            if len(mexc_check) > 0:
+                complete[num] = 1
+                mexc_check_out = glob.glob("mexc/mexc.o*")
+                mexc_check_out_complete = glob.glob('mexc/*_o*')
+                if complete[num] < 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
+                    occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
+                    if occVal == virtVal and occVal == 0:
+                        print(j)
+                    mol = Molecule()
+                    mol.setData('info.json')
+                    mol.setHOMO(occVal)
+                    mol.setLUMO(virtVal)
+                    # Testing below
+                    mol.setExictations(absorpt('mexc/mexc.out', method_mexc, basis_set_mexc))
+                    
+                    mol.toJSON()
+                    mol.sendToFile('info.json')
+                     
+                    #mol_lst.addMolecule(mol)
+                    mol_lst = MoleculeList()
+                    mol_lst.setData("../../results.json")
+                    mol_lst.updateMolecule(mol)
+                    mol_lst.sendToFile('../../results.json')
+                    
+                    complete[num] = 2
+
+                #if complete[num] >= 2
+
+            if complete[num] < 1:
+                print("directory for", j)
+                action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
+                    num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                    method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                    resubmissions, delay, cluster, j, xyzSmiles=True
+                )
+                add_qsub_dir(qsub_dir)
+                for pos in range(add_methods_length):
+                    action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
+                        num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                        add_methods["methods"][pos], add_methods['basis_set'][pos],
+                        add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
+                        resubmissions, delay, cluster, j, xyzSmiles=False
+                    )
+                    add_qsub_dir(qsub_dir)
+            
+
+            mexc_check = []
+            os.chdir('..')
+        stage = 0
+        for k in range(len(complete)):
+            stage += complete[k]
+            #if stage == len(complete)*2:
+            if stage == len(complete)*add_methods_length:
+                calculations_complete = True
+
+        if calculations_complete == True:
+            print(complete)
+            print('\nCalculations are complete.')
+            print('Took %.2f hours' % (i*min_delay / 60))
+            return complete
+        print('Completion List\n', complete, '\n')
+        print('delay %d' % (i))
+        """
+        qsub_funct
+        """
+        qsub_to_max(max_queue, 'r2652')
+        time.sleep(min_delay)
+    for i in range(len(resubmissions)):
+        if resubmissions[i] < 2:
+            print("Not finished %d: %s" % (resubmissions[i], monitor_jobs[i]))
+    os.chdir("..")
+    return complete
+
 def gather_general_smiles(monitor_jobs, path_results='./results'):
     os.chdir(path_results)
     for i in monitor_jobs:
@@ -360,13 +538,7 @@ def gather_general_smiles(monitor_jobs, path_results='./results'):
 
         os.chdir('..')
 
-def check_add_methods(add_methods, funct_name):
-    ln = len(add_methods['methods'])
-    if ln == len(add_methods['basis_set']) and ln == len(add_methods['mem_com']) and ln == len(add_methods['mem_pbs']):
-        return True 
-    else:
-        print("\nadd_methods must have values that have lists of the same length.\nTerminating %s before start\n" % funct_name)
-        return False 
+
 
 def gather_excitation_data(path_results, monitor_jobs, add_methods, 
     method_mexc, basis_set_mexc, baseName='mexc'
@@ -494,6 +666,17 @@ def main():
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster, route='results', add_methods=add_methods
                            )
+    """
+    monitor_jobs = ['test_1', 'test_2']
+    complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
+                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           cluster, route='results', add_methods=add_methods,
+                           max_queue=200
+    )
+    
+
+    """
     #tmp.qsub file for listings
     #path/to/qsub/file/
 
@@ -514,8 +697,8 @@ def main():
     for i in range(max_qsub - running):
         qsub_path = qsub_list.dequeue()
         qsub(qsub_path)
-    
     """
+    
     #gather_general_smiles(monitor_jobs)
     
     gather_excitation_data('./results', monitor_jobs, add_methods, method_mexc, basis_set_mexc)
