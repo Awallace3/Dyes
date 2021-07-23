@@ -377,6 +377,7 @@ def qsub_to_max(max_queue=100, user=""):
     print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
     with open('../qsub_len', 'r') as fp:
         current_queue = len(fp.readlines())-5
+    os.remove('../qsub_len')
     dif = max_queue - current_queue
     if dif > 0:
         cnt = 0
