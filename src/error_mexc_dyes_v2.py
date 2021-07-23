@@ -585,7 +585,7 @@ def main(index,
          ):
 
     out_files = glob.glob("*.out*")
-    out_completion = glob.glob("mex_o.*")
+    out_completion = glob.glob("*_o.*")
     if method_mexc == 'CAM-B3LYP':
         qsub_dir = 'mexc'
     else:
@@ -666,7 +666,7 @@ def main(index,
                             )
             
             os.remove("tmp.txt")
-            
+             
             return False, resubmissions, qsub_dir
 
     else:
