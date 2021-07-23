@@ -714,7 +714,7 @@ def main():
     
     #gather_general_smiles(monitor_jobs)
     
-    gather_excitation_data('./results', monitor_jobs, add_methods, method_mexc, basis_set_mexc)
+    #gather_excitation_data('./results', monitor_jobs, add_methods, method_mexc, basis_set_mexc)
     '''
     module load python
     source activate rdkit
