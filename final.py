@@ -1,4 +1,4 @@
-from operator import add
+from operator import add, sub
 import numpy as np
 import os
 import itertools
@@ -21,27 +21,32 @@ from molecule_json import MoleculeList
     # brew install obabel
     # conda install -c openbabel openbabel
 
-def collectLocalStructures (subdirectories):
+def collectLocalStructures (subdirectories, banned=[]):
     localStructuresDict = {}
     number_locals = 0
     
     for num, i in enumerate(subdirectories):
         os.chdir(i)
+        print("\n%s\n"%i)
         localStructuresDict['local{0}'.format(num+1)] = []
         localSmiles = glob.glob('*.smi')
         for j in localSmiles:
-            with open(j) as f:
-                smiles = f.read()
-                smiles = smiles.split("\n")
-                smiles[0] = smiles[0].rstrip()
-                localStructuresDict['local{0}'.format(num+1)].append((smiles[0], j[:-4], smiles[1]))
-                #  smiles[0]==smiles, j[:-4]==local_name, smiles[1]==name
-
+            #print(j[:-4])
+            if j[:-4] not in banned:
+                #print(j[:-4])
+                with open(j) as f:
+                    smiles = f.read()
+                    smiles = smiles.split("\n")
+                    smiles[0] = smiles[0].rstrip()
+                    localStructuresDict['local{0}'.format(num+1)].append((smiles[0], j[:-4], smiles[1]))
+                    #  smiles[0]==smiles, j[:-4]==local_name, smiles[1]==name
+            else:
+                print(j[:-4], 'skipped due to banned')
         
         os.chdir("..")
         number_locals += 1
     print(localStructuresDict)
-    
+
     return localStructuresDict
 
 def permutationDict(localStructuresDict):
@@ -52,36 +57,24 @@ def permutationDict(localStructuresDict):
         pre_perm = pre_perm + [value]
 
     post_perm = list(itertools.product(*pre_perm))
-    
+    #print(len(post_perm))
     return post_perm
 
 def smilesRingCleanUp(f, s, t):
-    combinedString = ''
-    current_val = 0
-    lst1 = []
-    claimed = []
-    double = []
+    print()
     smi1, na1, form1 = f
     smi2, na2, form2 = s
     smi3, na3, form3 = t
     name = na1 + "_" + na2 + "_" + na3
     formalName = form1 +"::"+form2+"::"+form3
-    print(name)
-    smi1 = smi1.replace("1", "7")
-    smi1 = smi1.replace("2", "6")
-    smi2 = smi2.replace("1", "5")
-    smi2 = smi2.replace("2", "4")
-    line = smi1 + "." + smi2 + "." + smi3
-
+    cmd = "../src/number_rings.pl '%s' '%s' '%s'" % (smi1, smi2, smi3)
+    line = subprocess.getoutput(cmd)
     return line, name, formalName
 
 
 def generateMolecules (smiles_tuple_list, 
                 method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster): 
-    #if not os.path.exists("inputs"):
-    #    os.mkdir('inputs')
-    xyzDict = {}
     monitor_jobs = []
     if not os.path.exists('results'):
         os.mkdir('results')
@@ -93,9 +86,6 @@ def generateMolecules (smiles_tuple_list,
     for num, i in enumerate(smiles_tuple_list):
         first, second, third = i
         line, name, formalName = smilesRingCleanUp(first, second, third)
-
-        # CHECK LOCATION
-
         mol_lst = MoleculeList()
         if os.path.exists('../results.json'):
             mol_lst.setData("../results.json")
@@ -108,26 +98,16 @@ def generateMolecules (smiles_tuple_list,
             continue
         mol = Molecule()
         mol.setSMILES(line)
-        
-        print("line{0}:".format(num), line)
-        line = line.replace("BBA", "9")
-        line = line.replace("BBD", "8")
-        print("line{0}:".format(num), line)
         file = open('smiles_input/{0}.smi'.format(name), 'w+')
         file.write(line)
         file.close()
-        
         cmd = "obabel -ismi smiles_input/{0}.smi -oxyz --gen3D".format(name)
         carts = subprocess.check_output(cmd, shell=True)
-        #subprocess.call(cmd, shell=True)
         carts = str(carts)
         carts = carts.rstrip()
-        
         carts = carts.splitlines()
-        
         for n, i in enumerate(carts):
             carts[n] = i.split('\\n')
-
         carts_cleaned = []
         invalid = True
         for n, i in enumerate(carts[0]):
@@ -140,7 +120,7 @@ def generateMolecules (smiles_tuple_list,
             continue
         del carts_cleaned[-1]
 
-        print(carts_cleaned)
+        #print(carts_cleaned)
         os.mkdir(name)
         err = subprocess.call("touch %s/info.json" % name, shell=True)
 
@@ -160,14 +140,15 @@ def generateMolecules (smiles_tuple_list,
                     baseName='mex', procedure='OPT', data=data,
                     dir_name=name
         )
+        add_qsub_dir('./', name, '../qsub_queue')
 
         # need to add qsub here for v2
 
         mol_lst.addMolecule(mol)
         mol_lst.sendToFile("../results.json")
         monitor_jobs.append(name)
-        print(monitor_jobs)
     os.chdir("..")
+    print(monitor_jobs)
     return monitor_jobs
 
 
@@ -360,7 +341,7 @@ def qsub(path='.'):
 
 
 
-def add_qsub_dir(qsub_dir, geom_dir):
+def add_qsub_dir(qsub_dir, geom_dir, path_qsub_queue='../../qsub_queue'):
     if qsub_dir == 'None':
         return 0
     elif qsub_dir == './':
@@ -368,7 +349,7 @@ def add_qsub_dir(qsub_dir, geom_dir):
     else:
         qsub_path = "%s/%s\n" % (geom_dir, qsub_dir)
     print(os.getcwd(), qsub_path, '../../qsub_queue')
-    with open('../../qsub_queue', 'a') as fp:
+    with open(path_qsub_queue, 'a') as fp:
         fp.write(qsub_path)
     return 1
 
@@ -610,15 +591,17 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
     return True
 
 def main():
-    """
-    print("\n\tstart\n")
+    #print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
-    localStructuresDict = collectLocalStructures(three_types) # p
-    
+    banned =  ['10b', '11b', '12b', '13b', '14b', '15b', '2b', '3b', '4b', '5b', '7b', '8b', '9b', "TPA2"] 
+    localStructuresDict = collectLocalStructures(three_types, banned) # p
+    #localStructuresDict = {'local1': [ ('N((BBD))(C1=CC=CC=C1)C2=CC=CC=C2', '2ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('CC(C=C1)=CC=C1C(C2=C3SC4=C2SC5=C4C(    C6=CC=C(C)C=C6)(C7=CC=C(C)C=C7)C8=C9C5=C(C=CC=C%10)C%10=C((BBA))C9=CC=C8)(C%11=CC=C(C)C=C%11)C%12=CC=CC%13=C((BBD))C%14=C(C=CC=C%14)C3=C%1    3%12', '26b', "9,9,19,19-tetra-p-tolyl-9,19-dihydrobenzo[10',1']phenanthro[3',4':4,5]thieno[3,2-b]benzo[10,1]phenanthro[3,4-d]thiophene"),     ], 'local3': [('OC(C1=C(O)C=C(C#C(BBA))C=C1)=O', '11ea', '4-ethynyl-2-hydroxybenzoic acid'), ]}
+    #localStructuresDict = {'local1': [ ('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('C(BBA)1=C2C(N=CC=N2)=C((BBD))S1', '1b', "test"),     ], 'local3': [('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ea', 'acid'), ]}
     smiles_tuple_list = permutationDict(localStructuresDict)
+    print("smiles_tuple_list", smiles_tuple_list)
     """
-    
+    """
     #resubmit_delay_min = 60 * 12
     #resubmit_max_attempts = 5
     resubmit_delay_min = 0.05 # 60 * 12
@@ -664,10 +647,10 @@ def main():
 
 
 
-    """
     # comment for testing
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
+    """
     """
     monitor_jobs =  ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea', '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea', '2ed_13b_1ea', 'TPA2_14b_3ea', '1ed_3b_2ea', '6ed_16b_1ea', '1ed_11b_1ea', '3ed_13b_2ea', 'TPA2_6b_3ea', '7ed_4b_2ea', '7ed_16b_2ea', '6ed_4b_2ea', '1ed_1b_3ea', '1ed_9b_1ea', '3ed_8b_3ea', '2ed_8b_3ea', 'TPA2_16b_2ea', '3ed_15b_1ea', '7ed_2b_1ea', '6ed_2b_1ea', '7ed_10b_1ea', '5ed_3b_3ea', 'TPA2_8b_2ea', '5ed_10b_3ea', '1ed_15b_3ea', '2ed_6b_2ea', '3ed_6b_2ea', 'TPA2_10b_1ea', '6ed_12b_3ea', '5ed_1b_2ea', '6ed_8b_2ea', '7ed_8b_2ea', 'TPA2_2b_1ea', '2ed_15b_2ea', '5ed_12b_2ea', '6ed_10b_2ea', '1ed_5b_1ea', '2ed_4b_3ea', '3ed_4b_3ea', '6ed_11b_2ea', '1ed_4b_1ea', '2ed_5b_3ea', '3ed_5b_3ea', '1ed_16b_2ea', '5ed_13b_2ea', '2ed_14b_2ea', 'TPA2_3b_1ea', '6ed_9b_2ea', '7ed_9b_2ea', '2ed_7b_2ea', '3ed_7b_2ea', 'TPA2_11b_1ea', '6ed_13b_3ea', '1ed_14b_3ea', '5ed_11b_3ea', '2ed_16b_3ea', 'TPA2_9b_2ea', '7ed_3b_1ea', '6ed_3b_1ea', '7ed_11b_1ea', '5ed_2b_3ea', '3ed_14b_1ea', '1ed_8b_1ea', '3ed_9b_3ea', '2ed_1b_1ea', '3ed_1b_1ea', '2ed_9b_3ea', '7ed_5b_2ea', '6ed_5b_2ea', 'TPA2_7b_3ea', '3ed_12b_2ea', '1ed_10b_1ea', 'TPA2_15b_3ea', '1ed_2b_2ea', '2ed_12b_1ea', '5ed_15b_1ea', '7ed_7b_3ea', '6ed_7b_3ea', '7ed_15b_3ea', '5ed_6b_1ea', 'TPA2_5b_2ea', '3ed_10b_3ea', '3ed_13b_1ea', '6ed_4b_1ea', '7ed_16b_1ea', '7ed_4b_1ea', '5ed_5b_3ea', '2ed_11b_3ea', '5ed_16b_3ea', '1ed_13b_3ea', 'TPA2_16b_1ea', '1ed_9b_2ea', '6ed_14b_3ea', '5ed_7b_2ea', 'TPA2_4b_1ea', '2ed_13b_2ea', '5ed_14b_2ea', '1ed_11b_2ea', '6ed_16b_2ea', '1ed_3b_1ea', '3ed_2b_3ea', '2ed_2b_3ea', 'TPA2_2b_2ea', '7ed_12b_3ea', '7ed_8b_1ea', '6ed_8b_1ea', '5ed_1b_1ea', '5ed_9b_3ea', '5ed_12b_1ea', '2ed_15b_1ea', 'TPA2_12b_3ea', '1ed_5b_2ea', '6ed_10b_1ea', '3ed_15b_2ea', 'TPA2_8b_1ea', '7ed_10b_2ea', '6ed_2b_2ea', '7ed_2b_2ea', '1ed_7b_3ea', 'TPA2_10b_2ea', '3ed_6b_1ea', '2ed_6b_1ea', '1ed_6b_3ea', 'TPA2_11b_2ea', '3ed_7b_1ea', '2ed_7b_1ea', '7ed_11b_2ea', '6ed_3b_2ea', '7ed_3b_2ea', 'TPA2_9b_1ea', 'TPA2_1b_3ea', '3ed_14b_2ea', '1ed_16b_1ea', 'TPA2_13b_3ea', '1ed_4b_2ea', '6ed_11b_1ea', '2ed_14b_1ea', '5ed_13b_1ea', '6ed_1b_3ea', '7ed_13b_3ea', '7ed_9b_1ea', '6ed_9b_1ea', '7ed_1b_3ea', '5ed_8b_3ea', 'TPA2_3b_2ea', '3ed_16b_3ea', '1ed_2b_1ea', '3ed_3b_3ea', '2ed_3b_3ea', '1ed_10b_2ea', '5ed_15b_2ea', '2ed_12b_2ea', 'TPA2_5b_1ea', '5ed_6b_2ea', '3ed_1b_2ea', '2ed_1b_2ea', '1ed_8b_2ea', '6ed_15b_3ea', '1ed_12b_3ea', '2ed_10b_3ea', '6ed_5b_1ea', '7ed_5b_1ea', '5ed_4b_3ea', '3ed_12b_1ea', '3ed_8b_1ea', '2ed_8b_1ea', '6ed_14b_2ea', '1ed_1b_1ea', '1ed_9b_3ea', '1ed_13b_2ea', '5ed_16b_2ea', '2ed_11b_2ea', 'TPA2_6b_1ea', '5ed_5b_2ea', '6ed_16b_3ea', '2ed_2b_2ea', 'TPA2_14b_1ea', '3ed_2b_2ea', '1ed_11b_3ea', '5ed_14b_3ea', '2ed_13b_3ea', '5ed_7b_3ea', '7ed_6b_1ea', '7ed_14b_1ea', '6ed_6b_1ea', '3ed_11b_1ea', '2ed_4b_1ea', 'TPA2_12b_2ea', '3ed_4b_1ea', '1ed_5b_3ea', '7ed_12b_2ea', '5ed_9b_2ea', 'TPA2_2b_3ea', '1ed_15b_1ea', '1ed_7b_2ea', '6ed_12b_1ea', 'TPA2_10b_3ea', '5ed_10b_1ea', '5ed_3b_1ea', '7ed_2b_3ea', '7ed_10b_3ea', '6ed_2b_3ea', '3ed_15b_3ea', '3ed_14b_3ea', 'TPA2_1b_2ea', '5ed_2b_1ea', '7ed_3b_3ea', '7ed_11b_3ea', '6ed_3b_3ea', '5ed_11b_1ea', '2ed_16b_1ea', '1ed_6b_2ea', '6ed_13b_1ea', 'TPA2_11b_3ea', '1ed_14b_1ea', '3ed_16b_2ea', 'TPA2_3b_3ea', '7ed_1b_2ea', '6ed_1b_2ea', '7ed_13b_2ea', '5ed_8b_2ea', '2ed_5b_1ea', 'TPA2_13b_2ea', '3ed_5b_1ea', '1ed_4b_3ea', '3ed_10b_1ea', '5ed_6b_3ea', '7ed_7b_1ea', '7ed_15b_1ea', '6ed_7b_1ea', '2ed_12b_3ea', '5ed_15b_3ea', '1ed_10b_3ea', '2ed_3b_2ea', 'TPA2_15b_1ea', '3ed_3b_2ea', '5ed_4b_2ea', 'TPA2_7b_1ea', '2ed_10b_2ea', '1ed_12b_2ea', '3ed_9b_1ea', '2ed_1b_3ea', '3ed_1b_3ea', '2ed_9b_1ea', '6ed_15b_2ea', '1ed_8b_3ea', '3ed_2b_1ea', 'TPA2_14b_2ea', '2ed_2b_1ea', '1ed_3b_3ea', '6ed_6b_2ea', '7ed_14b_2ea', '7ed_6b_2ea', 'TPA2_4b_3ea', '3ed_11b_2ea', '1ed_13b_1ea', '1ed_1b_2ea', '6ed_14b_1ea', '2ed_8b_2ea', 'TPA2_16b_3ea', '3ed_8b_2ea', '2ed_11b_1ea', '5ed_16b_1ea', '5ed_5b_1ea', '7ed_16b_3ea', '6ed_4b_3ea', '7ed_4b_3ea', 'TPA2_6b_2ea', '3ed_13b_3ea', '3ed_6b_3ea', '2ed_6b_3ea', '6ed_12b_2ea', '1ed_7b_1ea', '1ed_15b_2ea', '5ed_10b_2ea', 'TPA2_8b_3ea', '5ed_3b_2ea', '6ed_10b_3ea', '3ed_4b_2ea', 'TPA2_12b_1ea', '2ed_4b_2ea', '5ed_12b_3ea', '2ed_15b_3ea', '5ed_1b_3ea', '5ed_9b_1ea', '7ed_12b_1ea', '7ed_8b_3ea', '6ed_8b_3ea', '3ed_16b_1ea', '5ed_8b_1ea', '7ed_13b_1ea', '6ed_1b_1ea', '7ed_9b_3ea', '6ed_9b_3ea', '7ed_1b_1ea', '2ed_14b_3ea', '5ed_13b_3ea', '1ed_16b_3ea', '6ed_11b_3ea', '3ed_5b_2ea', 'TPA2_13b_1ea', '2ed_5b_2ea', '5ed_2b_2ea', 'TPA2_9b_3ea', 'TPA2_1b_1ea', '2ed_16b_2ea', '5ed_11b_2ea', '1ed_14b_2ea', '3ed_7b_3ea', '2ed_7b_3ea', '6ed_13b_2ea', '1ed_6b_1ea', '3ed_12b_3ea', 'TPA2_7b_2ea', '5ed_4b_1ea', '6ed_5b_3ea', '7ed_5b_3ea', '2ed_10b_1ea', '6ed_15b_1ea', '2ed_9b_2ea', '3ed_9b_2ea', '1ed_12b_1ea', '3ed_10b_2ea', 'TPA2_5b_3ea', '6ed_7b_2ea', '7ed_15b_2ea', '7ed_7b_2ea', '3ed_3b_1ea', 'TPA2_15b_2ea', '2ed_3b_1ea', '1ed_2b_3ea']
 
@@ -680,6 +663,7 @@ def main():
                            cluster, route='results', add_methods=add_methods
                            )
     """
+    """
     monitor_jobs = ['test_1',]
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -687,6 +671,7 @@ def main():
                            cluster, route='results', add_methods=add_methods,
                            max_queue=200
     )
+    """
     
 
     """

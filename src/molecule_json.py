@@ -134,7 +134,7 @@ class MoleculeList():
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             mol.giveData(i)
-            print(mol.SMILES, smiles)
+            #print(mol.SMILES, smiles)
             if mol.SMILES == smiles:
                 found = True
         return found 
