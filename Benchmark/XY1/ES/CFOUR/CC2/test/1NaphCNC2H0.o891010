@@ -1,0 +1,32 @@
+Warning: no access to tty (Bad file descriptor).
+Thus no job control in this shell.
+2 cores requested in PBS file
+ 
+/ddn/home6/r2532/maple/bin/tempQC/bin/psi4conda/etc/profile.d/conda.csh: No such file or directory.
+ 
+Running threaded CFOUR on cn008 with 20 threads
+/ddn/home1/r1621/maple/bin/tempQC/bin//cfour_v2devel_2015_06_18_g++_intel_2011.12.361/bin/xcfour
+ 
+Working and scratch directories
+/ddn/home6/r2532/chem/Benchmark/XY1/ES/CFOUR/CC2/test
+/tmp/r2532/C4_891010.maple
+ 
+Input and output files
+ZMAT      output.dat
+ 
+Running xcfour
+...Done
+ 
+Getting info from JOBARC
+ @GETMEM-I,  Allocated    7629 MB of main memory.
+  @GETREC-F, File attached to unit  75 does not contain record GRADIENT.
+  @CHECKOUT-I, Total execution time (CPU/WALL):        0.00/       0.00 seconds.
+ 
+  ERROR ERROR ERROR ERROR ERROR ERROR 
+  Job has terminated with error flag 
+  ERROR ERROR ERROR ERROR ERROR ERROR 
+ 
+Copying JOBARC to working directory
+Copying JAINDX to working directory
+Copying JOBDUMP to working directory
+ 

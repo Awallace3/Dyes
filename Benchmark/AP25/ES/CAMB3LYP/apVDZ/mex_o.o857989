@@ -1,0 +1,22 @@
+exec_host = cn113
+113
+Using AVX2 version
+Error: software termination
+   rax fffffffffffffffc, rbx 00007fffffff5c40, rcx 00007ffff75db24a
+   rdx 0000000000000000, rsp 00007fffffff5c08, rbp 0000000000000001
+   rsi 00007fffffff5c40, rdi 0000000000003196, r8  00007ffff78bd3c0
+   r9  00007fffffff5b60, r10 0000000000000000, r11 0000000000000246
+   r12 00007fffffff5c60, r13 000000000000007c, r14 0000000000000000
+   r15 00007fffffffc630
+Error: software termination
+   rax 0000000001011620, rbx 0000000001011620, rcx 00007ffff7bceda0
+   rdx 0000000001011620, rsp 00007fffffffb7b8, rbp 00007ffdf6efb6d8
+   rsi 00007ffdf6efb6d8, rdi 0000000000000004, r8  0000000000000000
+   r9  0000000000000001, r10 ffffffffffffffff, r11 0000000000000246
+   r12 000000000341a818, r13 0000000001011620, r14 0000000000000004
+   r15 0000000001011620
+  /lib64/libpthread.so.0(+0x11c00) [0x7ffff7bcfc00]
+  /lib64/libpthread.so.0(write+0x10) [0x7ffff7bceda0]
+  /usr/local/apps/gaussian/g16-b01-avx2//g16/l302.exe() [0x430085]
+  /usr/local/apps/gaussian/g16-b01-avx2//g16/l302.exe() [0x430491]
+  /usr/local/apps/gaussian/g16-b01-avx2//g16/l302.exe() [0x4b2538]
