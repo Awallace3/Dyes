@@ -62,18 +62,18 @@ def xyzadder(path):
 
 def main():
 
-    path_to_benchmark = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/Benchmark'
-  #  SMILES = input('What is the SMILES str for Benchmark Dye ')
-  #  name = input('What is the name of Benchmark Dye ')
-    SMILES = 'CCCC'
-    name = 'TESTTTTT'
+    path_to_benchmark = '/ddn/home6/r2532/chem/Dyes/Benchmark'
+    SMILES = input('What is the SMILES str for Benchmark Dye ')
+    name = input('What is the name of Benchmark Dye ')
+#    SMILES = 'CCCC'
+#    name = 'TESTTTTT'
     error = smilesinput(SMILES,name,path_to_benchmark)
     if error == 1:
         print(path_to_benchmark + '/' + name)
     else:
        
         obabelxyzconverter(name, path_to_benchmark)
-        path_to_coords = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/Benchmark/' + str(name)
+        path_to_coords = path_to_benchmark + '/'  + str(name)
         coordsexteditor(path_to_coords) 
         dir_name = name
         os.chdir(path_to_benchmark)
