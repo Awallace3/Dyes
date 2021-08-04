@@ -501,7 +501,7 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
                     baseName='./', procedure='OPT' 
                     )
 
-        qsub()
+        #qsub()
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
@@ -516,7 +516,7 @@ def qsub(path='.'):
             os.chdir("..")
 
 
-def make_exc_mo_freq(method_mexc, basis_set_mexc, 
+def make_exc(method_mexc, basis_set_mexc, 
                 mem_com_mexc, mem_pbs_mexc, cluster,
                 geomDirName
                 ):
@@ -547,56 +547,8 @@ def make_exc_mo_freq(method_mexc, basis_set_mexc,
                     outName=outName
                     )
     path = '%s' % dir_name
-    qsub(path)
-    """
-    gaussianInputFiles(output_num, method_opt, 
-                    basis_set_opt, mem_com_opt, 
-                    mem_pbs_opt, cluster, 
-                    baseName='mexc', procedure='OPT',
-                    data='', dir_name='', solvent='', 
-                    outName='mexc_o'
-                    ):
-    """
-    
-    """
-    baseName = 'mexc'
-    os.mkdir(baseName)
-    procedure = 'TD(NStates=10)'
-    output_num = 0
-    gaussianInputFiles(output_num, method_mexc, 
-                    basis_set_mexc, mem_com_mexc, 
-                    mem_pbs_mexc, cluster,
-                    baseName, procedure
-                    )
-    path = '%s' % baseName
-    qsub(path)
-    """
-    """
-    baseName = 'mo'
-    os.mkdir(baseName)
-    procedure = 'SP GFINPUT POP=FULL'
-    output_num = 0
-    gaussianInputFiles(output_num, method_mexc, 
-                    basis_set_mexc, mem_com_mexc, 
-                    mem_pbs_mexc, cluster,
-                    baseName, procedure
-                    )
-    path = '%s' % baseName
-    qsub(path)
-    """
-    """
-    baseName = 'freq'
-    os.mkdir(baseName)
-    procedure = 'FREQ'
-    output_num = 0
-    gaussianInputFiles(output_num, method_mexc, 
-                    basis_set_mexc, mem_com_mexc, 
-                    mem_pbs_mexc, cluster,
-                    baseName, procedure
-                    )
-    path = '%s' % baseName
-    qsub(path)
-    """
+    #qsub(path)
+
 
     
 def clean_energies(hf_1, hf_2, zero_point):
@@ -633,7 +585,11 @@ def main(index,
          ):
 
     out_files = glob.glob("*.out*")
-    out_completion = glob.glob("mex_o.*")
+    out_completion = glob.glob("*_o.*")
+    if method_mexc == 'CAM-B3LYP':
+        qsub_dir = 'mexc'
+    else:
+        qsub_dir = method_mexc
     if len(out_files) > 0:
 
         filename = out_files[-1]
@@ -649,9 +605,9 @@ def main(index,
             if delay == 0:
                 resubmissions[index] = output_num
         if len(out_completion) != len(out_files):
-            return True, resubmissions
+            return True, resubmissions, 'None'
         if resubmissions[index] > output_num:
-            return True, resubmissions
+            return True, resubmissions, 'None'
 
         f = open(filename, 'r')
         lines = f.readlines()
@@ -667,6 +623,7 @@ def main(index,
                     error = True
         cmd = "qsub mex.pbs"
         if error == True:
+            
             print("ERROR == TRUE")
             find_geom(lines, error=True, filename=filename,
                         imaginary=imaginary, geomDirName=geomDirName)
@@ -675,7 +632,8 @@ def main(index,
             #os.system("qsub mex.pbs")
             failure = subprocess.call(cmd, shell=True)
             resubmissions[index] += 1
-            return False, resubmissions
+            qsub_dir = './'
+            return False, resubmissions, qsub_dir
 
         elif imaginary == True:
             find_geom(lines, error=False, filename=filename,
@@ -684,11 +642,12 @@ def main(index,
 
             make_input_files_no_constraints(
                 output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster)
-            os.system("qsub mex.pbs")
+            #os.system("qsub mex.pbs")
             failure = subprocess.call(cmd, shell=True)
             print('imaginary frequency handling...')
             resubmissions[index] += 1
-            return False, resubmissions
+            qsub_dir = './'
+            return False, resubmissions, qsub_dir
         else:
             print("ELSE")
             cmd = "qsub mexc.pbs"
@@ -700,19 +659,18 @@ def main(index,
             freq, hf_1, hf_2, zero_point = freq_hf_zero(
                 lines, filename=filename)
             '''
-            print("entering make_exc_mo_freq")
-            make_exc_mo_freq(method_mexc, basis_set_mexc, 
+            print("entering make_exc")
+            make_exc(method_mexc, basis_set_mexc, 
                             mem_com_mexc, mem_pbs_mexc, cluster,
                             geomDirName
                             )
             
             os.remove("tmp.txt")
-            
-            return False, resubmissions
-        print('Calculation still running')
-        return True, resubmissions
+             
+            return False, resubmissions, qsub_dir
+
     else:
         print('No output files detected for geom%d' % (index+1))
-        return True, resubmissions
+        return True, resubmissions, "None"
 
 # main()

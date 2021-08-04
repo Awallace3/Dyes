@@ -1,5 +1,0 @@
-InChI_key in results.json
-obabel generate smiles
-rm cpu/gpu line for r410 q
-
-certbot

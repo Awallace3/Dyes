@@ -17,12 +17,21 @@ def ES_extraction(path):
             virtLst.append(i)
     if len(occLst) == 0 and len(virtLst) == 0:
         print("ES_extraction error: Found no data in %s" % path)
+
         return 0, 0
-    occLst = occLst[-1].split('  ')
-    virtLst = virtLst[0].split('  ')
+    
+    for i in range(2,10):
+        k = ' ' * i
+        occLst[-1] = occLst[-1].replace(k, " ")
+        virtLst[0] = occLst[0].replace(k, ' ')
+    occLst = occLst[-1].split(' ')
+    virtLst = virtLst[0].split(' ')
+    
+    #print(occLst, virtLst)
+    #print(occLst[-1].replace('\n', ""), virtLst[5].replace(" ", ''))
     
     occVal = float(occLst[-1].replace('\n', "").replace(" ", ""))
-    virtVal = float(virtLst[1].replace(" ", ''))
+    virtVal = float(virtLst[5].replace(" ", ''))
 
     # converted to eV and abs val
     occVal = abs(occVal*27.211385)
@@ -33,3 +42,6 @@ def ES_extraction(path):
     #print('scaling:',occVal, virtVal)
     return occVal, virtVal
 #ES_extraction('../ES/ES.out')
+
+if __name__ == "__main__":
+    ES_extraction()

@@ -204,6 +204,7 @@ def main(smiles, patterns=['BBA', 'BBD']):
         combined = combined.replace(i, r)
         cnt += 1
     print(combined)
+"""
 
 smiles = '(BBD)(C=C7)=CC=C7N(C6=CC=CC=C6)C3=CC=CC=C3.C(BBA)5=C4C(N=CC=N4)=C(BBD)S5.C(BBA)1=CC=C(/C=C(C#N)/C(O)=O)C=C1'
 smiles = 'c7ccc(N(c6ccccc6)c6ccc(8)cc6)cc7.c5cnc4c(8)sc(9)c4n5.N#C/C(=C\c1ccc(9)cc1)C(=O)O'
@@ -221,3 +222,11 @@ for i in range(len(smiles)):
         print(smiles[i], smiles_og[i])
 
 print(unique)
+"""
+
+
+sm1 = '(BBD)(C=C7)=CC=C7N(C6=CC=CC=C6)C3=CC=CC=C3'
+sm2 = 'C(BBA)5=C4C(N=CC=N4)=C(BBD)S5'
+sm3 = 'C(BBA)1=CC=C(/C=C(C#N)/C(O)=O)C=C1'
+
+

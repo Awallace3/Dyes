@@ -29,7 +29,8 @@ def absorpt(path, method_mexc, basis_set_mexc):
                 if 'Normal termination' in j:
                         jobComplete = True
         if jobComplete == False:
-                print("JOB INCOMPLETE")
+
+                print("JOB INCOMPLETE", path)
                 return []
         filename.close()
         with open(path, 'r') as fp:

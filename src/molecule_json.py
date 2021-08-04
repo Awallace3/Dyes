@@ -21,6 +21,11 @@ class Excitation:
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
             sort_keys=True, indent=4)
+    """
+    def giveData(self, data):
+        
+        self.exc = data["exc"]
+    """
 
     def __str__(self):
        return self.toJSON()
@@ -129,10 +134,17 @@ class MoleculeList():
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             mol.giveData(i)
-            print(mol.SMILES, smiles)
+            #print(mol.SMILES, smiles)
             if mol.SMILES == smiles:
                 found = True
         return found 
+    """
+    def checkExc(self):
+        for i in self.molecules:
+            mol = Molecule()
+            mol.giveData(i)
+    """
+            
 
     def updateMolecule(self, molecule):
         size = len(self.molecules)
