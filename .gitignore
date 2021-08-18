@@ -1,4 +1,6 @@
 inputs/
+qsub_len
+gen_qsub_queue
 results/
 src/ice_manager.py
 *.png
@@ -12,3 +14,6 @@ notes.txt
 testing_results
 results_cp
 qsub_queue
+results_1st
+results_1st.json
+output.log
