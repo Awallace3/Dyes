@@ -62,7 +62,7 @@ def xyzadder(path):
 
 def main():
 
-    path_to_benchmark = '/ddn/home6/r2532/chem/Dyes/Benchmark'
+    path_to_benchmark = '/ddn/home6/r2532/chem/Dyes/Benchmark/results'
     SMILES = input('What is the SMILES str for Benchmark Dye ')
     name = input('What is the name of Benchmark Dye ')
 #    SMILES = 'CCCC'
