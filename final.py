@@ -357,13 +357,20 @@ def qsub_to_max(max_queue=100, user=""):
     with open("../qsub_queue", 'r') as fp:
         qsubs = fp.readlines()
 
-    cmd = "qstat -u \"r%s\" > ../qsub_len" % user
+    # cmd = 'qstat -u %s > ../qsub_len' % user
+    # subprocess.call(cmd, shell=True)
+    # print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
+    # with open('../qsub_len', 'r') as fp:
+    #     current_queue = len(fp.readlines())-5
+    # os.remove('../qsub_len')
+    cmd = 'qstat -u %s | wc -l > ../qsub_len' % user
     subprocess.call(cmd, shell=True)
     print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
     with open('../qsub_len', 'r') as fp:
-        current_queue = len(fp.readlines())-5
+        current_queue = int(fp.read())-5
     os.remove('../qsub_len')
     dif = max_queue - current_queue
+    print('dif is', dif)
     if dif > 0:
         cnt = 0
         while (cnt < dif and len(qsubs) > 0):

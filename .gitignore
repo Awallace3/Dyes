@@ -14,3 +14,4 @@ results_cp
 qsub_queue
 .DS_Store
 Benchmark/
+src/exc.json
