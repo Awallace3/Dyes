@@ -628,13 +628,13 @@ def mean_abs_error_weighted(df, methods=['CAM-B3LYP/6-311G(d,p)', 'PBE1PBE/6-311
 def mean_abs_error(df, method='Dif. CAM-B3LYP/6-311G(d,p)'):
     return df[method].abs().mean()
 
-def weighted_avg_df(df, methods=['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)'], weights=[0.6594543456, 0.3405456544]):
+def weighted_avg_df(df, methods=['CAM-B3LYP/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)'], weights=[0.6594543456, 0.3405456544]):
 
     df['Weighted Avg.'] = df[methods[0]]*weights[0] + df[methods[1]]*weights[1]
     return df
 
 def benchmarkFlow(path_benchmark="Benchmark/benchmarks.json"):
-    df_molecules = json_pandas_molecule_BM('Benchmark/benchmarks.json')
+    df_molecules = json_pandas_molecule_BM(path_benchmark)
     methods_basissets = ['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
     df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
     convert_lst = methods_basissets.copy()
@@ -668,6 +668,118 @@ def benchmarkFlow(path_benchmark="Benchmark/benchmarks.json"):
     df_dif.to_csv("benchmarks.csv", index=False)
     print(mean_abs_error_weighted(df))
     print(mean_abs_error(df_dif, "Dif. PBE1PBE/6-311G(d,p)")) 
+
+def benchamrkPredictPCE(
+    path_benchmark="Benchmark/benchmarks.json", 
+    path_ipce="src/ipce.csv",
+    extra_values={
+        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        "D1": [2.337250,2.285609,1.742975,2.176884],
+        "D3": [2.301722,2.209749,1.549403,2.207872],
+        "XY1": [2.398999,2.314932,1.839675,2.247870],
+        "NL6": [2.250481,2.239272,1.383166,2.050367],
+        "ZL003": [2.488369,2.437129,2.031108,2.390798],
+        "JW1": [2.320036,2.302322,1.910812,2.103091],
+    },
+    ):
+
+    df_molecules = json_pandas_molecule_BM(path_benchmark)
+    methods_basissets = ['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
+    df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
+    convert_lst = methods_basissets.copy()
+    convert_lst.append("Exp")
+    
+    df = convert_df_nm_to_eV(df, convert_lst)
+    unlucky = {
+        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        "D1": [2.337250,2.285609,1.742975,2.176884],
+        "D3": [2.301722,2.209749,1.549403,2.207872],
+        "XY1": [2.398999,2.314932,1.839675,2.247870],
+        "NL6": [2.250481,2.239272,1.383166,2.050367],
+        "ZL003": [2.488369,2.437129,2.031108,2.390798],
+        "JW1": [2.320036,2.302322,1.910812,2.103091],
+    }
+    for key, val in unlucky.items():
+        row = {
+            'Name': key, 
+            methods_basissets[0]: val[0],
+            methods_basissets[1]: val[1],
+            methods_basissets[2]: val[2],
+            'Exp': val[3],
+        }
+        df = df.append(row, ignore_index=True)
+    #df = convert_df_nm_to_eV(df, convert_lst)
+    #df_dif = df_differences_exp(df, methods_basissets)
+    df = weighted_avg_df(df, convert_lst)
+    
+    
+    print(df)
+    
+    ipce = pd.read_csv(path_ipce)
+    ipce['IPCE'] = ipce['IPCE'].astype(float)
+    ipce['Abs. Max'] = ipce['Abs. Max'].astype(float)
+    ipce = convert_df_nm_to_eV(ipce, ['IPCE', 'Abs. Max'])
+    ipce = ipce.sort_values(['Name'], axis=0).reset_index(drop=True)
+    del ipce['Name']
+    df = df.sort_values(['Name'], axis=0).reset_index(drop=True)
+    
+    df2 = pd.concat([df, ipce], axis=1).reindex(ipce.index)
+    
+
+    #print(ipce['Name'])
+    #print(df['Name'])
+    avg_ipce_from_abs_max = (df2['Abs. Max'] - df2['IPCE']).mean()
+    print('avg:', avg_ipce_from_abs_max)
+    df2['Comp. IPCE'] = df2['Weighted Avg.'] - avg_ipce_from_abs_max
+    h = 6.626E-34
+    c = 3E17
+    J_to_eV = 1.602E-19
+    del df2['CAM-B3LYP/6-311G(d,p)']
+    del df2['bhandhlyp/6-311G(d,p)']
+    del df2['PBE1PBE/6-311G(d,p)']
+    del df2['Exp']
+
+    FF_h = 0.75
+    FF_l = 0.60
+    I_o = 1
+    energy_cut_off = 400
+    #energy_cut_off = h*c/(energy_cut_off*J_to_eV)
+
+    
+    df2['Comp. Jsc'] = ((h*c/(df2['Comp. IPCE'] * J_to_eV)) - energy_cut_off)/100*7.5
+    df2['Comp. Voc_h'] = (df2['Weighted Avg.'] - 0.4) 
+    df2['Comp. Voc_l'] = (df2['Weighted Avg.'] - 0.6) 
+
+    df2['Comp. PCE Voc_l FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_l / I_o
+    df2['Comp. PCE Voc_l FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_h / I_o
+    df2['Comp. PCE Voc_h FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_l / I_o
+    df2['Comp. PCE Voc_h FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_h / I_o
+
+    df2['Exp. PCE Voc_l FF_l'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_l 
+    df2['Exp. PCE Voc_l FF_h'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_h
+    df2['Exp. PCE Voc_h FF_l'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_l
+    df2['Exp. PCE Voc_h FF_h'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_h
+
+    """
+    df2['Comp. Jsc'] = h*c/((df2['Comp. IPCE'] + energy_cut_off)*J_to_eV) /100*7.5
+    df2['Comp. Voc_h'] = (df2['Weighted Avg.'] - 0.4) 
+    df2['Comp. Voc_l'] = (df2['Weighted Avg.'] - 0.6) 
+
+    df2['Comp. PCE Voc_l FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_l / I_o
+    df2['Comp. PCE Voc_l FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_h / I_o
+    df2['Comp. PCE Voc_h FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_l / I_o
+    df2['Comp. PCE Voc_h FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_h / I_o
+
+    df2['Exp. PCE Voc_l FF_l'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_l 
+    df2['Exp. PCE Voc_l FF_h'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_h
+    df2['Exp. PCE Voc_h FF_l'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_l
+    df2['Exp. PCE Voc_h FF_h'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_h
+    """
+
+
+    df2.to_csv("pce_predict.csv")
+    
+    print(df2)
     
 
 def df_differences_exp(df, methods):
@@ -690,7 +802,8 @@ def main():
     #df_molecules = json_pandas_molecule_BM('Benchmark/benchmarks.json')
     
     
-    benchmarkFlow()
+    #benchmarkFlow()
+    benchamrkPredictPCE()
         
 
 
