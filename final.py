@@ -396,7 +396,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     "mem_com" : [],
                     "mem_pbs" : []
                 },
-                max_queue=200
+                max_queue=200, results_json='results.json'
                 ):
     """
     Modified from jobResubmit above
@@ -425,6 +425,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
         #resubmissions.append(resubmission_max)
     calculations_complete = False
     # comment change directory below in production
+    print(os.getcwd())
     os.chdir(route)
     
     for i in range(number_delays):
@@ -453,9 +454,12 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                      
                     #mol_lst.addMolecule(mol)
                     mol_lst = MoleculeList()
-                    mol_lst.setData("../../results.json")
+                    print(os.getcwd())
+                    #mol_lst.setData("../../results.json")
+                    mol_lst.setData("../../%s" % results_json)
                     mol_lst.updateMolecule(mol)
-                    mol_lst.sendToFile('../../results.json')
+                    #mol_lst.sendToFile('../../results.json')
+                    mol_lst.sendToFile('../../%s' % results_json)
                     
                     complete[num] = 2
 
@@ -650,12 +654,21 @@ def main():
         "mem_com" : ["1600", "1600"],
         "mem_pbs" : ["10", "10"]
     }
+
     add_methods = {
         "methods" : ["CAM-B3LYP", "PBE1PBE"],
         "basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
         "mem_com" : ["1600", "1600"],
         "solvent" : ["dichloromethane", 'dichloromethane'],
         "mem_pbs" : ["10", "10"]
+    }
+
+    add_methods = {
+        "methods" : ["CAM-B3LYP"],
+        "basis_set" : [ "6-311G(d,p)"],
+        "mem_com" : [ "1600"],
+        "solvent" : [ 'dichloromethane'],
+        "mem_pbs" : [ "10"]
     }
 
 
@@ -680,11 +693,12 @@ def main():
                            )
     """
     #monitor_jobs = ['test_1',]
+    print(os.getcwd())
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           cluster, route='Benchamrk/results', add_methods=add_methods,
-                           max_queue=200
+                           cluster, route='Benchmark/results', add_methods=add_methods,
+                           max_queue=200, results_json='benchmarks.json'
     )
     
 
