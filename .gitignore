@@ -16,3 +16,4 @@ qsub_queue
 Benchmark/
 src/exc.json
 last_qsub
+user

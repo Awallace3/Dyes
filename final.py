@@ -21,6 +21,10 @@ from molecule_json import MoleculeList
     # brew install obabel
     # conda install -c openbabel openbabel
 
+def read_user():
+    with open('user', 'r') as fp:
+        return fp.read().rstrip()
+
 def collectLocalStructures (subdirectories, banned=[]):
     localStructuresDict = {}
     number_locals = 0
@@ -403,7 +407,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     "mem_com" : [],
                     "mem_pbs" : []
                 },
-                max_queue=200, results_json='results.json'
+                max_queue=200, results_json='results.json', user=read_user()
                 ):
     """
     Modified from jobResubmit above
@@ -506,6 +510,8 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
             if stage == len(complete)*add_methods_length:
                 calculations_complete = True
 
+        qsub_to_max(max_queue, user)
+        # qsub_to_max(max_queue, 'r2652')
         if calculations_complete == True:
             print(complete)
             print('\nCalculations are complete.')
@@ -516,7 +522,6 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
         """
         qsub_funct
         """
-        qsub_to_max(max_queue, 'r2652')
         time.sleep(min_delay)
     for i in range(len(resubmissions)):
         if resubmissions[i] < 2:
@@ -611,6 +616,8 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
     print("FAILED:", failed)
     return True
 
+
+
 def main():
     #print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
@@ -641,8 +648,11 @@ def main():
     basis_set_mexc = "6-311G(d,p)"
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
+    
+    
     #cluster='map'
     cluster='seq'
+
 
     add_methods = {
         "methods" : ["PBE1PBE"],
@@ -703,12 +713,14 @@ def main():
                            )
     """
     #monitor_jobs = ['test_1',]
+    
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            cluster, route='Benchmark/results', add_methods=add_methods,
                            max_queue=200, results_json='benchmarks.json'
     )
+    
     
 
     """
