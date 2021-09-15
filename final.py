@@ -384,7 +384,14 @@ def qsub_to_max(max_queue=100, user=""):
             fp.write(i)
     return 1
 
-
+def r_qsub_dir(method_mexc, solvent):
+    if method_mexc == 'CAM-B3LYP':
+        qsub_dir = 'mexc'
+    else:
+        qsub_dir = method_mexc.lower()
+    if solvent != '':
+        qsub_dir += '_%s'%solvent
+    return qsub_dir
 
 def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -472,20 +479,23 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster, j, xyzSmiles=True
                 )
-                print(qsub_dir)
                 if qsub_dir != 'None':
                     add_qsub_dir(qsub_dir.lower(), j)
+            if complete[num] <= 2:
                 for pos in range(add_methods_length):
-                    action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
-                        num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                        add_methods["methods"][pos], add_methods['basis_set'][pos],
-                        add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
-                        resubmissions, delay, cluster, j, xyzSmiles=False, solvent=add_methods["solvent"][pos],
-                    )
-                    print(pos, os.getcwd())
-                    if qsub_dir != "None":
-                        add_qsub_dir(qsub_dir.lower(),  j)
-            
+                    test_dir = r_qsub_dir(add_methods['methods'][pos], add_methods['solvent'][pos])
+                    if not os.path.exists(test_dir):
+                        print("add method", add_methods)
+                        action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
+                            num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                            add_methods["methods"][pos], add_methods['basis_set'][pos],
+                            add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
+                            resubmissions, delay, cluster, j, xyzSmiles=False, solvent=add_methods["solvent"][pos],
+                        )
+                        # print(pos, os.getcwd())
+                        if qsub_dir != "None":
+                            add_qsub_dir(qsub_dir.lower(),  j)
+                
 
             mexc_check = []
             os.chdir('..')
@@ -613,10 +623,10 @@ def main():
     #print("smiles_tuple_list", smiles_tuple_list)
     """
     """
-    #resubmit_delay_min = 60 * 12
-    #resubmit_max_attempts = 5
-    resubmit_delay_min = 60 * 6 # 60 * 12
-    resubmit_max_attempts = 56
+    resubmit_delay_min = 0.001
+    resubmit_max_attempts = 2
+    # resubmit_delay_min = 60 * 6 # 60 * 12
+    # resubmit_max_attempts = 56
 
     # geometry optimization options
     method_opt = "B3LYP"
@@ -693,7 +703,6 @@ def main():
                            )
     """
     #monitor_jobs = ['test_1',]
-    print(os.getcwd())
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,

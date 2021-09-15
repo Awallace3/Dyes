@@ -49,7 +49,7 @@ def gaussianInputFiles(output_num, method_opt,
         dir_name=baseName
     
     if solvent != '':
-        dir_name += '_%s'%solvent
+        # dir_name += '_%s'%solvent
         print(dir_name)
         solvent_line = 'SCRF=(Solvent=%s)' % solvent
         print(dir_name)
@@ -534,6 +534,8 @@ def make_exc(method_mexc, basis_set_mexc,
     else:
         baseName = 'mexc'
         dir_name = method_mexc.lower()
+    if solvent != '':
+        dir_name += '_%s' % solvent
     if os.path.exists(dir_name):
         print('\n%s directory already exists\n' % (dir_name))
         return 
@@ -546,7 +548,7 @@ def make_exc(method_mexc, basis_set_mexc,
 
     
     
-    outName = geomDirName 
+    outName = geomDirName + '_%s_%s' % (baseName, solvent)
     gaussianInputFiles(output_num, method_mexc, 
                     basis_set_mexc, mem_com_mexc, 
                     mem_pbs_mexc, cluster,
@@ -600,6 +602,8 @@ def main(index,
         qsub_dir = method_mexc
     if solvent != '':
         qsub_dir += '_%s'%solvent
+
+    print("v2 %s %s" % (solvent, qsub_dir))
 
     if len(out_files) > 0:
 
