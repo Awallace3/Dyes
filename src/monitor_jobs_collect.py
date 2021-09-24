@@ -11,8 +11,8 @@ def acquire_half_results_dir(first=True):
 		print("monitor_jobs = ", lst[len(lst)//2:])
 			
 
-def acquire_results_dir():
-	os.chdir("../results")
+def acquire_results_dir(path='../results'):
+	os.chdir(path)
 	lst = glob.glob('*')
 	print("monitor_jobs = ", lst[:len(lst)])
 			
@@ -88,5 +88,4 @@ if __name__ == '__main__':
 	
 	#results = jobs_list('../results')
 	#complete_monitor_jobs(results)
-	acquire_results_dir()
-	
+	acquire_results_dir('../Benchmark/results')

@@ -64361,3 +64361,35 @@ qsub dir 1ed_6b_1ea/bhandhlyp
 
 qsub dir 1ed_6b_1ea/pbe1pbe
 /ddn/home3/r2652/chem/Dyes/results/1ed_6b_1ea/pbe1pbe cmd qsub mexc.pbs
+/ddn/home3/r2652/chem/Dyes
+/ddn/home3/r2652/chem/Dyes/Benchmark/results/AP3
+Creating new Molecule in results.json for 
+add method {'methods': ['CAM-B3LYP'], 'basis_set': ['6-311G(d,p)'], 'mem_com': ['1600'], 'solvent': ['dichloromethane'], 'mem_pbs': ['10']}
+v2 dichloromethane mexc_dichloromethane
+ELSE
+entering make_exc
+mexc_dichloromethane
+mexc_dichloromethane
+/ddn/home3/r2652/chem/Dyes/Benchmark/results/AP3 AP3/mexc_dichloromethane
+ ../../qsub_queue
+qsub_to_max /ddn/home3/r2652/chem/Dyes/Benchmark/results ../qsub_len ../qsub_queue
+dif is 193
+
+ AP3/mexc_dichloromethane /ddn/home3/r2652/chem/Dyes/Benchmark/results 
+
+qsub dir AP3/mexc_dichloromethane
+/ddn/home3/r2652/chem/Dyes/Benchmark/results/AP3/mexc_dichloromethane cmd qsub mexc.pbs
+507766.sequoia
+Completion List
+ [2] 
+
+delay 0
+/ddn/home3/r2652/chem/Dyes/Benchmark/results/AP3
+updating...
+37
+qsub_to_max /ddn/home3/r2652/chem/Dyes/Benchmark/results ../qsub_len ../qsub_queue
+dif is 192
+Completion List
+ [2] 
+
+delay 1

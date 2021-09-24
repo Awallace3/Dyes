@@ -31,7 +31,18 @@ def ES_extraction(path):
     #print(occLst[-1].replace('\n', ""), virtLst[5].replace(" ", ''))
     
     occVal = float(occLst[-1].replace('\n', "").replace(" ", ""))
-    virtVal = float(virtLst[5].replace(" ", ''))
+    #virtVal = float(virtLst[5].replace(" ", ''))
+    for i in virtLst:
+        i = i.replace(" ", '')
+        #print(i)
+        try:
+            i = float(i)
+            virtVal = i
+            break
+        except:
+            continue
+        
+    #print('virtVal', type(virtVal), virtVal)
 
     # converted to eV and abs val
     occVal = abs(occVal*27.211385)
