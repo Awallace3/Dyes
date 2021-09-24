@@ -616,6 +616,9 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
     print("FAILED:", failed)
     return True
 
+def clean_dir_name(dir_name):
+    return dir_name.replace("-", '').replace(",", '')
+
 
 
 def main():
@@ -705,14 +708,6 @@ def main():
     #monitor_jobs = ['7ed_5b_2ea', '7ed_1b_3ea', '3ed_1b_3ea']
     #monitor_jobs =['7ed_21b_6ea']
     monitor_jobs = ['AP3']
-    """
-    complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
-                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           cluster, route='results', add_methods=add_methods
-                           )
-    """
-    #monitor_jobs = ['test_1',]
     
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -722,38 +717,13 @@ def main():
     )
     
     
-
-    """
-    #tmp.qsub file for listings
-    #path/to/qsub/file/
-
-    # comment out qsub in error_mexc_dyes_v1.py    
-    return bool, resubmissions, qsub_dir
-    # in resubmit
-    bool, resubmissions, qsub_dir
-    * use queue data structure
-    qsub_list.enque(qsub_dir)
-
-    # call function in job_resubmit on sleep time
-    cmd = 'qstat -u \"user_var\" > tmp.qstat'
-    subprocess.call(cmd, shell=True)
-    with open('tmp.qstat', 'r') as fp:
-        running = fp.readlines()[-1:0]
-        running_tot = (len(fp.readlines()) - 5)
-
-    for i in range(max_qsub - running):
-        qsub_path = qsub_list.dequeue()
-        qsub(qsub_path)
-    """
-    
     #gather_general_smiles(monitor_jobs)
     
     #gather_excitation_data('./results', monitor_jobs, add_methods, method_mexc, basis_set_mexc)
     '''
     module load python
-    source activate rdkit
-    home6/r2532/chem/dyemoleculecata/
     '''
-main()
+if __name__ == "__main__":
+    main()
 
-# rsync --update -ra dir1/ dir2
+# rsync --update -ra dir1 dir2
