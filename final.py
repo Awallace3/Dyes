@@ -499,6 +499,8 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                         # print(pos, os.getcwd())
                         if qsub_dir != "None":
                             add_qsub_dir(qsub_dir.lower(),  j)
+                    else:
+                        complete[num] += 1
                 
 
             mexc_check = []
@@ -507,7 +509,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
         for k in range(len(complete)):
             stage += complete[k]
             #if stage == len(complete)*2:
-            if stage == len(complete)*add_methods_length:
+            if stage == len(complete)*(add_methods_length+2):
                 calculations_complete = True
 
         qsub_to_max(max_queue, user)
