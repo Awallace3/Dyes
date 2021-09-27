@@ -635,8 +635,8 @@ def main():
     """
     resubmit_delay_min = 0.001
     resubmit_max_attempts = 2
-    # resubmit_delay_min = 60 * 6 # 60 * 12
-    # resubmit_max_attempts = 56
+    resubmit_delay_min = 60 * 6 # 60 * 12
+    resubmit_max_attempts = 120
 
     # geometry optimization options
     method_opt = "B3LYP"
@@ -687,10 +687,10 @@ def main():
     }
 
     add_methods = {
-        "methods" : ["CAM-B3LYP"],
+        "methods" : ["PBE1PBE"],
         "basis_set" : [ "6-311G(d,p)"],
         "mem_com" : [ "1600"],
-        "solvent" : [ 'dichloromethane'],
+        "solvent" : [ ''],
         "mem_pbs" : [ "10"]
     }
 
