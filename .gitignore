@@ -21,3 +21,5 @@ gen_qsub_queue
 results_1st.json
 results_1st/
 output.log
+*.png
+*.tex
