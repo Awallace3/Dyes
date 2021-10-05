@@ -23,7 +23,7 @@ json_pandas_molecules dataframe
 
 def json_pandas_molecule(path_results):
     dat = pd.read_json(path_results)
-    print('dat', dat)
+    # print('dat', dat)
 
     FIELDS = ["name", "localName", "generalSMILES"]
     df = pd.json_normalize(dat["molecules"])
@@ -882,7 +882,7 @@ def theoretical_dyes_basis_set_out(
         "headers_colors":[
             ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['Weighted Average', 'green']
             ],
-        "weights":[0.6594543456, 0.3405456544],
+        "weights":[0.71, 0.29],
         }
 
 
@@ -893,13 +893,13 @@ def theoretical_dyes_basis_set_out(
     if units.lower() == 'ev':
         df = df_conv_energy(df)
     if output_csv != '':
-        df2 = df.sort_values(methods_basissets[0], ascending=False)    
+        df2 = df.sort_values(methods_basissets[0], ascending=True)    
         df2.to_csv('%s.csv'%output_csv, index=False)
     if output_graph != '':
         print("working on graph")
         plot_methods(df, weighted_avg=plot_js['weighted_avg'], headers_colors=plot_js['headers_colors'], weights=plot_js['weights'], outname=output_graph, transparent=True)
     if output_latex != '':
-        df2 = df.sort_values(methods_basissets[0], ascending=False)    
+        df2 = df.sort_values(methods_basissets[0], ascending=True)    
         df2.to_latex('%s.tex'%output_csv, index=False)
         
     print(df)
@@ -916,7 +916,7 @@ def benchmarks_dyes_basis_set_out(
         "headers_colors":[
             ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['Weighted Average', 'green']
             ],
-        "weights":[0.6594543456, 0.3405456544],
+        "weights":[0.71, 0.29],
         }
 
 ):
@@ -1125,15 +1125,27 @@ def main():
         os.chdir("..")
     else:
         print("need to be in src, results or Dyes directory")
-    
+    """"""    
     # Theoretical data
-    # theoretical_dyes_basis_set_out('ds1_results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical' )    
+    methods_basissets=['CAM-B3LYP/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
+    plot_js = {
+        "weighted_avg" :['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'], 
+        "headers_colors":[
+            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['Weighted Average', 'green']
+            ],
+        "weights":[0.71, 0.29],
+        
+        }
 
+    theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )    
+    # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)    
+    """"""
+    """"""
     # Benchmark data
     # benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='test', output_latex='test', output_graph='test')
     # benchmarks_solvation('Benchmark/benchmarks.json', output_graph='test')
-    benchmarks_solvation('Benchmark/benchmarks.json', )
-
+    # benchmarks_solvation('Benchmark/benchmarks.json', )
+    """"""
     # df_molecules = json_pandas_molecule('og_results.json')
 
     # df_molecules = json_pandas_molecule_BM('Benchmark/benchmarks.json')
