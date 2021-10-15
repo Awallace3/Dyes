@@ -59,6 +59,12 @@ def check_add_methods(add_methods, funct_name):
         print("\nadd_methods must have values that have lists of the same length.\nTerminating %s before start\n" % funct_name)
         return False 
 
+<<<<<<< HEAD
+=======
+def clean_solvent(solvent):
+	return solvent.replace('-', '').replace(',', '')
+
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 def gather_benchmark_excitations(path_benchmarks, monitor_jobs, add_methods, 
 	method_mexc, basis_set_mexc, baseName='mexc'):
 	if not check_add_methods(add_methods, "gather_excitation_data"):
@@ -99,6 +105,7 @@ def gather_benchmark_excitations(path_benchmarks, monitor_jobs, add_methods,
 		mol.setExictations(excitations)
 		
 		methods_len = len(add_methods['methods'])
+<<<<<<< HEAD
 		try:
 			for j in range(methods_len):
 				method = add_methods['methods'][j]
@@ -107,6 +114,29 @@ def gather_benchmark_excitations(path_benchmarks, monitor_jobs, add_methods,
 				mol.appendExcitations(absorpt('%s/%s.out' % (method.lower(), baseName), method, basis_set))
 		except:
 			failed.append(i)
+=======
+		# try:
+		for j in range(methods_len):
+			method = add_methods['methods'][j]
+			if method.lower() == 'cam-b3lyp':
+				method_name = method
+				method = 'mexc'
+			else:
+				method_name = method
+			
+			basis_set = add_methods['basis_set'][j]
+			if add_methods['solvent'][j] != '':
+				
+				method += '_%s'% clean_solvent(add_methods['solvent'][j])
+				#method_name += '_%s'% clean_solvent(add_methods['solvent'][j])
+			
+			if 'mexc' in method_name:
+				method_name.replace('mexc', 'CAM-B3LYP')
+
+			mol.appendExcitations(absorpt('%s/%s.out' % (method.lower(), baseName), method_name, basis_set, solvent=add_methods['solvent'][j]))
+		# except:
+		# 	failed.append(i)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
 
 
@@ -120,10 +150,17 @@ def gather_benchmark_excitations(path_benchmarks, monitor_jobs, add_methods,
 		
 
 		os.chdir("..")
+<<<<<<< HEAD
 		print("FAILED:", failed)
 
 def main():
 	make_benchmark_json('../Benchmark/results/')
+=======
+	print("FAILED:", len(failed), failed)
+
+def main():
+	#make_benchmark_json('../Benchmark/results/')
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
 
 	exp_values = {
@@ -131,7 +168,11 @@ def main():
 		"C258": 458,
 		"BTD-1": 515,
 		"NKX-2883": 552,
+<<<<<<< HEAD
 		"WS-8": 547,
+=======
+		"WS-6": 547,
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 		"HKK-BTZ4": 540,
 		"WS-55": 558,
 		"IQ4": 529,
@@ -150,7 +191,11 @@ def main():
 		"TPA-TTAR-A": 498,
 		"TTAR-15": 498,
 		"S-DAHTDTT": 441,
+<<<<<<< HEAD
 		"TPA-T-TTAR-A": 413,
+=======
+		"TPA-T-TTAR-T-A": 413,
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 		"TTAR-9": 519,
 		"D-DAHTDTT": 439,
 		"SGT-121": 470.5,
@@ -172,7 +217,10 @@ def main():
 		"NL6": 605,
 		"ZL003": 519,
 		"JW1": 590,
+<<<<<<< HEAD
 		"TPA-T-TTAR-T-A":413,
+=======
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 		"TTAR-B8": 485,
 	}
 	convert_Molecule_to_Molecule_BM("../Benchmark/results/", exp_values)
@@ -180,6 +228,7 @@ def main():
 	method_mexc = "CAM-B3LYP"
 	basis_set_mexc = "6-311G(d,p)"
 	add_methods = {
+<<<<<<< HEAD
 		"methods" : ["bhandhlyp", "PBE1PBE","pbe1pbe_dichloromethane","mexc_dichloromethane","bhandhlyp_dichloromethane","mexc_nndimethylformamide","pbe1pbe_nndimethylformamide","bhandhlyp_nndimethylformamide",'mexc_tetrahydrofuran','bhandhlyp_tetrahydrofuran','pbe1pbe_tetrahydrofuran'],
 		"basis_set" : ["6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)","6-311G(d,p)"],
 		"mem_com" : ["1600", "1600","1600","1600","1600","1600","1600","1600","1600","1600","1600"],
@@ -193,6 +242,22 @@ def main():
 	monitor_jobs = ['AP25','C272','FNE32','IQ4','NL2','SGT-129','TTAR-9','XY1','AP3','D-DAHTDTT','FNE34','IQ6','NL4','R6','SGT-130','TPA-T-TTAR-A','TTAR-B8','Y123','BTD-1','D1','FNE52','NL6','S-DAHTDTT','SGT-136','TPA-T-TTAR-T-A','WS-55','ZL003','C258','D3','HKK-BTZ4','NKX-2883','NL7','T-DAHTDTT','TPA-TTAR-A','C271','DQ5','IQ21','NL11','NL8','SGT-121','TH304','TTAR-15']
  
 
+=======
+		"methods" : ["bhandhlyp", "PBE1PBE"],
+		"basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
+		"mem_com" : ["1600", "1600"],
+		"mem_pbs" : ["10", "10"]
+	}
+
+	add_methods = {
+        "methods" : ["CAM-B3LYP", "PBE1PBE", 'bhandhlyp', "PBE1PBE", 'bhandhlyp', "CAM-B3LYP", "PBE1PBE", 'bhandhlyp', "CAM-B3LYP", "PBE1PBE", 'bhandhlyp', ],
+        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)", "6-311G(d,p)", ],
+        "mem_com" : ["1600", "1600", "1600", "1600", "1600", "1600", "1600", "1600", "1600","1600", "1600", ],
+        "solvent" : ["dichloromethane", 'dichloromethane', 'dichloromethane', '','', 'n,n-dimethylformamide', 'n,n-dimethylformamide','n,n-dimethylformamide', 'tetrahydrofuran', 'tetrahydrofuran', 'tetrahydrofuran', ],
+        "mem_pbs" : ["10", "10", "10", "10", "10", "10",  "10", "10", "10", "10", "10", ]
+    }
+	monitor_jobs =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271', 'WS-6', 'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A']
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
 	gather_benchmark_excitations('../Benchmark/results', monitor_jobs, add_methods, method_mexc, basis_set_mexc)
 

@@ -53,7 +53,10 @@ def gaussianInputFiles(output_num, method_opt,
         print(dir_name)
         solvent_line = 'SCRF=(Solvent=%s)' % solvent
         print(dir_name)
+<<<<<<< HEAD
     print(dir_name)
+=======
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     
     if data == '':
         with open('tmp.txt') as fp:
@@ -80,13 +83,14 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l " % outName)
+            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l " % outName.replace("-", "").replace(",","_"))
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             # r410 node
             fp.write("#PBS -q r410\n")
+            #fp.write("#PBS -q gpu\n")
             fp.write("#PBS -W umask=022\n")
-            fp.write(
-                "#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
+            #fp.write("#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
+            fp.write("#PBS -l nodes=1:ppn=1\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(
                 "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n")
             fp.write(
@@ -120,7 +124,7 @@ def gaussianInputFiles(output_num, method_opt,
 
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/sh\n")
-            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -W umask=022\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l " % outName)
+            fp.write("#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -W umask=022\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l " % outName.replace("-", '').replace(",",'_'))
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write("export g09root=/usr/local/apps/\n. $g09root/g09/bsd/g09.profile\n\n")
@@ -509,6 +513,17 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
                     )
 
         #qsub()
+def clean_name(name):
+    return name.replace("-", '_').replace(",", '')
+
+def clean_input_name(method, basis_set, solvent):
+    clean = method
+    if basis_set != '6-311G(d,p)':
+        clean += basis_set.replace("(", '').replace(")", '').replace(",", '_')
+    if solvent != '':
+        clean += "_%s" % (clean_name(solvent))
+    return solvent
+
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
@@ -522,6 +537,8 @@ def qsub(path='.'):
         for i in range(resetDirNum):
             os.chdir("..")
 
+def clean_dir_name(dir_name):
+    return dir_name.replace("-", '').replace(",", '')
 
 def make_exc(method_mexc, basis_set_mexc, 
                 mem_com_mexc, mem_pbs_mexc, cluster,
@@ -540,6 +557,8 @@ def make_exc(method_mexc, basis_set_mexc,
     if os.path.exists(dir_name):
         print('\n%s directory already exists\n' % (dir_name))
         return 
+
+    dir_name = clean_dir_name(dir_name)
     os.mkdir(dir_name)
     procedure = 'TD(NStates=10)'
     output_num = 0
@@ -603,6 +622,11 @@ def main(index,
         qsub_dir = method_mexc
     if solvent != '':
         qsub_dir += '_%s'%solvent
+<<<<<<< HEAD
+=======
+    
+    qsub_dir = clean_dir_name(qsub_dir)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
     print("v2 %s %s" % (solvent, qsub_dir))
 

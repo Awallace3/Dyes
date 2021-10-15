@@ -21,6 +21,10 @@ from molecule_json import MoleculeList
     # brew install obabel
     # conda install -c openbabel openbabel
 
+def read_user():
+    with open('user', 'r') as fp:
+        return fp.read().rstrip()
+
 def collectLocalStructures (subdirectories, banned=[]):
     localStructuresDict = {}
     number_locals = 0
@@ -357,13 +361,20 @@ def qsub_to_max(max_queue=100, user=""):
     with open("../qsub_queue", 'r') as fp:
         qsubs = fp.readlines()
 
-    cmd = "qstat -u \"r%s\" > ../qsub_len" % user
+    # cmd = 'qstat -u %s > ../qsub_len' % user
+    # subprocess.call(cmd, shell=True)
+    # print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
+    # with open('../qsub_len', 'r') as fp:
+    #     current_queue = len(fp.readlines())-5
+    # os.remove('../qsub_len')
+    cmd = 'qstat -u %s | wc -l > ../qsub_len' % user
     subprocess.call(cmd, shell=True)
     print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
     with open('../qsub_len', 'r') as fp:
-        current_queue = len(fp.readlines())-5
+        current_queue = int(fp.read())-5
     os.remove('../qsub_len')
     dif = max_queue - current_queue
+    print('dif is', dif)
     if dif > 0:
         cnt = 0
         while (cnt < dif and len(qsubs) > 0):
@@ -377,7 +388,14 @@ def qsub_to_max(max_queue=100, user=""):
             fp.write(i)
     return 1
 
-
+def r_qsub_dir(method_mexc, solvent):
+    if method_mexc == 'CAM-B3LYP':
+        qsub_dir = 'mexc'
+    else:
+        qsub_dir = method_mexc.lower()
+    if solvent != '':
+        qsub_dir += '_%s'%solvent
+    return qsub_dir
 
 def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                 method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
@@ -389,7 +407,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     "mem_com" : [],
                     "mem_pbs" : []
                 },
-                max_queue=200
+                max_queue=200, results_json='results.json', user=read_user()
                 ):
     """
     Modified from jobResubmit above
@@ -418,6 +436,7 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
         #resubmissions.append(resubmission_max)
     calculations_complete = False
     # comment change directory below in production
+    print(os.getcwd())
     os.chdir(route)
     
     for i in range(number_delays):
@@ -446,9 +465,12 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                      
                     #mol_lst.addMolecule(mol)
                     mol_lst = MoleculeList()
-                    mol_lst.setData("../../results.json")
+                    print(os.getcwd())
+                    #mol_lst.setData("../../results.json")
+                    mol_lst.setData("../../%s" % results_json)
                     mol_lst.updateMolecule(mol)
-                    mol_lst.sendToFile('../../results.json')
+                    #mol_lst.sendToFile('../../results.json')
+                    mol_lst.sendToFile('../../%s' % results_json)
                     
                     complete[num] = 2
 
@@ -461,20 +483,25 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
                     method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                     resubmissions, delay, cluster, j, xyzSmiles=True
                 )
-                print(qsub_dir)
                 if qsub_dir != 'None':
                     add_qsub_dir(qsub_dir.lower(), j)
+            if complete[num] <= 2:
                 for pos in range(add_methods_length):
-                    action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
-                        num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                        add_methods["methods"][pos], add_methods['basis_set'][pos],
-                        add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
-                        resubmissions, delay, cluster, j, xyzSmiles=False
-                    )
-                    print(pos, os.getcwd())
-                    if qsub_dir != "None":
-                        add_qsub_dir(qsub_dir.lower(),  j)
-            
+                    test_dir = r_qsub_dir(add_methods['methods'][pos], add_methods['solvent'][pos])
+                    if not os.path.exists(test_dir):
+                        print("add method", add_methods)
+                        action, resubmissions, qsub_dir = error_mexc_dyes_v2.main(
+                            num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                            add_methods["methods"][pos], add_methods['basis_set'][pos],
+                            add_methods["mem_com"][pos], add_methods["mem_pbs"][pos],
+                            resubmissions, delay, cluster, j, xyzSmiles=False, solvent=add_methods["solvent"][pos],
+                        )
+                        # print(pos, os.getcwd())
+                        if qsub_dir != "None":
+                            add_qsub_dir(qsub_dir.lower(),  j)
+                    else:
+                        complete[num] += 1
+                
 
             mexc_check = []
             os.chdir('..')
@@ -482,9 +509,11 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
         for k in range(len(complete)):
             stage += complete[k]
             #if stage == len(complete)*2:
-            if stage == len(complete)*add_methods_length:
+            if stage == len(complete)*(add_methods_length+2):
                 calculations_complete = True
 
+        qsub_to_max(max_queue, user)
+        # qsub_to_max(max_queue, 'r2652')
         if calculations_complete == True:
             print(complete)
             print('\nCalculations are complete.')
@@ -495,7 +524,6 @@ def jobResubmit_v2(monitor_jobs, min_delay, number_delays,
         """
         qsub_funct
         """
-        qsub_to_max(max_queue, 'r2652')
         time.sleep(min_delay)
     for i in range(len(resubmissions)):
         if resubmissions[i] < 2:
@@ -535,7 +563,7 @@ def gather_general_smiles(monitor_jobs, path_results='./results'):
 
 
 def gather_excitation_data(path_results, monitor_jobs, add_methods, 
-    method_mexc, basis_set_mexc, baseName='mexc'
+    method_mexc, basis_set_mexc, baseName='mexc', results_json='results.json'
     ):
     if not check_add_methods(add_methods, "gather_excitation_data"):
         return 
@@ -581,14 +609,19 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
         mol.toJSON()
         #mol.sendToFile('info.json')
         mol_lst = MoleculeList()
-        mol_lst.setData("../../results.json")
+        mol_lst.setData("../../%s" % results_json)
         mol_lst.updateMolecule(mol)
-        mol_lst.sendToFile('../../results.json')
+        mol_lst.sendToFile('../../%s' % results_json)
     
 
         os.chdir("..")
     print("FAILED:", failed)
     return True
+
+def clean_dir_name(dir_name):
+    return dir_name.replace("-", '').replace(",", '')
+
+
 
 def main():
     #print("\n\tstart\n")
@@ -602,10 +635,10 @@ def main():
     #print("smiles_tuple_list", smiles_tuple_list)
     """
     """
-    #resubmit_delay_min = 60 * 12
-    #resubmit_max_attempts = 5
+    resubmit_delay_min = 0.001
+    resubmit_max_attempts = 2
     resubmit_delay_min = 60 * 6 # 60 * 12
-    resubmit_max_attempts = 56
+    resubmit_max_attempts = 120
 
     # geometry optimization options
     method_opt = "B3LYP"
@@ -620,8 +653,11 @@ def main():
     basis_set_mexc = "6-311G(d,p)"
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
+    
+    
     #cluster='map'
     cluster='seq'
+
 
     add_methods = {
         "methods" : ["PBE1PBE"],
@@ -644,6 +680,22 @@ def main():
         "mem_pbs" : ["10", "10"]
     }
 
+    add_methods = {
+        "methods" : ["CAM-B3LYP", "PBE1PBE"],
+        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
+        "mem_com" : ["1600", "1600"],
+        "solvent" : ["dichloromethane", 'dichloromethane'],
+        "mem_pbs" : ["10", "10"]
+    }
+
+    add_methods = {
+        "methods" : ["PBE1PBE"],
+        "basis_set" : [ "6-311G(d,p)"],
+        "mem_com" : [ "1600"],
+        "solvent" : [ ''],
+        "mem_pbs" : [ "10"]
+    }
+
 
 
 
@@ -653,58 +705,39 @@ def main():
     #print("monitor_jobs =", monitor_jobs)
     """
     """
-    monitor_jobs =  ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea', '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea', '2ed_13b_1ea', 'TPA2_14b_3ea', '1ed_3b_2ea', '6ed_16b_1ea', '1ed_11b_1ea', '3ed_13b_2ea', 'TPA2_6b_3ea', '7ed_4b_2ea', '7ed_16b_2ea', '6ed_4b_2ea', '1ed_1b_3ea', '1ed_9b_1ea', '3ed_8b_3ea', '2ed_8b_3ea', 'TPA2_16b_2ea', '3ed_15b_1ea', '7ed_2b_1ea', '6ed_2b_1ea', '7ed_10b_1ea', '5ed_3b_3ea', 'TPA2_8b_2ea', '5ed_10b_3ea', '1ed_15b_3ea', '2ed_6b_2ea', '3ed_6b_2ea', 'TPA2_10b_1ea', '6ed_12b_3ea', '5ed_1b_2ea', '6ed_8b_2ea', '7ed_8b_2ea', 'TPA2_2b_1ea', '2ed_15b_2ea', '5ed_12b_2ea', '6ed_10b_2ea', '1ed_5b_1ea', '2ed_4b_3ea', '3ed_4b_3ea', '6ed_11b_2ea', '1ed_4b_1ea', '2ed_5b_3ea', '3ed_5b_3ea', '1ed_16b_2ea', '5ed_13b_2ea', '2ed_14b_2ea', 'TPA2_3b_1ea', '6ed_9b_2ea', '7ed_9b_2ea', '2ed_7b_2ea', '3ed_7b_2ea', 'TPA2_11b_1ea', '6ed_13b_3ea', '1ed_14b_3ea', '5ed_11b_3ea', '2ed_16b_3ea', 'TPA2_9b_2ea', '7ed_3b_1ea', '6ed_3b_1ea', '7ed_11b_1ea', '5ed_2b_3ea', '3ed_14b_1ea', '1ed_8b_1ea', '3ed_9b_3ea', '2ed_1b_1ea', '3ed_1b_1ea', '2ed_9b_3ea', '7ed_5b_2ea', '6ed_5b_2ea', 'TPA2_7b_3ea', '3ed_12b_2ea', '1ed_10b_1ea', 'TPA2_15b_3ea', '1ed_2b_2ea', '2ed_12b_1ea', '5ed_15b_1ea', '7ed_7b_3ea', '6ed_7b_3ea', '7ed_15b_3ea', '5ed_6b_1ea', 'TPA2_5b_2ea', '3ed_10b_3ea', '3ed_13b_1ea', '6ed_4b_1ea', '7ed_16b_1ea', '7ed_4b_1ea', '5ed_5b_3ea', '2ed_11b_3ea', '5ed_16b_3ea', '1ed_13b_3ea', 'TPA2_16b_1ea', '1ed_9b_2ea', '6ed_14b_3ea', '5ed_7b_2ea', 'TPA2_4b_1ea', '2ed_13b_2ea', '5ed_14b_2ea', '1ed_11b_2ea', '6ed_16b_2ea', '1ed_3b_1ea', '3ed_2b_3ea', '2ed_2b_3ea', 'TPA2_2b_2ea', '7ed_12b_3ea', '7ed_8b_1ea', '6ed_8b_1ea', '5ed_1b_1ea', '5ed_9b_3ea', '5ed_12b_1ea', '2ed_15b_1ea', 'TPA2_12b_3ea', '1ed_5b_2ea', '6ed_10b_1ea', '3ed_15b_2ea', 'TPA2_8b_1ea', '7ed_10b_2ea', '6ed_2b_2ea', '7ed_2b_2ea', '1ed_7b_3ea', 'TPA2_10b_2ea', '3ed_6b_1ea', '2ed_6b_1ea', '1ed_6b_3ea', 'TPA2_11b_2ea', '3ed_7b_1ea', '2ed_7b_1ea', '7ed_11b_2ea', '6ed_3b_2ea', '7ed_3b_2ea', 'TPA2_9b_1ea', 'TPA2_1b_3ea', '3ed_14b_2ea', '1ed_16b_1ea', 'TPA2_13b_3ea', '1ed_4b_2ea', '6ed_11b_1ea', '2ed_14b_1ea', '5ed_13b_1ea', '6ed_1b_3ea', '7ed_13b_3ea', '7ed_9b_1ea', '6ed_9b_1ea', '7ed_1b_3ea', '5ed_8b_3ea', 'TPA2_3b_2ea', '3ed_16b_3ea', '1ed_2b_1ea', '3ed_3b_3ea', '2ed_3b_3ea', '1ed_10b_2ea', '5ed_15b_2ea', '2ed_12b_2ea', 'TPA2_5b_1ea', '5ed_6b_2ea', '3ed_1b_2ea', '2ed_1b_2ea', '1ed_8b_2ea', '6ed_15b_3ea', '1ed_12b_3ea', '2ed_10b_3ea', '6ed_5b_1ea', '7ed_5b_1ea', '5ed_4b_3ea', '3ed_12b_1ea', '3ed_8b_1ea', '2ed_8b_1ea', '6ed_14b_2ea', '1ed_1b_1ea', '1ed_9b_3ea', '1ed_13b_2ea', '5ed_16b_2ea', '2ed_11b_2ea', 'TPA2_6b_1ea', '5ed_5b_2ea', '6ed_16b_3ea', '2ed_2b_2ea', 'TPA2_14b_1ea', '3ed_2b_2ea', '1ed_11b_3ea', '5ed_14b_3ea', '2ed_13b_3ea', '5ed_7b_3ea', '7ed_6b_1ea', '7ed_14b_1ea', '6ed_6b_1ea', '3ed_11b_1ea', '2ed_4b_1ea', 'TPA2_12b_2ea', '3ed_4b_1ea', '1ed_5b_3ea', '7ed_12b_2ea', '5ed_9b_2ea', 'TPA2_2b_3ea', '1ed_15b_1ea', '1ed_7b_2ea', '6ed_12b_1ea', 'TPA2_10b_3ea', '5ed_10b_1ea', '5ed_3b_1ea', '7ed_2b_3ea', '7ed_10b_3ea', '6ed_2b_3ea', '3ed_15b_3ea', '3ed_14b_3ea', 'TPA2_1b_2ea', '5ed_2b_1ea', '7ed_3b_3ea', '7ed_11b_3ea', '6ed_3b_3ea', '5ed_11b_1ea', '2ed_16b_1ea', '1ed_6b_2ea', '6ed_13b_1ea', 'TPA2_11b_3ea', '1ed_14b_1ea', '3ed_16b_2ea', 'TPA2_3b_3ea', '7ed_1b_2ea', '6ed_1b_2ea', '7ed_13b_2ea', '5ed_8b_2ea', '2ed_5b_1ea', 'TPA2_13b_2ea', '3ed_5b_1ea', '1ed_4b_3ea', '3ed_10b_1ea', '5ed_6b_3ea', '7ed_7b_1ea', '7ed_15b_1ea', '6ed_7b_1ea', '2ed_12b_3ea', '5ed_15b_3ea', '1ed_10b_3ea', '2ed_3b_2ea', 'TPA2_15b_1ea', '3ed_3b_2ea', '5ed_4b_2ea', 'TPA2_7b_1ea', '2ed_10b_2ea', '1ed_12b_2ea', '3ed_9b_1ea', '2ed_1b_3ea', '3ed_1b_3ea', '2ed_9b_1ea', '6ed_15b_2ea', '1ed_8b_3ea', '3ed_2b_1ea', 'TPA2_14b_2ea', '2ed_2b_1ea', '1ed_3b_3ea', '6ed_6b_2ea', '7ed_14b_2ea', '7ed_6b_2ea', 'TPA2_4b_3ea', '3ed_11b_2ea', '1ed_13b_1ea', '1ed_1b_2ea', '6ed_14b_1ea', '2ed_8b_2ea', 'TPA2_16b_3ea', '3ed_8b_2ea', '2ed_11b_1ea', '5ed_16b_1ea', '5ed_5b_1ea', '7ed_16b_3ea', '6ed_4b_3ea', '7ed_4b_3ea', 'TPA2_6b_2ea', '3ed_13b_3ea', '3ed_6b_3ea', '2ed_6b_3ea', '6ed_12b_2ea', '1ed_7b_1ea', '1ed_15b_2ea', '5ed_10b_2ea', 'TPA2_8b_3ea', '5ed_3b_2ea', '6ed_10b_3ea', '3ed_4b_2ea', 'TPA2_12b_1ea', '2ed_4b_2ea', '5ed_12b_3ea', '2ed_15b_3ea', '5ed_1b_3ea', '5ed_9b_1ea', '7ed_12b_1ea', '7ed_8b_3ea', '6ed_8b_3ea', '3ed_16b_1ea', '5ed_8b_1ea', '7ed_13b_1ea', '6ed_1b_1ea', '7ed_9b_3ea', '6ed_9b_3ea', '7ed_1b_1ea', '2ed_14b_3ea', '5ed_13b_3ea', '1ed_16b_3ea', '6ed_11b_3ea', '3ed_5b_2ea', 'TPA2_13b_1ea', '2ed_5b_2ea', '5ed_2b_2ea', 'TPA2_9b_3ea', 'TPA2_1b_1ea', '2ed_16b_2ea', '5ed_11b_2ea', '1ed_14b_2ea', '3ed_7b_3ea', '2ed_7b_3ea', '6ed_13b_2ea', '1ed_6b_1ea', '3ed_12b_3ea', 'TPA2_7b_2ea', '5ed_4b_1ea', '6ed_5b_3ea', '7ed_5b_3ea', '2ed_10b_1ea', '6ed_15b_1ea', '2ed_9b_2ea', '3ed_9b_2ea', '1ed_12b_1ea', '3ed_10b_2ea', 'TPA2_5b_3ea', '6ed_7b_2ea', '7ed_15b_2ea', '7ed_7b_2ea', '3ed_3b_1ea', 'TPA2_15b_2ea', '2ed_3b_1ea', '1ed_2b_3ea']
-    monitor_jobs = ['7ed_21b_6ea', '7ed_21b_3ea', '7ed_21b_8ea', '7ed_21b_11ea', '7ed_21b_5ea', '7ed_21b_2ea', '7ed_21b_7ea', '7ed_21b_4ea', '7ed_21b_10ea', '7ed_21b_9ea', '7ed_21b_1ea', '7ed_20b_6ea', '7ed_20b_3ea', '7ed_20b_8ea', '7ed_20b_11ea', '7ed_20b_5ea', '7ed_20b_2ea', '7ed_20b_7ea', '7ed_20b_4ea', '7ed_20b_10ea', '7ed_20b_9ea', '7ed_20b_1ea', '7ed_6b_6ea', '7ed_6b_3ea', '7ed_6b_8ea', '7ed_6b_11ea', '7ed_6b_5ea', '7ed_6b_2ea', '7ed_6b_7ea', '7ed_6b_4ea', '7ed_6b_10ea', '7ed_6b_9ea', '7ed_6b_1ea', '7ed_26b_6ea', '7ed_26b_3ea', '7ed_26b_8ea', '7ed_26b_11ea', '7ed_26b_5ea', '7ed_26b_2ea', '7ed_26b_7ea', '7ed_26b_4ea', '7ed_26b_10ea', '7ed_26b_9ea', '7ed_26b_1ea', '7ed_25b_6ea', '7ed_25b_3ea', '7ed_25b_8ea', '7ed_25b_11ea', '7ed_25b_5ea', '7ed_25b_2ea', '7ed_25b_7ea', '7ed_25b_4ea', '7ed_25b_10ea', '7ed_25b_9ea', '7ed_25b_1ea', '7ed_24b_6ea', '7ed_24b_3ea', '7ed_24b_8ea', '7ed_24b_11ea', '7ed_24b_5ea', '7ed_24b_2ea', '7ed_24b_7ea', '7ed_24b_4ea', '7ed_24b_10ea', '7ed_24b_9ea', '7ed_24b_1ea', '7ed_1b_6ea', '7ed_1b_3ea', '7ed_1b_8ea', '7ed_1b_11ea', '7ed_1b_5ea', '7ed_1b_2ea', '7ed_1b_7ea', '7ed_1b_4ea', '7ed_1b_10ea', '7ed_1b_9ea', '7ed_1b_1ea', '7ed_23b_6ea', '7ed_23b_3ea', '7ed_23b_8ea', '7ed_23b_11ea', '7ed_23b_5ea', '7ed_23b_2ea', '7ed_23b_7ea', '7ed_23b_4ea', '7ed_23b_10ea', '7ed_23b_9ea', '7ed_23b_1ea', '7ed_17b_6ea', '7ed_17b_3ea', '7ed_17b_8ea', '7ed_17b_11ea', '7ed_17b_5ea', '7ed_17b_2ea', '7ed_17b_7ea', '7ed_17b_4ea', '7ed_17b_10ea', '7ed_17b_9ea', '7ed_17b_1ea', '7ed_22b_6ea', '7ed_22b_3ea', '7ed_22b_8ea', '7ed_22b_11ea', '7ed_22b_5ea', '7ed_22b_2ea', '7ed_22b_7ea', '7ed_22b_4ea', '7ed_22b_10ea', '7ed_22b_9ea', '7ed_22b_1ea', '7ed_16b_6ea', '7ed_16b_3ea', '7ed_16b_8ea', '7ed_16b_11ea', '7ed_16b_5ea', '7ed_16b_2ea', '7ed_16b_7ea', '7ed_16b_4ea', '7ed_16b_10ea', '7ed_16b_9ea', '7ed_16b_1ea', '1ed_21b_6ea', '1ed_21b_3ea', '1ed_21b_8ea', '1ed_21b_11ea', '1ed_21b_5ea', '1ed_21b_2ea', '1ed_21b_7ea', '1ed_21b_4ea', '1ed_21b_10ea', '1ed_21b_9ea', '1ed_21b_1ea', '1ed_20b_6ea', '1ed_20b_3ea', '1ed_20b_8ea', '1ed_20b_11ea', '1ed_20b_5ea', '1ed_20b_2ea', '1ed_20b_7ea', '1ed_20b_4ea', '1ed_20b_10ea', '1ed_20b_9ea', '1ed_20b_1ea', '1ed_6b_6ea', '1ed_6b_3ea', '1ed_6b_8ea', '1ed_6b_11ea', '1ed_6b_5ea', '1ed_6b_2ea', '1ed_6b_7ea', '1ed_6b_4ea', '1ed_6b_10ea', '1ed_6b_9ea', '1ed_6b_1ea', '1ed_26b_6ea', '1ed_26b_3ea', '1ed_26b_8ea', '1ed_26b_11ea', '1ed_26b_5ea', '1ed_26b_2ea', '1ed_26b_7ea', '1ed_26b_4ea', '1ed_26b_10ea', '1ed_26b_9ea', '1ed_26b_1ea', '1ed_25b_6ea', '1ed_25b_3ea', '1ed_25b_8ea', '1ed_25b_11ea', '1ed_25b_5ea', '1ed_25b_2ea', '1ed_25b_7ea', '1ed_25b_4ea', '1ed_25b_10ea', '1ed_25b_9ea', '1ed_25b_1ea', '1ed_24b_6ea', '1ed_24b_3ea', '1ed_24b_8ea', '1ed_24b_11ea', '1ed_24b_5ea', '1ed_24b_2ea', '1ed_24b_7ea', '1ed_24b_4ea', '1ed_24b_10ea', '1ed_24b_9ea', '1ed_24b_1ea', '1ed_1b_6ea', '1ed_1b_3ea', '1ed_1b_8ea', '1ed_1b_11ea', '1ed_1b_5ea', '1ed_1b_2ea', '1ed_1b_7ea', '1ed_1b_4ea', '1ed_1b_10ea', '1ed_1b_9ea', '1ed_1b_1ea', '1ed_23b_6ea', '1ed_23b_3ea', '1ed_23b_8ea', '1ed_23b_11ea', '1ed_23b_5ea', '1ed_23b_2ea', '1ed_23b_7ea', '1ed_23b_4ea', '1ed_23b_10ea', '1ed_23b_9ea', '1ed_23b_1ea', '1ed_17b_6ea', '1ed_17b_3ea', '1ed_17b_8ea', '1ed_17b_11ea', '1ed_17b_5ea', '1ed_17b_2ea', '1ed_17b_7ea', '1ed_17b_4ea', '1ed_17b_10ea', '1ed_17b_9ea', '1ed_17b_1ea', '1ed_22b_6ea', '1ed_22b_3ea', '1ed_22b_8ea', '1ed_22b_11ea', '1ed_22b_5ea', '1ed_22b_2ea', '1ed_22b_7ea', '1ed_22b_4ea', '1ed_22b_10ea', '1ed_22b_9ea', '1ed_22b_1ea', '1ed_16b_6ea', '1ed_16b_3ea', '1ed_16b_8ea', '1ed_16b_11ea', '1ed_16b_5ea', '1ed_16b_2ea', '1ed_16b_7ea', '1ed_16b_4ea', '1ed_16b_10ea', '1ed_16b_9ea', '1ed_16b_1ea', '6ed_21b_6ea', '6ed_21b_3ea', '6ed_21b_8ea', '6ed_21b_11ea', '6ed_21b_5ea', '6ed_21b_2ea', '6ed_21b_7ea', '6ed_21b_4ea', '6ed_21b_10ea', '6ed_21b_9ea', '6ed_21b_1ea', '6ed_20b_6ea', '6ed_20b_3ea', '6ed_20b_8ea', '6ed_20b_11ea', '6ed_20b_5ea', '6ed_20b_2ea', '6ed_20b_7ea', '6ed_20b_4ea', '6ed_20b_10ea', '6ed_20b_9ea', '6ed_20b_1ea', '6ed_6b_6ea', '6ed_6b_3ea', '6ed_6b_8ea', '6ed_6b_11ea', '6ed_6b_5ea', '6ed_6b_2ea', '6ed_6b_7ea', '6ed_6b_4ea', '6ed_6b_10ea', '6ed_6b_9ea', '6ed_6b_1ea', '6ed_26b_6ea', '6ed_26b_3ea', '6ed_26b_8ea', '6ed_26b_11ea', '6ed_26b_5ea', '6ed_26b_2ea', '6ed_26b_7ea', '6ed_26b_4ea', '6ed_26b_10ea', '6ed_26b_9ea', '6ed_26b_1ea', '6ed_25b_6ea', '6ed_25b_3ea', '6ed_25b_8ea', '6ed_25b_11ea', '6ed_25b_5ea', '6ed_25b_2ea', '6ed_25b_7ea', '6ed_25b_4ea', '6ed_25b_10ea', '6ed_25b_9ea', '6ed_25b_1ea', '6ed_24b_6ea', '6ed_24b_3ea', '6ed_24b_8ea', '6ed_24b_11ea', '6ed_24b_5ea', '6ed_24b_2ea', '6ed_24b_7ea', '6ed_24b_4ea', '6ed_24b_10ea', '6ed_24b_9ea', '6ed_24b_1ea', '6ed_1b_6ea', '6ed_1b_3ea', '6ed_1b_8ea', '6ed_1b_11ea', '6ed_1b_5ea', '6ed_1b_2ea', '6ed_1b_7ea', '6ed_1b_4ea', '6ed_1b_10ea', '6ed_1b_9ea', '6ed_1b_1ea', '6ed_23b_6ea', '6ed_23b_3ea', '6ed_23b_8ea', '6ed_23b_11ea', '6ed_23b_5ea', '6ed_23b_2ea', '6ed_23b_7ea', '6ed_23b_4ea', '6ed_23b_10ea', '6ed_23b_9ea', '6ed_23b_1ea', '6ed_17b_6ea', '6ed_17b_3ea', '6ed_17b_8ea', '6ed_17b_11ea', '6ed_17b_5ea', '6ed_17b_2ea', '6ed_17b_7ea', '6ed_17b_4ea', '6ed_17b_10ea', '6ed_17b_9ea', '6ed_17b_1ea', '6ed_22b_6ea', '6ed_22b_3ea', '6ed_22b_8ea', '6ed_22b_11ea', '6ed_22b_5ea', '6ed_22b_2ea', '6ed_22b_7ea', '6ed_22b_4ea', '6ed_22b_10ea', '6ed_22b_9ea', '6ed_22b_1ea', '6ed_16b_6ea', '6ed_16b_3ea', '6ed_16b_8ea', '6ed_16b_11ea', '6ed_16b_5ea', '6ed_16b_2ea', '6ed_16b_7ea', '6ed_16b_4ea', '6ed_16b_10ea', '6ed_16b_9ea', '6ed_16b_1ea', '3ed_21b_6ea', '3ed_21b_3ea', '3ed_21b_8ea', '3ed_21b_11ea', '3ed_21b_5ea', '3ed_21b_2ea', '3ed_21b_7ea', '3ed_21b_4ea', '3ed_21b_10ea', '3ed_21b_9ea', '3ed_21b_1ea', '3ed_20b_6ea', '3ed_20b_3ea', '3ed_20b_8ea', '3ed_20b_11ea', '3ed_20b_5ea', '3ed_20b_2ea', '3ed_20b_7ea', '3ed_20b_4ea', '3ed_20b_10ea', '3ed_20b_9ea', '3ed_20b_1ea', '3ed_6b_6ea', '3ed_6b_3ea', '3ed_6b_8ea', '3ed_6b_11ea', '3ed_6b_5ea', '3ed_6b_2ea', '3ed_6b_7ea', '3ed_6b_4ea', '3ed_6b_10ea', '3ed_6b_9ea', '3ed_6b_1ea', '3ed_26b_6ea', '3ed_26b_3ea', '3ed_26b_8ea', '3ed_26b_11ea', '3ed_26b_5ea', '3ed_26b_2ea', '3ed_26b_7ea', '3ed_26b_4ea', '3ed_26b_10ea', '3ed_26b_9ea', '3ed_26b_1ea', '3ed_25b_6ea', '3ed_25b_3ea', '3ed_25b_8ea', '3ed_25b_11ea', '3ed_25b_5ea', '3ed_25b_2ea', '3ed_25b_7ea', '3ed_25b_4ea', '3ed_25b_10ea', '3ed_25b_9ea', '3ed_25b_1ea', '3ed_24b_6ea', '3ed_24b_3ea', '3ed_24b_8ea', '3ed_24b_11ea', '3ed_24b_5ea', '3ed_24b_2ea', '3ed_24b_7ea', '3ed_24b_4ea', '3ed_24b_10ea', '3ed_24b_9ea', '3ed_24b_1ea', '3ed_1b_6ea', '3ed_1b_3ea', '3ed_1b_8ea', '3ed_1b_11ea', '3ed_1b_5ea', '3ed_1b_2ea', '3ed_1b_7ea', '3ed_1b_4ea', '3ed_1b_10ea', '3ed_1b_9ea', '3ed_1b_1ea', '3ed_23b_6ea', '3ed_23b_3ea', '3ed_23b_8ea', '3ed_23b_11ea', '3ed_23b_5ea', '3ed_23b_2ea', '3ed_23b_7ea', '3ed_23b_4ea', '3ed_23b_10ea', '3ed_23b_9ea', '3ed_23b_1ea', '3ed_17b_6ea', '3ed_17b_3ea', '3ed_17b_8ea', '3ed_17b_11ea', '3ed_17b_5ea', '3ed_17b_2ea', '3ed_17b_7ea', '3ed_17b_4ea', '3ed_17b_10ea', '3ed_17b_9ea', '3ed_17b_1ea', '3ed_22b_6ea', '3ed_22b_3ea', '3ed_22b_8ea', '3ed_22b_11ea', '3ed_22b_5ea', '3ed_22b_2ea', '3ed_22b_7ea', '3ed_22b_4ea', '3ed_22b_10ea', '3ed_22b_9ea', '3ed_22b_1ea', '3ed_16b_6ea', '3ed_16b_3ea', '3ed_16b_8ea', '3ed_16b_11ea', '3ed_16b_5ea', '3ed_16b_2ea', '3ed_16b_7ea', '3ed_16b_4ea', '3ed_16b_10ea', '3ed_16b_9ea', '3ed_16b_1ea', '5ed_21b_6ea', '5ed_21b_3ea', '5ed_21b_8ea', '5ed_21b_11ea', '5ed_21b_5ea', '5ed_21b_2ea', '5ed_21b_7ea', '5ed_21b_4ea', '5ed_21b_10ea', '5ed_21b_9ea', '5ed_21b_1ea', '5ed_20b_6ea', '5ed_20b_3ea', '5ed_20b_8ea', '5ed_20b_11ea', '5ed_20b_5ea', '5ed_20b_2ea', '5ed_20b_7ea', '5ed_20b_4ea', '5ed_20b_10ea', '5ed_20b_9ea', '5ed_20b_1ea', '5ed_6b_6ea', '5ed_6b_3ea', '5ed_6b_8ea', '5ed_6b_11ea', '5ed_6b_5ea', '5ed_6b_2ea', '5ed_6b_7ea', '5ed_6b_4ea', '5ed_6b_10ea', '5ed_6b_9ea', '5ed_6b_1ea', '5ed_26b_6ea', '5ed_26b_3ea', '5ed_26b_8ea', '5ed_26b_11ea', '5ed_26b_5ea', '5ed_26b_2ea', '5ed_26b_7ea', '5ed_26b_4ea', '5ed_26b_10ea', '5ed_26b_9ea', '5ed_26b_1ea', '5ed_25b_6ea', '5ed_25b_3ea', '5ed_25b_8ea', '5ed_25b_11ea', '5ed_25b_5ea', '5ed_25b_2ea', '5ed_25b_7ea', '5ed_25b_4ea', '5ed_25b_10ea', '5ed_25b_9ea', '5ed_25b_1ea', '5ed_24b_6ea', '5ed_24b_3ea', '5ed_24b_8ea', '5ed_24b_11ea', '5ed_24b_5ea', '5ed_24b_2ea', '5ed_24b_7ea', '5ed_24b_4ea', '5ed_24b_10ea', '5ed_24b_9ea', '5ed_24b_1ea', '5ed_1b_6ea', '5ed_1b_3ea', '5ed_1b_8ea', '5ed_1b_11ea', '5ed_1b_5ea', '5ed_1b_2ea', '5ed_1b_7ea', '5ed_1b_4ea', '5ed_1b_10ea', '5ed_1b_9ea', '5ed_1b_1ea', '5ed_23b_6ea', '5ed_23b_3ea', '5ed_23b_8ea', '5ed_23b_11ea', '5ed_23b_5ea', '5ed_23b_2ea', '5ed_23b_7ea', '5ed_23b_4ea', '5ed_23b_10ea', '5ed_23b_9ea', '5ed_23b_1ea', '5ed_17b_6ea', '5ed_17b_3ea', '5ed_17b_8ea', '5ed_17b_11ea', '5ed_17b_5ea', '5ed_17b_2ea', '5ed_17b_7ea', '5ed_17b_4ea', '5ed_17b_10ea', '5ed_17b_9ea', '5ed_17b_1ea', '5ed_22b_6ea', '5ed_22b_3ea', '5ed_22b_8ea', '5ed_22b_11ea', '5ed_22b_5ea', '5ed_22b_2ea', '5ed_22b_7ea', '5ed_22b_4ea', '5ed_22b_10ea', '5ed_22b_9ea', '5ed_22b_1ea', '5ed_16b_6ea', '5ed_16b_3ea', '5ed_16b_8ea', '5ed_16b_11ea', '5ed_16b_5ea', '5ed_16b_2ea', '5ed_16b_7ea', '5ed_16b_4ea', '5ed_16b_10ea', '5ed_16b_9ea', '5ed_16b_1ea', '2ed_21b_6ea', '2ed_21b_3ea', '2ed_21b_8ea', '2ed_21b_11ea', '2ed_21b_5ea', '2ed_21b_2ea', '2ed_21b_7ea', '2ed_21b_4ea', '2ed_21b_10ea', '2ed_21b_9ea', '2ed_21b_1ea', '2ed_20b_6ea', '2ed_20b_3ea', '2ed_20b_8ea', '2ed_20b_11ea', '2ed_20b_5ea', '2ed_20b_2ea', '2ed_20b_7ea', '2ed_20b_4ea', '2ed_20b_10ea', '2ed_20b_9ea', '2ed_20b_1ea', '2ed_6b_6ea', '2ed_6b_3ea', '2ed_6b_8ea', '2ed_6b_11ea', '2ed_6b_5ea', '2ed_6b_2ea', '2ed_6b_7ea', '2ed_6b_4ea', '2ed_6b_10ea', '2ed_6b_9ea', '2ed_6b_1ea', '2ed_26b_6ea', '2ed_26b_3ea', '2ed_26b_8ea', '2ed_26b_11ea', '2ed_26b_5ea', '2ed_26b_2ea', '2ed_26b_7ea', '2ed_26b_4ea', '2ed_26b_10ea', '2ed_26b_9ea', '2ed_26b_1ea', '2ed_25b_6ea', '2ed_25b_3ea', '2ed_25b_8ea', '2ed_25b_11ea', '2ed_25b_5ea', '2ed_25b_2ea', '2ed_25b_7ea', '2ed_25b_4ea', '2ed_25b_10ea', '2ed_25b_9ea', '2ed_25b_1ea', '2ed_24b_6ea', '2ed_24b_3ea', '2ed_24b_8ea', '2ed_24b_11ea', '2ed_24b_5ea', '2ed_24b_2ea', '2ed_24b_7ea', '2ed_24b_4ea', '2ed_24b_10ea', '2ed_24b_9ea', '2ed_24b_1ea', '2ed_1b_6ea', '2ed_1b_3ea', '2ed_1b_8ea', '2ed_1b_11ea', '2ed_1b_5ea', '2ed_1b_2ea', '2ed_1b_7ea', '2ed_1b_4ea', '2ed_1b_10ea', '2ed_1b_9ea', '2ed_1b_1ea', '2ed_23b_6ea', '2ed_23b_3ea', '2ed_23b_8ea', '2ed_23b_11ea', '2ed_23b_5ea', '2ed_23b_2ea', '2ed_23b_7ea', '2ed_23b_4ea', '2ed_23b_10ea', '2ed_23b_9ea', '2ed_23b_1ea', '2ed_17b_6ea', '2ed_17b_3ea', '2ed_17b_8ea', '2ed_17b_11ea', '2ed_17b_5ea', '2ed_17b_2ea', '2ed_17b_7ea', '2ed_17b_4ea', '2ed_17b_10ea', '2ed_17b_9ea', '2ed_17b_1ea', '2ed_22b_6ea', '2ed_22b_3ea', '2ed_22b_8ea', '2ed_22b_11ea', '2ed_22b_5ea', '2ed_22b_2ea', '2ed_22b_7ea', '2ed_22b_4ea', '2ed_22b_10ea', '2ed_22b_9ea', '2ed_22b_1ea', '2ed_16b_6ea', '2ed_16b_3ea', '2ed_16b_8ea', '2ed_16b_11ea', '2ed_16b_5ea', '2ed_16b_2ea', '2ed_16b_7ea', '2ed_16b_4ea', '2ed_16b_10ea', '2ed_16b_9ea', '2ed_16b_1ea']
+    ds1 =  ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea', '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea', '2ed_13b_1ea', 'TPA2_14b_3ea', '1ed_3b_2ea', '6ed_16b_1ea', '1ed_11b_1ea', '3ed_13b_2ea', 'TPA2_6b_3ea', '7ed_4b_2ea', '7ed_16b_2ea', '6ed_4b_2ea', '1ed_1b_3ea', '1ed_9b_1ea', '3ed_8b_3ea', '2ed_8b_3ea', 'TPA2_16b_2ea', '3ed_15b_1ea', '7ed_2b_1ea', '6ed_2b_1ea', '7ed_10b_1ea', '5ed_3b_3ea', 'TPA2_8b_2ea', '5ed_10b_3ea', '1ed_15b_3ea', '2ed_6b_2ea', '3ed_6b_2ea', 'TPA2_10b_1ea', '6ed_12b_3ea', '5ed_1b_2ea', '6ed_8b_2ea', '7ed_8b_2ea', 'TPA2_2b_1ea', '2ed_15b_2ea', '5ed_12b_2ea', '6ed_10b_2ea', '1ed_5b_1ea', '2ed_4b_3ea', '3ed_4b_3ea', '6ed_11b_2ea', '1ed_4b_1ea', '2ed_5b_3ea', '3ed_5b_3ea', '1ed_16b_2ea', '5ed_13b_2ea', '2ed_14b_2ea', 'TPA2_3b_1ea', '6ed_9b_2ea', '7ed_9b_2ea', '2ed_7b_2ea', '3ed_7b_2ea', 'TPA2_11b_1ea', '6ed_13b_3ea', '1ed_14b_3ea', '5ed_11b_3ea', '2ed_16b_3ea', 'TPA2_9b_2ea', '7ed_3b_1ea', '6ed_3b_1ea', '7ed_11b_1ea', '5ed_2b_3ea', '3ed_14b_1ea', '1ed_8b_1ea', '3ed_9b_3ea', '2ed_1b_1ea', '3ed_1b_1ea', '2ed_9b_3ea', '7ed_5b_2ea', '6ed_5b_2ea', 'TPA2_7b_3ea', '3ed_12b_2ea', '1ed_10b_1ea', 'TPA2_15b_3ea', '1ed_2b_2ea', '2ed_12b_1ea', '5ed_15b_1ea', '7ed_7b_3ea', '6ed_7b_3ea', '7ed_15b_3ea', '5ed_6b_1ea', 'TPA2_5b_2ea', '3ed_10b_3ea', '3ed_13b_1ea', '6ed_4b_1ea', '7ed_16b_1ea', '7ed_4b_1ea', '5ed_5b_3ea', '2ed_11b_3ea', '5ed_16b_3ea', '1ed_13b_3ea', 'TPA2_16b_1ea', '1ed_9b_2ea', '6ed_14b_3ea', '5ed_7b_2ea', 'TPA2_4b_1ea', '2ed_13b_2ea', '5ed_14b_2ea', '1ed_11b_2ea', '6ed_16b_2ea', '1ed_3b_1ea', '3ed_2b_3ea', '2ed_2b_3ea', 'TPA2_2b_2ea', '7ed_12b_3ea', '7ed_8b_1ea', '6ed_8b_1ea', '5ed_1b_1ea', '5ed_9b_3ea', '5ed_12b_1ea', '2ed_15b_1ea', 'TPA2_12b_3ea', '1ed_5b_2ea', '6ed_10b_1ea', '3ed_15b_2ea', 'TPA2_8b_1ea', '7ed_10b_2ea', '6ed_2b_2ea', '7ed_2b_2ea', '1ed_7b_3ea', 'TPA2_10b_2ea', '3ed_6b_1ea', '2ed_6b_1ea', '1ed_6b_3ea', 'TPA2_11b_2ea', '3ed_7b_1ea', '2ed_7b_1ea', '7ed_11b_2ea', '6ed_3b_2ea', '7ed_3b_2ea', 'TPA2_9b_1ea', 'TPA2_1b_3ea', '3ed_14b_2ea', '1ed_16b_1ea', 'TPA2_13b_3ea', '1ed_4b_2ea', '6ed_11b_1ea', '2ed_14b_1ea', '5ed_13b_1ea', '6ed_1b_3ea', '7ed_13b_3ea', '7ed_9b_1ea', '6ed_9b_1ea', '7ed_1b_3ea', '5ed_8b_3ea', 'TPA2_3b_2ea', '3ed_16b_3ea', '1ed_2b_1ea', '3ed_3b_3ea', '2ed_3b_3ea', '1ed_10b_2ea', '5ed_15b_2ea', '2ed_12b_2ea', 'TPA2_5b_1ea', '5ed_6b_2ea', '3ed_1b_2ea', '2ed_1b_2ea', '1ed_8b_2ea', '6ed_15b_3ea', '1ed_12b_3ea', '2ed_10b_3ea', '6ed_5b_1ea', '7ed_5b_1ea', '5ed_4b_3ea', '3ed_12b_1ea', '3ed_8b_1ea', '2ed_8b_1ea', '6ed_14b_2ea', '1ed_1b_1ea', '1ed_9b_3ea', '1ed_13b_2ea', '5ed_16b_2ea', '2ed_11b_2ea', 'TPA2_6b_1ea', '5ed_5b_2ea', '6ed_16b_3ea', '2ed_2b_2ea', 'TPA2_14b_1ea', '3ed_2b_2ea', '1ed_11b_3ea', '5ed_14b_3ea', '2ed_13b_3ea', '5ed_7b_3ea', '7ed_6b_1ea', '7ed_14b_1ea', '6ed_6b_1ea', '3ed_11b_1ea', '2ed_4b_1ea', 'TPA2_12b_2ea', '3ed_4b_1ea', '1ed_5b_3ea', '7ed_12b_2ea', '5ed_9b_2ea', 'TPA2_2b_3ea', '1ed_15b_1ea', '1ed_7b_2ea', '6ed_12b_1ea', 'TPA2_10b_3ea', '5ed_10b_1ea', '5ed_3b_1ea', '7ed_2b_3ea', '7ed_10b_3ea', '6ed_2b_3ea', '3ed_15b_3ea', '3ed_14b_3ea', 'TPA2_1b_2ea', '5ed_2b_1ea', '7ed_3b_3ea', '7ed_11b_3ea', '6ed_3b_3ea', '5ed_11b_1ea', '2ed_16b_1ea', '1ed_6b_2ea', '6ed_13b_1ea', 'TPA2_11b_3ea', '1ed_14b_1ea', '3ed_16b_2ea', 'TPA2_3b_3ea', '7ed_1b_2ea', '6ed_1b_2ea', '7ed_13b_2ea', '5ed_8b_2ea', '2ed_5b_1ea', 'TPA2_13b_2ea', '3ed_5b_1ea', '1ed_4b_3ea', '3ed_10b_1ea', '5ed_6b_3ea', '7ed_7b_1ea', '7ed_15b_1ea', '6ed_7b_1ea', '2ed_12b_3ea', '5ed_15b_3ea', '1ed_10b_3ea', '2ed_3b_2ea', 'TPA2_15b_1ea', '3ed_3b_2ea', '5ed_4b_2ea', 'TPA2_7b_1ea', '2ed_10b_2ea', '1ed_12b_2ea', '3ed_9b_1ea', '2ed_1b_3ea', '3ed_1b_3ea', '2ed_9b_1ea', '6ed_15b_2ea', '1ed_8b_3ea', '3ed_2b_1ea', 'TPA2_14b_2ea', '2ed_2b_1ea', '1ed_3b_3ea', '6ed_6b_2ea', '7ed_14b_2ea', '7ed_6b_2ea', 'TPA2_4b_3ea', '3ed_11b_2ea', '1ed_13b_1ea', '1ed_1b_2ea', '6ed_14b_1ea', '2ed_8b_2ea', 'TPA2_16b_3ea', '3ed_8b_2ea', '2ed_11b_1ea', '5ed_16b_1ea', '5ed_5b_1ea', '7ed_16b_3ea', '6ed_4b_3ea', '7ed_4b_3ea', 'TPA2_6b_2ea', '3ed_13b_3ea', '3ed_6b_3ea', '2ed_6b_3ea', '6ed_12b_2ea', '1ed_7b_1ea', '1ed_15b_2ea', '5ed_10b_2ea', 'TPA2_8b_3ea', '5ed_3b_2ea', '6ed_10b_3ea', '3ed_4b_2ea', 'TPA2_12b_1ea', '2ed_4b_2ea', '5ed_12b_3ea', '2ed_15b_3ea', '5ed_1b_3ea', '5ed_9b_1ea', '7ed_12b_1ea', '7ed_8b_3ea', '6ed_8b_3ea', '3ed_16b_1ea', '5ed_8b_1ea', '7ed_13b_1ea', '6ed_1b_1ea', '7ed_9b_3ea', '6ed_9b_3ea', '7ed_1b_1ea', '2ed_14b_3ea', '5ed_13b_3ea', '1ed_16b_3ea', '6ed_11b_3ea', '3ed_5b_2ea', 'TPA2_13b_1ea', '2ed_5b_2ea', '5ed_2b_2ea', 'TPA2_9b_3ea', 'TPA2_1b_1ea', '2ed_16b_2ea', '5ed_11b_2ea', '1ed_14b_2ea', '3ed_7b_3ea', '2ed_7b_3ea', '6ed_13b_2ea', '1ed_6b_1ea', '3ed_12b_3ea', 'TPA2_7b_2ea', '5ed_4b_1ea', '6ed_5b_3ea', '7ed_5b_3ea', '2ed_10b_1ea', '6ed_15b_1ea', '2ed_9b_2ea', '3ed_9b_2ea', '1ed_12b_1ea', '3ed_10b_2ea', 'TPA2_5b_3ea', '6ed_7b_2ea', '7ed_15b_2ea', '7ed_7b_2ea', '3ed_3b_1ea', 'TPA2_15b_2ea', '2ed_3b_1ea', '1ed_2b_3ea']
+    ds2 = ['7ed_21b_6ea', '7ed_21b_3ea', '7ed_21b_8ea', '7ed_21b_11ea', '7ed_21b_5ea', '7ed_21b_2ea', '7ed_21b_7ea', '7ed_21b_4ea', '7ed_21b_10ea', '7ed_21b_9ea', '7ed_21b_1ea', '7ed_20b_6ea', '7ed_20b_3ea', '7ed_20b_8ea', '7ed_20b_11ea', '7ed_20b_5ea', '7ed_20b_2ea', '7ed_20b_7ea', '7ed_20b_4ea', '7ed_20b_10ea', '7ed_20b_9ea', '7ed_20b_1ea', '7ed_6b_6ea', '7ed_6b_3ea', '7ed_6b_8ea', '7ed_6b_11ea', '7ed_6b_5ea', '7ed_6b_2ea', '7ed_6b_7ea', '7ed_6b_4ea', '7ed_6b_10ea', '7ed_6b_9ea', '7ed_6b_1ea', '7ed_26b_6ea', '7ed_26b_3ea', '7ed_26b_8ea', '7ed_26b_11ea', '7ed_26b_5ea', '7ed_26b_2ea', '7ed_26b_7ea', '7ed_26b_4ea', '7ed_26b_10ea', '7ed_26b_9ea', '7ed_26b_1ea', '7ed_25b_6ea', '7ed_25b_3ea', '7ed_25b_8ea', '7ed_25b_11ea', '7ed_25b_5ea', '7ed_25b_2ea', '7ed_25b_7ea', '7ed_25b_4ea', '7ed_25b_10ea', '7ed_25b_9ea', '7ed_25b_1ea', '7ed_24b_6ea', '7ed_24b_3ea', '7ed_24b_8ea', '7ed_24b_11ea', '7ed_24b_5ea', '7ed_24b_2ea', '7ed_24b_7ea', '7ed_24b_4ea', '7ed_24b_10ea', '7ed_24b_9ea', '7ed_24b_1ea', '7ed_1b_6ea', '7ed_1b_3ea', '7ed_1b_8ea', '7ed_1b_11ea', '7ed_1b_5ea', '7ed_1b_2ea', '7ed_1b_7ea', '7ed_1b_4ea', '7ed_1b_10ea', '7ed_1b_9ea', '7ed_1b_1ea', '7ed_23b_6ea', '7ed_23b_3ea', '7ed_23b_8ea', '7ed_23b_11ea', '7ed_23b_5ea', '7ed_23b_2ea', '7ed_23b_7ea', '7ed_23b_4ea', '7ed_23b_10ea', '7ed_23b_9ea', '7ed_23b_1ea', '7ed_17b_6ea', '7ed_17b_3ea', '7ed_17b_8ea', '7ed_17b_11ea', '7ed_17b_5ea', '7ed_17b_2ea', '7ed_17b_7ea', '7ed_17b_4ea', '7ed_17b_10ea', '7ed_17b_9ea', '7ed_17b_1ea', '7ed_22b_6ea', '7ed_22b_3ea', '7ed_22b_8ea', '7ed_22b_11ea', '7ed_22b_5ea', '7ed_22b_2ea', '7ed_22b_7ea', '7ed_22b_4ea', '7ed_22b_10ea', '7ed_22b_9ea', '7ed_22b_1ea', '7ed_16b_6ea', '7ed_16b_3ea', '7ed_16b_8ea', '7ed_16b_11ea', '7ed_16b_5ea', '7ed_16b_2ea', '7ed_16b_7ea', '7ed_16b_4ea', '7ed_16b_10ea', '7ed_16b_9ea', '7ed_16b_1ea', '1ed_21b_6ea', '1ed_21b_3ea', '1ed_21b_8ea', '1ed_21b_11ea', '1ed_21b_5ea', '1ed_21b_2ea', '1ed_21b_7ea', '1ed_21b_4ea', '1ed_21b_10ea', '1ed_21b_9ea', '1ed_21b_1ea', '1ed_20b_6ea', '1ed_20b_3ea', '1ed_20b_8ea', '1ed_20b_11ea', '1ed_20b_5ea', '1ed_20b_2ea', '1ed_20b_7ea', '1ed_20b_4ea', '1ed_20b_10ea', '1ed_20b_9ea', '1ed_20b_1ea', '1ed_6b_6ea', '1ed_6b_3ea', '1ed_6b_8ea', '1ed_6b_11ea', '1ed_6b_5ea', '1ed_6b_2ea', '1ed_6b_7ea', '1ed_6b_4ea', '1ed_6b_10ea', '1ed_6b_9ea', '1ed_6b_1ea', '1ed_26b_6ea', '1ed_26b_3ea', '1ed_26b_8ea', '1ed_26b_11ea', '1ed_26b_5ea', '1ed_26b_2ea', '1ed_26b_7ea', '1ed_26b_4ea', '1ed_26b_10ea', '1ed_26b_9ea', '1ed_26b_1ea', '1ed_25b_6ea', '1ed_25b_3ea', '1ed_25b_8ea', '1ed_25b_11ea', '1ed_25b_5ea', '1ed_25b_2ea', '1ed_25b_7ea', '1ed_25b_4ea', '1ed_25b_10ea', '1ed_25b_9ea', '1ed_25b_1ea', '1ed_24b_6ea', '1ed_24b_3ea', '1ed_24b_8ea', '1ed_24b_11ea', '1ed_24b_5ea', '1ed_24b_2ea', '1ed_24b_7ea', '1ed_24b_4ea', '1ed_24b_10ea', '1ed_24b_9ea', '1ed_24b_1ea', '1ed_1b_6ea', '1ed_1b_3ea', '1ed_1b_8ea', '1ed_1b_11ea', '1ed_1b_5ea', '1ed_1b_2ea', '1ed_1b_7ea', '1ed_1b_4ea', '1ed_1b_10ea', '1ed_1b_9ea', '1ed_1b_1ea', '1ed_23b_6ea', '1ed_23b_3ea', '1ed_23b_8ea', '1ed_23b_11ea', '1ed_23b_5ea', '1ed_23b_2ea', '1ed_23b_7ea', '1ed_23b_4ea', '1ed_23b_10ea', '1ed_23b_9ea', '1ed_23b_1ea', '1ed_17b_6ea', '1ed_17b_3ea', '1ed_17b_8ea', '1ed_17b_11ea', '1ed_17b_5ea', '1ed_17b_2ea', '1ed_17b_7ea', '1ed_17b_4ea', '1ed_17b_10ea', '1ed_17b_9ea', '1ed_17b_1ea', '1ed_22b_6ea', '1ed_22b_3ea', '1ed_22b_8ea', '1ed_22b_11ea', '1ed_22b_5ea', '1ed_22b_2ea', '1ed_22b_7ea', '1ed_22b_4ea', '1ed_22b_10ea', '1ed_22b_9ea', '1ed_22b_1ea', '1ed_16b_6ea', '1ed_16b_3ea', '1ed_16b_8ea', '1ed_16b_11ea', '1ed_16b_5ea', '1ed_16b_2ea', '1ed_16b_7ea', '1ed_16b_4ea', '1ed_16b_10ea', '1ed_16b_9ea', '1ed_16b_1ea', '6ed_21b_6ea', '6ed_21b_3ea', '6ed_21b_8ea', '6ed_21b_11ea', '6ed_21b_5ea', '6ed_21b_2ea', '6ed_21b_7ea', '6ed_21b_4ea', '6ed_21b_10ea', '6ed_21b_9ea', '6ed_21b_1ea', '6ed_20b_6ea', '6ed_20b_3ea', '6ed_20b_8ea', '6ed_20b_11ea', '6ed_20b_5ea', '6ed_20b_2ea', '6ed_20b_7ea', '6ed_20b_4ea', '6ed_20b_10ea', '6ed_20b_9ea', '6ed_20b_1ea', '6ed_6b_6ea', '6ed_6b_3ea', '6ed_6b_8ea', '6ed_6b_11ea', '6ed_6b_5ea', '6ed_6b_2ea', '6ed_6b_7ea', '6ed_6b_4ea', '6ed_6b_10ea', '6ed_6b_9ea', '6ed_6b_1ea', '6ed_26b_6ea', '6ed_26b_3ea', '6ed_26b_8ea', '6ed_26b_11ea', '6ed_26b_5ea', '6ed_26b_2ea', '6ed_26b_7ea', '6ed_26b_4ea', '6ed_26b_10ea', '6ed_26b_9ea', '6ed_26b_1ea', '6ed_25b_6ea', '6ed_25b_3ea', '6ed_25b_8ea', '6ed_25b_11ea', '6ed_25b_5ea', '6ed_25b_2ea', '6ed_25b_7ea', '6ed_25b_4ea', '6ed_25b_10ea', '6ed_25b_9ea', '6ed_25b_1ea', '6ed_24b_6ea', '6ed_24b_3ea', '6ed_24b_8ea', '6ed_24b_11ea', '6ed_24b_5ea', '6ed_24b_2ea', '6ed_24b_7ea', '6ed_24b_4ea', '6ed_24b_10ea', '6ed_24b_9ea', '6ed_24b_1ea', '6ed_1b_6ea', '6ed_1b_3ea', '6ed_1b_8ea', '6ed_1b_11ea', '6ed_1b_5ea', '6ed_1b_2ea', '6ed_1b_7ea', '6ed_1b_4ea', '6ed_1b_10ea', '6ed_1b_9ea', '6ed_1b_1ea', '6ed_23b_6ea', '6ed_23b_3ea', '6ed_23b_8ea', '6ed_23b_11ea', '6ed_23b_5ea', '6ed_23b_2ea', '6ed_23b_7ea', '6ed_23b_4ea', '6ed_23b_10ea', '6ed_23b_9ea', '6ed_23b_1ea', '6ed_17b_6ea', '6ed_17b_3ea', '6ed_17b_8ea', '6ed_17b_11ea', '6ed_17b_5ea', '6ed_17b_2ea', '6ed_17b_7ea', '6ed_17b_4ea', '6ed_17b_10ea', '6ed_17b_9ea', '6ed_17b_1ea', '6ed_22b_6ea', '6ed_22b_3ea', '6ed_22b_8ea', '6ed_22b_11ea', '6ed_22b_5ea', '6ed_22b_2ea', '6ed_22b_7ea', '6ed_22b_4ea', '6ed_22b_10ea', '6ed_22b_9ea', '6ed_22b_1ea', '6ed_16b_6ea', '6ed_16b_3ea', '6ed_16b_8ea', '6ed_16b_11ea', '6ed_16b_5ea', '6ed_16b_2ea', '6ed_16b_7ea', '6ed_16b_4ea', '6ed_16b_10ea', '6ed_16b_9ea', '6ed_16b_1ea', '3ed_21b_6ea', '3ed_21b_3ea', '3ed_21b_8ea', '3ed_21b_11ea', '3ed_21b_5ea', '3ed_21b_2ea', '3ed_21b_7ea', '3ed_21b_4ea', '3ed_21b_10ea', '3ed_21b_9ea', '3ed_21b_1ea', '3ed_20b_6ea', '3ed_20b_3ea', '3ed_20b_8ea', '3ed_20b_11ea', '3ed_20b_5ea', '3ed_20b_2ea', '3ed_20b_7ea', '3ed_20b_4ea', '3ed_20b_10ea', '3ed_20b_9ea', '3ed_20b_1ea', '3ed_6b_6ea', '3ed_6b_3ea', '3ed_6b_8ea', '3ed_6b_11ea', '3ed_6b_5ea', '3ed_6b_2ea', '3ed_6b_7ea', '3ed_6b_4ea', '3ed_6b_10ea', '3ed_6b_9ea', '3ed_6b_1ea', '3ed_26b_6ea', '3ed_26b_3ea', '3ed_26b_8ea', '3ed_26b_11ea', '3ed_26b_5ea', '3ed_26b_2ea', '3ed_26b_7ea', '3ed_26b_4ea', '3ed_26b_10ea', '3ed_26b_9ea', '3ed_26b_1ea', '3ed_25b_6ea', '3ed_25b_3ea', '3ed_25b_8ea', '3ed_25b_11ea', '3ed_25b_5ea', '3ed_25b_2ea', '3ed_25b_7ea', '3ed_25b_4ea', '3ed_25b_10ea', '3ed_25b_9ea', '3ed_25b_1ea', '3ed_24b_6ea', '3ed_24b_3ea', '3ed_24b_8ea', '3ed_24b_11ea', '3ed_24b_5ea', '3ed_24b_2ea', '3ed_24b_7ea', '3ed_24b_4ea', '3ed_24b_10ea', '3ed_24b_9ea', '3ed_24b_1ea', '3ed_1b_6ea', '3ed_1b_3ea', '3ed_1b_8ea', '3ed_1b_11ea', '3ed_1b_5ea', '3ed_1b_2ea', '3ed_1b_7ea', '3ed_1b_4ea', '3ed_1b_10ea', '3ed_1b_9ea', '3ed_1b_1ea', '3ed_23b_6ea', '3ed_23b_3ea', '3ed_23b_8ea', '3ed_23b_11ea', '3ed_23b_5ea', '3ed_23b_2ea', '3ed_23b_7ea', '3ed_23b_4ea', '3ed_23b_10ea', '3ed_23b_9ea', '3ed_23b_1ea', '3ed_17b_6ea', '3ed_17b_3ea', '3ed_17b_8ea', '3ed_17b_11ea', '3ed_17b_5ea', '3ed_17b_2ea', '3ed_17b_7ea', '3ed_17b_4ea', '3ed_17b_10ea', '3ed_17b_9ea', '3ed_17b_1ea', '3ed_22b_6ea', '3ed_22b_3ea', '3ed_22b_8ea', '3ed_22b_11ea', '3ed_22b_5ea', '3ed_22b_2ea', '3ed_22b_7ea', '3ed_22b_4ea', '3ed_22b_10ea', '3ed_22b_9ea', '3ed_22b_1ea', '3ed_16b_6ea', '3ed_16b_3ea', '3ed_16b_8ea', '3ed_16b_11ea', '3ed_16b_5ea', '3ed_16b_2ea', '3ed_16b_7ea', '3ed_16b_4ea', '3ed_16b_10ea', '3ed_16b_9ea', '3ed_16b_1ea', '5ed_21b_6ea', '5ed_21b_3ea', '5ed_21b_8ea', '5ed_21b_11ea', '5ed_21b_5ea', '5ed_21b_2ea', '5ed_21b_7ea', '5ed_21b_4ea', '5ed_21b_10ea', '5ed_21b_9ea', '5ed_21b_1ea', '5ed_20b_6ea', '5ed_20b_3ea', '5ed_20b_8ea', '5ed_20b_11ea', '5ed_20b_5ea', '5ed_20b_2ea', '5ed_20b_7ea', '5ed_20b_4ea', '5ed_20b_10ea', '5ed_20b_9ea', '5ed_20b_1ea', '5ed_6b_6ea', '5ed_6b_3ea', '5ed_6b_8ea', '5ed_6b_11ea', '5ed_6b_5ea', '5ed_6b_2ea', '5ed_6b_7ea', '5ed_6b_4ea', '5ed_6b_10ea', '5ed_6b_9ea', '5ed_6b_1ea', '5ed_26b_6ea', '5ed_26b_3ea', '5ed_26b_8ea', '5ed_26b_11ea', '5ed_26b_5ea', '5ed_26b_2ea', '5ed_26b_7ea', '5ed_26b_4ea', '5ed_26b_10ea', '5ed_26b_9ea', '5ed_26b_1ea', '5ed_25b_6ea', '5ed_25b_3ea', '5ed_25b_8ea', '5ed_25b_11ea', '5ed_25b_5ea', '5ed_25b_2ea', '5ed_25b_7ea', '5ed_25b_4ea', '5ed_25b_10ea', '5ed_25b_9ea', '5ed_25b_1ea', '5ed_24b_6ea', '5ed_24b_3ea', '5ed_24b_8ea', '5ed_24b_11ea', '5ed_24b_5ea', '5ed_24b_2ea', '5ed_24b_7ea', '5ed_24b_4ea', '5ed_24b_10ea', '5ed_24b_9ea', '5ed_24b_1ea', '5ed_1b_6ea', '5ed_1b_3ea', '5ed_1b_8ea', '5ed_1b_11ea', '5ed_1b_5ea', '5ed_1b_2ea', '5ed_1b_7ea', '5ed_1b_4ea', '5ed_1b_10ea', '5ed_1b_9ea', '5ed_1b_1ea', '5ed_23b_6ea', '5ed_23b_3ea', '5ed_23b_8ea', '5ed_23b_11ea', '5ed_23b_5ea', '5ed_23b_2ea', '5ed_23b_7ea', '5ed_23b_4ea', '5ed_23b_10ea', '5ed_23b_9ea', '5ed_23b_1ea', '5ed_17b_6ea', '5ed_17b_3ea', '5ed_17b_8ea', '5ed_17b_11ea', '5ed_17b_5ea', '5ed_17b_2ea', '5ed_17b_7ea', '5ed_17b_4ea', '5ed_17b_10ea', '5ed_17b_9ea', '5ed_17b_1ea', '5ed_22b_6ea', '5ed_22b_3ea', '5ed_22b_8ea', '5ed_22b_11ea', '5ed_22b_5ea', '5ed_22b_2ea', '5ed_22b_7ea', '5ed_22b_4ea', '5ed_22b_10ea', '5ed_22b_9ea', '5ed_22b_1ea', '5ed_16b_6ea', '5ed_16b_3ea', '5ed_16b_8ea', '5ed_16b_11ea', '5ed_16b_5ea', '5ed_16b_2ea', '5ed_16b_7ea', '5ed_16b_4ea', '5ed_16b_10ea', '5ed_16b_9ea', '5ed_16b_1ea', '2ed_21b_6ea', '2ed_21b_3ea', '2ed_21b_8ea', '2ed_21b_11ea', '2ed_21b_5ea', '2ed_21b_2ea', '2ed_21b_7ea', '2ed_21b_4ea', '2ed_21b_10ea', '2ed_21b_9ea', '2ed_21b_1ea', '2ed_20b_6ea', '2ed_20b_3ea', '2ed_20b_8ea', '2ed_20b_11ea', '2ed_20b_5ea', '2ed_20b_2ea', '2ed_20b_7ea', '2ed_20b_4ea', '2ed_20b_10ea', '2ed_20b_9ea', '2ed_20b_1ea', '2ed_6b_6ea', '2ed_6b_3ea', '2ed_6b_8ea', '2ed_6b_11ea', '2ed_6b_5ea', '2ed_6b_2ea', '2ed_6b_7ea', '2ed_6b_4ea', '2ed_6b_10ea', '2ed_6b_9ea', '2ed_6b_1ea', '2ed_26b_6ea', '2ed_26b_3ea', '2ed_26b_8ea', '2ed_26b_11ea', '2ed_26b_5ea', '2ed_26b_2ea', '2ed_26b_7ea', '2ed_26b_4ea', '2ed_26b_10ea', '2ed_26b_9ea', '2ed_26b_1ea', '2ed_25b_6ea', '2ed_25b_3ea', '2ed_25b_8ea', '2ed_25b_11ea', '2ed_25b_5ea', '2ed_25b_2ea', '2ed_25b_7ea', '2ed_25b_4ea', '2ed_25b_10ea', '2ed_25b_9ea', '2ed_25b_1ea', '2ed_24b_6ea', '2ed_24b_3ea', '2ed_24b_8ea', '2ed_24b_11ea', '2ed_24b_5ea', '2ed_24b_2ea', '2ed_24b_7ea', '2ed_24b_4ea', '2ed_24b_10ea', '2ed_24b_9ea', '2ed_24b_1ea', '2ed_1b_6ea', '2ed_1b_3ea', '2ed_1b_8ea', '2ed_1b_11ea', '2ed_1b_5ea', '2ed_1b_2ea', '2ed_1b_7ea', '2ed_1b_4ea', '2ed_1b_10ea', '2ed_1b_9ea', '2ed_1b_1ea', '2ed_23b_6ea', '2ed_23b_3ea', '2ed_23b_8ea', '2ed_23b_11ea', '2ed_23b_5ea', '2ed_23b_2ea', '2ed_23b_7ea', '2ed_23b_4ea', '2ed_23b_10ea', '2ed_23b_9ea', '2ed_23b_1ea', '2ed_17b_6ea', '2ed_17b_3ea', '2ed_17b_8ea', '2ed_17b_11ea', '2ed_17b_5ea', '2ed_17b_2ea', '2ed_17b_7ea', '2ed_17b_4ea', '2ed_17b_10ea', '2ed_17b_9ea', '2ed_17b_1ea', '2ed_22b_6ea', '2ed_22b_3ea', '2ed_22b_8ea', '2ed_22b_11ea', '2ed_22b_5ea', '2ed_22b_2ea', '2ed_22b_7ea', '2ed_22b_4ea', '2ed_22b_10ea', '2ed_22b_9ea', '2ed_22b_1ea', '2ed_16b_6ea', '2ed_16b_3ea', '2ed_16b_8ea', '2ed_16b_11ea', '2ed_16b_5ea', '2ed_16b_2ea', '2ed_16b_7ea', '2ed_16b_4ea', '2ed_16b_10ea', '2ed_16b_9ea', '2ed_16b_1ea']
     #monitor_jobs = ['7ed_5b_2ea', '7ed_1b_3ea', '3ed_1b_3ea']
     #monitor_jobs =['7ed_21b_6ea']
-
+    #monitor_jobs = ['AP3']
+    all_ds = ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea', '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea', '2ed_13b_1ea', 'TPA2_14b_3ea', '1ed_3b_2ea', '6ed_16b_1ea', '1ed_11b_1ea', '3ed_13b_2ea', 'TPA2_6b_3ea', '7ed_4b_2ea', '7ed_16b_2ea', '6ed_4b_2ea', '1ed_1b_3ea', '1ed_9b_1ea', '3ed_8b_3ea', '2ed_8b_3ea', 'TPA2_16b_2ea', '3ed_15b_1ea', '7ed_2b_1ea', '6ed_2b_1ea', '7ed_10b_1ea', '5ed_3b_3ea', 'TPA2_8b_2ea', '5ed_10b_3ea', '1ed_15b_3ea', '2ed_6b_2ea', '3ed_6b_2ea', 'TPA2_10b_1ea', '6ed_12b_3ea', '5ed_1b_2ea', '6ed_8b_2ea', '7ed_8b_2ea', 'TPA2_2b_1ea', '2ed_15b_2ea', '5ed_12b_2ea', '6ed_10b_2ea', '1ed_5b_1ea', '2ed_4b_3ea', '3ed_4b_3ea', '6ed_11b_2ea', '1ed_4b_1ea', '2ed_5b_3ea', '3ed_5b_3ea', '1ed_16b_2ea', '5ed_13b_2ea', '2ed_14b_2ea', 'TPA2_3b_1ea', '6ed_9b_2ea', '7ed_9b_2ea', '2ed_7b_2ea', '3ed_7b_2ea', 'TPA2_11b_1ea', '6ed_13b_3ea', '1ed_14b_3ea', '5ed_11b_3ea', '2ed_16b_3ea', 'TPA2_9b_2ea', '7ed_3b_1ea', '6ed_3b_1ea', '7ed_11b_1ea', '5ed_2b_3ea', '3ed_14b_1ea', '1ed_8b_1ea', '3ed_9b_3ea', '2ed_1b_1ea', '3ed_1b_1ea', '2ed_9b_3ea', '7ed_5b_2ea', '6ed_5b_2ea', 'TPA2_7b_3ea', '3ed_12b_2ea', '1ed_10b_1ea', 'TPA2_15b_3ea', '1ed_2b_2ea', '2ed_12b_1ea', '5ed_15b_1ea', '7ed_7b_3ea', '6ed_7b_3ea', '7ed_15b_3ea', '5ed_6b_1ea', 'TPA2_5b_2ea', '3ed_10b_3ea', '3ed_13b_1ea', '6ed_4b_1ea', '7ed_16b_1ea', '7ed_4b_1ea', '5ed_5b_3ea', '2ed_11b_3ea', '5ed_16b_3ea', '1ed_13b_3ea', 'TPA2_16b_1ea', '1ed_9b_2ea', '6ed_14b_3ea', '5ed_7b_2ea', 'TPA2_4b_1ea', '2ed_13b_2ea', '5ed_14b_2ea', '1ed_11b_2ea', '6ed_16b_2ea', '1ed_3b_1ea', '3ed_2b_3ea', '2ed_2b_3ea', 'TPA2_2b_2ea', '7ed_12b_3ea', '7ed_8b_1ea', '6ed_8b_1ea', '5ed_1b_1ea', '5ed_9b_3ea', '5ed_12b_1ea', '2ed_15b_1ea', 'TPA2_12b_3ea', '1ed_5b_2ea', '6ed_10b_1ea', '3ed_15b_2ea', 'TPA2_8b_1ea', '7ed_10b_2ea', '6ed_2b_2ea', '7ed_2b_2ea', '1ed_7b_3ea', 'TPA2_10b_2ea', '3ed_6b_1ea', '2ed_6b_1ea', '1ed_6b_3ea', 'TPA2_11b_2ea', '3ed_7b_1ea', '2ed_7b_1ea', '7ed_11b_2ea', '6ed_3b_2ea', '7ed_3b_2ea', 'TPA2_9b_1ea', 'TPA2_1b_3ea', '3ed_14b_2ea', '1ed_16b_1ea', 'TPA2_13b_3ea', '1ed_4b_2ea', '6ed_11b_1ea', '2ed_14b_1ea', '5ed_13b_1ea', '6ed_1b_3ea', '7ed_13b_3ea', '7ed_9b_1ea', '6ed_9b_1ea', '7ed_1b_3ea', '5ed_8b_3ea', 'TPA2_3b_2ea', '3ed_16b_3ea', '1ed_2b_1ea', '3ed_3b_3ea', '2ed_3b_3ea', '1ed_10b_2ea', '5ed_15b_2ea', '2ed_12b_2ea', 'TPA2_5b_1ea', '5ed_6b_2ea', '3ed_1b_2ea', '2ed_1b_2ea', '1ed_8b_2ea', '6ed_15b_3ea', '1ed_12b_3ea', '2ed_10b_3ea', '6ed_5b_1ea', '7ed_5b_1ea', '5ed_4b_3ea', '3ed_12b_1ea', '3ed_8b_1ea', '2ed_8b_1ea', '6ed_14b_2ea', '1ed_1b_1ea', '1ed_9b_3ea', '1ed_13b_2ea', '5ed_16b_2ea', '2ed_11b_2ea', 'TPA2_6b_1ea', '5ed_5b_2ea', '6ed_16b_3ea', '2ed_2b_2ea', 'TPA2_14b_1ea', '3ed_2b_2ea', '1ed_11b_3ea', '5ed_14b_3ea', '2ed_13b_3ea', '5ed_7b_3ea', '7ed_6b_1ea', '7ed_14b_1ea', '6ed_6b_1ea', '3ed_11b_1ea', '2ed_4b_1ea', 'TPA2_12b_2ea', '3ed_4b_1ea', '1ed_5b_3ea', '7ed_12b_2ea', '5ed_9b_2ea', 'TPA2_2b_3ea', '1ed_15b_1ea', '1ed_7b_2ea', '6ed_12b_1ea', 'TPA2_10b_3ea', '5ed_10b_1ea', '5ed_3b_1ea', '7ed_2b_3ea', '7ed_10b_3ea', '6ed_2b_3ea', '3ed_15b_3ea', '3ed_14b_3ea', 'TPA2_1b_2ea', '5ed_2b_1ea', '7ed_3b_3ea', '7ed_11b_3ea', '6ed_3b_3ea', '5ed_11b_1ea', '2ed_16b_1ea', '1ed_6b_2ea', '6ed_13b_1ea', 'TPA2_11b_3ea', '1ed_14b_1ea', '3ed_16b_2ea', 'TPA2_3b_3ea', '7ed_1b_2ea', '6ed_1b_2ea', '7ed_13b_2ea', '5ed_8b_2ea', '2ed_5b_1ea', 'TPA2_13b_2ea', '3ed_5b_1ea', '1ed_4b_3ea', '3ed_10b_1ea', '5ed_6b_3ea', '7ed_7b_1ea', '7ed_15b_1ea', '6ed_7b_1ea', '2ed_12b_3ea', '5ed_15b_3ea', '1ed_10b_3ea', '2ed_3b_2ea', 'TPA2_15b_1ea', '3ed_3b_2ea', '5ed_4b_2ea', 'TPA2_7b_1ea', '2ed_10b_2ea', '1ed_12b_2ea', '3ed_9b_1ea', '2ed_1b_3ea', '3ed_1b_3ea', '2ed_9b_1ea', '6ed_15b_2ea', '1ed_8b_3ea', '3ed_2b_1ea', 'TPA2_14b_2ea', '2ed_2b_1ea', '1ed_3b_3ea', '6ed_6b_2ea', '7ed_14b_2ea', '7ed_6b_2ea', 'TPA2_4b_3ea', '3ed_11b_2ea', '1ed_13b_1ea', '1ed_1b_2ea', '6ed_14b_1ea', '2ed_8b_2ea', 'TPA2_16b_3ea', '3ed_8b_2ea', '2ed_11b_1ea', '5ed_16b_1ea', '5ed_5b_1ea', '7ed_16b_3ea', '6ed_4b_3ea', '7ed_4b_3ea', 'TPA2_6b_2ea', '3ed_13b_3ea', '3ed_6b_3ea', '2ed_6b_3ea', '6ed_12b_2ea', '1ed_7b_1ea', '1ed_15b_2ea', '5ed_10b_2ea', 'TPA2_8b_3ea', '5ed_3b_2ea', '6ed_10b_3ea', '3ed_4b_2ea', 'TPA2_12b_1ea', '2ed_4b_2ea', '5ed_12b_3ea', '2ed_15b_3ea', '5ed_1b_3ea', '5ed_9b_1ea', '7ed_12b_1ea', '7ed_8b_3ea', '6ed_8b_3ea', '3ed_16b_1ea', '5ed_8b_1ea', '7ed_13b_1ea', '6ed_1b_1ea', '7ed_9b_3ea', '6ed_9b_3ea', '7ed_1b_1ea', '2ed_14b_3ea', '5ed_13b_3ea', '1ed_16b_3ea', '6ed_11b_3ea', '3ed_5b_2ea', 'TPA2_13b_1ea', '2ed_5b_2ea', '5ed_2b_2ea', 'TPA2_9b_3ea', 'TPA2_1b_1ea', '2ed_16b_2ea', '5ed_11b_2ea', '1ed_14b_2ea', '3ed_7b_3ea', '2ed_7b_3ea', '6ed_13b_2ea', '1ed_6b_1ea', '3ed_12b_3ea', 'TPA2_7b_2ea', '5ed_4b_1ea', '6ed_5b_3ea', '7ed_5b_3ea', '2ed_10b_1ea', '6ed_15b_1ea', '2ed_9b_2ea', '3ed_9b_2ea', '1ed_12b_1ea', '3ed_10b_2ea', 'TPA2_5b_3ea', '6ed_7b_2ea', '7ed_15b_2ea', '7ed_7b_2ea', '3ed_3b_1ea', 'TPA2_15b_2ea', '2ed_3b_1ea', '1ed_2b_3ea','7ed_21b_6ea', '7ed_21b_3ea', '7ed_21b_8ea', '7ed_21b_11ea', '7ed_21b_5ea', '7ed_21b_2ea', '7ed_21b_7ea', '7ed_21b_4ea', '7ed_21b_10ea', '7ed_21b_9ea', '7ed_21b_1ea', '7ed_20b_6ea', '7ed_20b_3ea', '7ed_20b_8ea', '7ed_20b_11ea', '7ed_20b_5ea', '7ed_20b_2ea', '7ed_20b_7ea', '7ed_20b_4ea', '7ed_20b_10ea', '7ed_20b_9ea', '7ed_20b_1ea', '7ed_6b_6ea', '7ed_6b_3ea', '7ed_6b_8ea', '7ed_6b_11ea', '7ed_6b_5ea', '7ed_6b_2ea', '7ed_6b_7ea', '7ed_6b_4ea', '7ed_6b_10ea', '7ed_6b_9ea', '7ed_6b_1ea', '7ed_26b_6ea', '7ed_26b_3ea', '7ed_26b_8ea', '7ed_26b_11ea', '7ed_26b_5ea', '7ed_26b_2ea', '7ed_26b_7ea', '7ed_26b_4ea', '7ed_26b_10ea', '7ed_26b_9ea', '7ed_26b_1ea', '7ed_25b_6ea', '7ed_25b_3ea', '7ed_25b_8ea', '7ed_25b_11ea', '7ed_25b_5ea', '7ed_25b_2ea', '7ed_25b_7ea', '7ed_25b_4ea', '7ed_25b_10ea', '7ed_25b_9ea', '7ed_25b_1ea', '7ed_24b_6ea', '7ed_24b_3ea', '7ed_24b_8ea', '7ed_24b_11ea', '7ed_24b_5ea', '7ed_24b_2ea', '7ed_24b_7ea', '7ed_24b_4ea', '7ed_24b_10ea', '7ed_24b_9ea', '7ed_24b_1ea', '7ed_1b_6ea', '7ed_1b_3ea', '7ed_1b_8ea', '7ed_1b_11ea', '7ed_1b_5ea', '7ed_1b_2ea', '7ed_1b_7ea', '7ed_1b_4ea', '7ed_1b_10ea', '7ed_1b_9ea', '7ed_1b_1ea', '7ed_23b_6ea', '7ed_23b_3ea', '7ed_23b_8ea', '7ed_23b_11ea', '7ed_23b_5ea', '7ed_23b_2ea', '7ed_23b_7ea', '7ed_23b_4ea', '7ed_23b_10ea', '7ed_23b_9ea', '7ed_23b_1ea', '7ed_17b_6ea', '7ed_17b_3ea', '7ed_17b_8ea', '7ed_17b_11ea', '7ed_17b_5ea', '7ed_17b_2ea', '7ed_17b_7ea', '7ed_17b_4ea', '7ed_17b_10ea', '7ed_17b_9ea', '7ed_17b_1ea', '7ed_22b_6ea', '7ed_22b_3ea', '7ed_22b_8ea', '7ed_22b_11ea', '7ed_22b_5ea', '7ed_22b_2ea', '7ed_22b_7ea', '7ed_22b_4ea', '7ed_22b_10ea', '7ed_22b_9ea', '7ed_22b_1ea', '7ed_16b_6ea', '7ed_16b_3ea', '7ed_16b_8ea', '7ed_16b_11ea', '7ed_16b_5ea', '7ed_16b_2ea', '7ed_16b_7ea', '7ed_16b_4ea', '7ed_16b_10ea', '7ed_16b_9ea', '7ed_16b_1ea', '1ed_21b_6ea', '1ed_21b_3ea', '1ed_21b_8ea', '1ed_21b_11ea', '1ed_21b_5ea', '1ed_21b_2ea', '1ed_21b_7ea', '1ed_21b_4ea', '1ed_21b_10ea', '1ed_21b_9ea', '1ed_21b_1ea', '1ed_20b_6ea', '1ed_20b_3ea', '1ed_20b_8ea', '1ed_20b_11ea', '1ed_20b_5ea', '1ed_20b_2ea', '1ed_20b_7ea', '1ed_20b_4ea', '1ed_20b_10ea', '1ed_20b_9ea', '1ed_20b_1ea', '1ed_6b_6ea', '1ed_6b_3ea', '1ed_6b_8ea', '1ed_6b_11ea', '1ed_6b_5ea', '1ed_6b_2ea', '1ed_6b_7ea', '1ed_6b_4ea', '1ed_6b_10ea', '1ed_6b_9ea', '1ed_6b_1ea', '1ed_26b_6ea', '1ed_26b_3ea', '1ed_26b_8ea', '1ed_26b_11ea', '1ed_26b_5ea', '1ed_26b_2ea', '1ed_26b_7ea', '1ed_26b_4ea', '1ed_26b_10ea', '1ed_26b_9ea', '1ed_26b_1ea', '1ed_25b_6ea', '1ed_25b_3ea', '1ed_25b_8ea', '1ed_25b_11ea', '1ed_25b_5ea', '1ed_25b_2ea', '1ed_25b_7ea', '1ed_25b_4ea', '1ed_25b_10ea', '1ed_25b_9ea', '1ed_25b_1ea', '1ed_24b_6ea', '1ed_24b_3ea', '1ed_24b_8ea', '1ed_24b_11ea', '1ed_24b_5ea', '1ed_24b_2ea', '1ed_24b_7ea', '1ed_24b_4ea', '1ed_24b_10ea', '1ed_24b_9ea', '1ed_24b_1ea', '1ed_1b_6ea', '1ed_1b_3ea', '1ed_1b_8ea', '1ed_1b_11ea', '1ed_1b_5ea', '1ed_1b_2ea', '1ed_1b_7ea', '1ed_1b_4ea', '1ed_1b_10ea', '1ed_1b_9ea', '1ed_1b_1ea', '1ed_23b_6ea', '1ed_23b_3ea', '1ed_23b_8ea', '1ed_23b_11ea', '1ed_23b_5ea', '1ed_23b_2ea', '1ed_23b_7ea', '1ed_23b_4ea', '1ed_23b_10ea', '1ed_23b_9ea', '1ed_23b_1ea', '1ed_17b_6ea', '1ed_17b_3ea', '1ed_17b_8ea', '1ed_17b_11ea', '1ed_17b_5ea', '1ed_17b_2ea', '1ed_17b_7ea', '1ed_17b_4ea', '1ed_17b_10ea', '1ed_17b_9ea', '1ed_17b_1ea', '1ed_22b_6ea', '1ed_22b_3ea', '1ed_22b_8ea', '1ed_22b_11ea', '1ed_22b_5ea', '1ed_22b_2ea', '1ed_22b_7ea', '1ed_22b_4ea', '1ed_22b_10ea', '1ed_22b_9ea', '1ed_22b_1ea', '1ed_16b_6ea', '1ed_16b_3ea', '1ed_16b_8ea', '1ed_16b_11ea', '1ed_16b_5ea', '1ed_16b_2ea', '1ed_16b_7ea', '1ed_16b_4ea', '1ed_16b_10ea', '1ed_16b_9ea', '1ed_16b_1ea', '6ed_21b_6ea', '6ed_21b_3ea', '6ed_21b_8ea', '6ed_21b_11ea', '6ed_21b_5ea', '6ed_21b_2ea', '6ed_21b_7ea', '6ed_21b_4ea', '6ed_21b_10ea', '6ed_21b_9ea', '6ed_21b_1ea', '6ed_20b_6ea', '6ed_20b_3ea', '6ed_20b_8ea', '6ed_20b_11ea', '6ed_20b_5ea', '6ed_20b_2ea', '6ed_20b_7ea', '6ed_20b_4ea', '6ed_20b_10ea', '6ed_20b_9ea', '6ed_20b_1ea', '6ed_6b_6ea', '6ed_6b_3ea', '6ed_6b_8ea', '6ed_6b_11ea', '6ed_6b_5ea', '6ed_6b_2ea', '6ed_6b_7ea', '6ed_6b_4ea', '6ed_6b_10ea', '6ed_6b_9ea', '6ed_6b_1ea', '6ed_26b_6ea', '6ed_26b_3ea', '6ed_26b_8ea', '6ed_26b_11ea', '6ed_26b_5ea', '6ed_26b_2ea', '6ed_26b_7ea', '6ed_26b_4ea', '6ed_26b_10ea', '6ed_26b_9ea', '6ed_26b_1ea', '6ed_25b_6ea', '6ed_25b_3ea', '6ed_25b_8ea', '6ed_25b_11ea', '6ed_25b_5ea', '6ed_25b_2ea', '6ed_25b_7ea', '6ed_25b_4ea', '6ed_25b_10ea', '6ed_25b_9ea', '6ed_25b_1ea', '6ed_24b_6ea', '6ed_24b_3ea', '6ed_24b_8ea', '6ed_24b_11ea', '6ed_24b_5ea', '6ed_24b_2ea', '6ed_24b_7ea', '6ed_24b_4ea', '6ed_24b_10ea', '6ed_24b_9ea', '6ed_24b_1ea', '6ed_1b_6ea', '6ed_1b_3ea', '6ed_1b_8ea', '6ed_1b_11ea', '6ed_1b_5ea', '6ed_1b_2ea', '6ed_1b_7ea', '6ed_1b_4ea', '6ed_1b_10ea', '6ed_1b_9ea', '6ed_1b_1ea', '6ed_23b_6ea', '6ed_23b_3ea', '6ed_23b_8ea', '6ed_23b_11ea', '6ed_23b_5ea', '6ed_23b_2ea', '6ed_23b_7ea', '6ed_23b_4ea', '6ed_23b_10ea', '6ed_23b_9ea', '6ed_23b_1ea', '6ed_17b_6ea', '6ed_17b_3ea', '6ed_17b_8ea', '6ed_17b_11ea', '6ed_17b_5ea', '6ed_17b_2ea', '6ed_17b_7ea', '6ed_17b_4ea', '6ed_17b_10ea', '6ed_17b_9ea', '6ed_17b_1ea', '6ed_22b_6ea', '6ed_22b_3ea', '6ed_22b_8ea', '6ed_22b_11ea', '6ed_22b_5ea', '6ed_22b_2ea', '6ed_22b_7ea', '6ed_22b_4ea', '6ed_22b_10ea', '6ed_22b_9ea', '6ed_22b_1ea', '6ed_16b_6ea', '6ed_16b_3ea', '6ed_16b_8ea', '6ed_16b_11ea', '6ed_16b_5ea', '6ed_16b_2ea', '6ed_16b_7ea', '6ed_16b_4ea', '6ed_16b_10ea', '6ed_16b_9ea', '6ed_16b_1ea', '3ed_21b_6ea', '3ed_21b_3ea', '3ed_21b_8ea', '3ed_21b_11ea', '3ed_21b_5ea', '3ed_21b_2ea', '3ed_21b_7ea', '3ed_21b_4ea', '3ed_21b_10ea', '3ed_21b_9ea', '3ed_21b_1ea', '3ed_20b_6ea', '3ed_20b_3ea', '3ed_20b_8ea', '3ed_20b_11ea', '3ed_20b_5ea', '3ed_20b_2ea', '3ed_20b_7ea', '3ed_20b_4ea', '3ed_20b_10ea', '3ed_20b_9ea', '3ed_20b_1ea', '3ed_6b_6ea', '3ed_6b_3ea', '3ed_6b_8ea', '3ed_6b_11ea', '3ed_6b_5ea', '3ed_6b_2ea', '3ed_6b_7ea', '3ed_6b_4ea', '3ed_6b_10ea', '3ed_6b_9ea', '3ed_6b_1ea', '3ed_26b_6ea', '3ed_26b_3ea', '3ed_26b_8ea', '3ed_26b_11ea', '3ed_26b_5ea', '3ed_26b_2ea', '3ed_26b_7ea', '3ed_26b_4ea', '3ed_26b_10ea', '3ed_26b_9ea', '3ed_26b_1ea', '3ed_25b_6ea', '3ed_25b_3ea', '3ed_25b_8ea', '3ed_25b_11ea', '3ed_25b_5ea', '3ed_25b_2ea', '3ed_25b_7ea', '3ed_25b_4ea', '3ed_25b_10ea', '3ed_25b_9ea', '3ed_25b_1ea', '3ed_24b_6ea', '3ed_24b_3ea', '3ed_24b_8ea', '3ed_24b_11ea', '3ed_24b_5ea', '3ed_24b_2ea', '3ed_24b_7ea', '3ed_24b_4ea', '3ed_24b_10ea', '3ed_24b_9ea', '3ed_24b_1ea', '3ed_1b_6ea', '3ed_1b_3ea', '3ed_1b_8ea', '3ed_1b_11ea', '3ed_1b_5ea', '3ed_1b_2ea', '3ed_1b_7ea', '3ed_1b_4ea', '3ed_1b_10ea', '3ed_1b_9ea', '3ed_1b_1ea', '3ed_23b_6ea', '3ed_23b_3ea', '3ed_23b_8ea', '3ed_23b_11ea', '3ed_23b_5ea', '3ed_23b_2ea', '3ed_23b_7ea', '3ed_23b_4ea', '3ed_23b_10ea', '3ed_23b_9ea', '3ed_23b_1ea', '3ed_17b_6ea', '3ed_17b_3ea', '3ed_17b_8ea', '3ed_17b_11ea', '3ed_17b_5ea', '3ed_17b_2ea', '3ed_17b_7ea', '3ed_17b_4ea', '3ed_17b_10ea', '3ed_17b_9ea', '3ed_17b_1ea', '3ed_22b_6ea', '3ed_22b_3ea', '3ed_22b_8ea', '3ed_22b_11ea', '3ed_22b_5ea', '3ed_22b_2ea', '3ed_22b_7ea', '3ed_22b_4ea', '3ed_22b_10ea', '3ed_22b_9ea', '3ed_22b_1ea', '3ed_16b_6ea', '3ed_16b_3ea', '3ed_16b_8ea', '3ed_16b_11ea', '3ed_16b_5ea', '3ed_16b_2ea', '3ed_16b_7ea', '3ed_16b_4ea', '3ed_16b_10ea', '3ed_16b_9ea', '3ed_16b_1ea', '5ed_21b_6ea', '5ed_21b_3ea', '5ed_21b_8ea', '5ed_21b_11ea', '5ed_21b_5ea', '5ed_21b_2ea', '5ed_21b_7ea', '5ed_21b_4ea', '5ed_21b_10ea', '5ed_21b_9ea', '5ed_21b_1ea', '5ed_20b_6ea', '5ed_20b_3ea', '5ed_20b_8ea', '5ed_20b_11ea', '5ed_20b_5ea', '5ed_20b_2ea', '5ed_20b_7ea', '5ed_20b_4ea', '5ed_20b_10ea', '5ed_20b_9ea', '5ed_20b_1ea', '5ed_6b_6ea', '5ed_6b_3ea', '5ed_6b_8ea', '5ed_6b_11ea', '5ed_6b_5ea', '5ed_6b_2ea', '5ed_6b_7ea', '5ed_6b_4ea', '5ed_6b_10ea', '5ed_6b_9ea', '5ed_6b_1ea', '5ed_26b_6ea', '5ed_26b_3ea', '5ed_26b_8ea', '5ed_26b_11ea', '5ed_26b_5ea', '5ed_26b_2ea', '5ed_26b_7ea', '5ed_26b_4ea', '5ed_26b_10ea', '5ed_26b_9ea', '5ed_26b_1ea', '5ed_25b_6ea', '5ed_25b_3ea', '5ed_25b_8ea', '5ed_25b_11ea', '5ed_25b_5ea', '5ed_25b_2ea', '5ed_25b_7ea', '5ed_25b_4ea', '5ed_25b_10ea', '5ed_25b_9ea', '5ed_25b_1ea', '5ed_24b_6ea', '5ed_24b_3ea', '5ed_24b_8ea', '5ed_24b_11ea', '5ed_24b_5ea', '5ed_24b_2ea', '5ed_24b_7ea', '5ed_24b_4ea', '5ed_24b_10ea', '5ed_24b_9ea', '5ed_24b_1ea', '5ed_1b_6ea', '5ed_1b_3ea', '5ed_1b_8ea', '5ed_1b_11ea', '5ed_1b_5ea', '5ed_1b_2ea', '5ed_1b_7ea', '5ed_1b_4ea', '5ed_1b_10ea', '5ed_1b_9ea', '5ed_1b_1ea', '5ed_23b_6ea', '5ed_23b_3ea', '5ed_23b_8ea', '5ed_23b_11ea', '5ed_23b_5ea', '5ed_23b_2ea', '5ed_23b_7ea', '5ed_23b_4ea', '5ed_23b_10ea', '5ed_23b_9ea', '5ed_23b_1ea', '5ed_17b_6ea', '5ed_17b_3ea', '5ed_17b_8ea', '5ed_17b_11ea', '5ed_17b_5ea', '5ed_17b_2ea', '5ed_17b_7ea', '5ed_17b_4ea', '5ed_17b_10ea', '5ed_17b_9ea', '5ed_17b_1ea', '5ed_22b_6ea', '5ed_22b_3ea', '5ed_22b_8ea', '5ed_22b_11ea', '5ed_22b_5ea', '5ed_22b_2ea', '5ed_22b_7ea', '5ed_22b_4ea', '5ed_22b_10ea', '5ed_22b_9ea', '5ed_22b_1ea', '5ed_16b_6ea', '5ed_16b_3ea', '5ed_16b_8ea', '5ed_16b_11ea', '5ed_16b_5ea', '5ed_16b_2ea', '5ed_16b_7ea', '5ed_16b_4ea', '5ed_16b_10ea', '5ed_16b_9ea', '5ed_16b_1ea', '2ed_21b_6ea', '2ed_21b_3ea', '2ed_21b_8ea', '2ed_21b_11ea', '2ed_21b_5ea', '2ed_21b_2ea', '2ed_21b_7ea', '2ed_21b_4ea', '2ed_21b_10ea', '2ed_21b_9ea', '2ed_21b_1ea', '2ed_20b_6ea', '2ed_20b_3ea', '2ed_20b_8ea', '2ed_20b_11ea', '2ed_20b_5ea', '2ed_20b_2ea', '2ed_20b_7ea', '2ed_20b_4ea', '2ed_20b_10ea', '2ed_20b_9ea', '2ed_20b_1ea', '2ed_6b_6ea', '2ed_6b_3ea', '2ed_6b_8ea', '2ed_6b_11ea', '2ed_6b_5ea', '2ed_6b_2ea', '2ed_6b_7ea', '2ed_6b_4ea', '2ed_6b_10ea', '2ed_6b_9ea', '2ed_6b_1ea', '2ed_26b_6ea', '2ed_26b_3ea', '2ed_26b_8ea', '2ed_26b_11ea', '2ed_26b_5ea', '2ed_26b_2ea', '2ed_26b_7ea', '2ed_26b_4ea', '2ed_26b_10ea', '2ed_26b_9ea', '2ed_26b_1ea', '2ed_25b_6ea', '2ed_25b_3ea', '2ed_25b_8ea', '2ed_25b_11ea', '2ed_25b_5ea', '2ed_25b_2ea', '2ed_25b_7ea', '2ed_25b_4ea', '2ed_25b_10ea', '2ed_25b_9ea', '2ed_25b_1ea', '2ed_24b_6ea', '2ed_24b_3ea', '2ed_24b_8ea', '2ed_24b_11ea', '2ed_24b_5ea', '2ed_24b_2ea', '2ed_24b_7ea', '2ed_24b_4ea', '2ed_24b_10ea', '2ed_24b_9ea', '2ed_24b_1ea', '2ed_1b_6ea', '2ed_1b_3ea', '2ed_1b_8ea', '2ed_1b_11ea', '2ed_1b_5ea', '2ed_1b_2ea', '2ed_1b_7ea', '2ed_1b_4ea', '2ed_1b_10ea', '2ed_1b_9ea', '2ed_1b_1ea', '2ed_23b_6ea', '2ed_23b_3ea', '2ed_23b_8ea', '2ed_23b_11ea', '2ed_23b_5ea', '2ed_23b_2ea', '2ed_23b_7ea', '2ed_23b_4ea', '2ed_23b_10ea', '2ed_23b_9ea', '2ed_23b_1ea', '2ed_17b_6ea', '2ed_17b_3ea', '2ed_17b_8ea', '2ed_17b_11ea', '2ed_17b_5ea', '2ed_17b_2ea', '2ed_17b_7ea', '2ed_17b_4ea', '2ed_17b_10ea', '2ed_17b_9ea', '2ed_17b_1ea', '2ed_22b_6ea', '2ed_22b_3ea', '2ed_22b_8ea', '2ed_22b_11ea', '2ed_22b_5ea', '2ed_22b_2ea', '2ed_22b_7ea', '2ed_22b_4ea', '2ed_22b_10ea', '2ed_22b_9ea', '2ed_22b_1ea', '2ed_16b_6ea', '2ed_16b_3ea', '2ed_16b_8ea', '2ed_16b_11ea', '2ed_16b_5ea', '2ed_16b_2ea', '2ed_16b_7ea', '2ed_16b_4ea', '2ed_16b_10ea', '2ed_16b_9ea', '2ed_16b_1ea'] 
     """
-    complete = jobResubmit(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
+    complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           cluster, route='results', add_methods=add_methods
-                           )
-    """
-    #monitor_jobs = ['test_1',]
-    complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
-                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           #cluster, route='Benchmark/results', add_methods=add_methods,
                            cluster, route='results', add_methods=add_methods,
-                           max_queue=200
+                           max_queue=200, results_json='results.json'
     )
+    """
     
-
-    """
-    #tmp.qsub file for listings
-    #path/to/qsub/file/
-
-    # comment out qsub in error_mexc_dyes_v1.py    
-    return bool, resubmissions, qsub_dir
-    # in resubmit
-    bool, resubmissions, qsub_dir
-    * use queue data structure
-    qsub_list.enque(qsub_dir)
-
-    # call function in job_resubmit on sleep time
-    cmd = 'qstat -u \"user_var\" > tmp.qstat'
-    subprocess.call(cmd, shell=True)
-    with open('tmp.qstat', 'r') as fp:
-        running = fp.readlines()[-1:0]
-        running_tot = (len(fp.readlines()) - 5)
-
-    for i in range(max_qsub - running):
-        qsub_path = qsub_list.dequeue()
-        qsub(qsub_path)
-    """
     
     #gather_general_smiles(monitor_jobs)
-    
-    #gather_excitation_data('./results', monitor_jobs, add_methods, method_mexc, basis_set_mexc)
+    add_methods = {
+        "methods" : ["bhandhlyp", "PBE1PBE"],
+        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
+        "mem_com" : ["1600", "1600"],
+        "mem_pbs" : ["10", "10"]
+    }
+
+    # DS1 update results.json before data analysis in src/gather_results.py
+    # gather_excitation_data('./results_cp/ds1_results', ds1, add_methods, method_mexc, basis_set_mexc, results_json='../ds1_results.json')
+    # DS2
+    gather_excitation_data('./results', ds2, add_methods, method_mexc, basis_set_mexc, results_json='results.json')
     '''
     module load python
-    source activate rdkit
-    home6/r2532/chem/dyemoleculecata/
     '''
-main()
+if __name__ == "__main__":
+    main()
 
-# rsync --update -ra dir1/ dir2
+# rsync --update -ra dir1 dir2
