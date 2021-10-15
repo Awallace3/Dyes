@@ -1,0 +1,26 @@
+#!/bin/sh
+#PBS -N mexc_o_o
+#PBS -S /bin/bash
+#PBS -W umask=022
+#PBS -j oe
+#PBS -m abe
+#PBS -l cput=1000:00:00
+#PBS -l mem=10gb
+#PBS -l nodes=1:ppn=2
+#PBS -l file=100gb
+
+export g09root=/usr/local/apps/
+. $g09root/g09/bsd/g09.profile
+
+scrdir=/tmp/bnp.$PBS_JOBID
+
+mkdir -p $scrdir
+export GAUSS_SCRDIR=$scrdir
+export OMP_NUM_THREADS=1
+
+printf 'exec_host = '
+head -n 1 $PBS_NODEFILE
+
+cd $PBS_O_WORKDIR
+
+/usr/local/apps/bin/g09setup mex.com mex.out

@@ -1,0 +1,30 @@
+exec_host = cn011
+11
+Using AVX version
+Error: software termination
+Error: software termination
+   rax 0000000000000020, rbx 00007fff948daca0, rcx 00007fff946ea808
+   rdx 00007fff94926448, rsp 00007ffffffefb20, rbp 00007ffffffefd80
+   rsi 0000000000000003, rdi 00000000000001a0, r8  0000000000000015
+   r9  000000000000001f, r10 00000000000000a8, r11 0000000000000015
+   r12 00007fff948e6160, r13 0000000000000f68, r14 000000000000000d
+   r15 0000000000000004
+   rax fffffffffffffffc, rbx 00007fffffff5c30, rcx 00007ffff75db24a
+   rdx 0000000000000000, rsp 00007fffffff5bf8, rbp 0000000000000001
+   rsi 00007fffffff5c30, rdi 000000000000dac4, r8  00007ffff78bd3c0
+   r9  00007fffffff5b50, r10 0000000000000000, r11 0000000000000246
+   r12 00007fffffff5c50, r13 000000000000007b, r14 0000000000000000
+   r15 00007fffffffc620
+  /lib64/libpthread.so.0(+0x11c00) [0x7ffff7bcfc00]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x86a510]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x5fa578]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x527006]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x440751]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x4493d5]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x4b58a1]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x423695]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x413372]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x40bd32]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x40bc34]
+  /lib64/libc.so.6(__libc_start_main+0xf5) [0x7ffff753fa35]
+  /usr/local/apps/gaussian/g16-b01-avx//g16/l401.exe() [0x4063a9]

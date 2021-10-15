@@ -2,6 +2,8 @@ import glob
 import os
 import subprocess
 
+from numpy.lib.twodim_base import triu_indices_from
+
 def fix_mex():
     os.chdir("../calc_zone")
     directories = glob.glob("geom*")
@@ -53,7 +55,18 @@ def fix_mexc():
                 subprocess.call("touch " + create_o, shell=True)
         os.chdir("../..")
 
+def remove_exc(monitor_jobs, dir_name='MO26X', path_dir='../Benchmark/results'):
+    os.chdir(path_dir)
+    for i in monitor_jobs:
+        os.chdir(i)
+        cmd = 'rm -r %s' % path_dir
+        print(os.getcwd(), cmd)
+        #subprocess.call(cmd, shell=True)
+        os.chdir("..")
+
+
 def main():
     #fix_mex()
-    fix_mexc()
+    #fix_mexc()
+    remove_exc(['AP25'])
 main()

@@ -106,6 +106,47 @@ class Molecule:
     def __str__(self):
        return self.toJSON()
 
+class Molecule_BM(Molecule):
+    def __init__(self):
+        super().__init__()
+        Molecule.__init__(self)
+        self.exp = 0
+
+    def setExp(self, exp):
+        self.exp = exp
+
+    def giveData(self, data):
+        
+        self.exp = data["exp"]
+        self.name = data["name"]
+        self.LUMO = data["LUMO"]
+        self.HOMO = data["HOMO"]
+        self.excitations = data["excitations"]
+        self.SMILES = data["SMILES"]
+        self.generalSMILES = data["generalSMILES"]
+        self.parts = data["parts"]
+        self.localName = data["localName"]
+
+    def setData(self, fileName):
+        with open(fileName, 'r') as json_file:
+            data = json.load(json_file)
+        
+        if 'exp' in data:
+            self.exp = data["exp"]
+        else: 
+            self.exp = 0
+        
+        self.name = data["name"]
+        self.LUMO = data["LUMO"]
+        self.HOMO = data["HOMO"]
+        self.excitations = data["excitations"]
+        self.SMILES = data["SMILES"]
+        self.generalSMILES = data["generalSMILES"]
+        self.parts = data["parts"]
+        self.localName = data["localName"]
+        
+
+
 class MoleculeList():
     def __init__(self):
         self.molecules = []
@@ -159,6 +200,8 @@ class MoleculeList():
             if mol.name == molecule.name:
                 #print('updating existing Molecule information in results.json')
                 self.molecules[i] = molecule
+                print('updating...')
+                print(len(self.molecules))
                 found = True
                 break
 
@@ -192,4 +235,10 @@ class MoleculeList():
     
     def __str__(self):
        return self.toJSON()
+"""
+class MoleculeList_BM(MoleculeList):
+    def __init__(self):
+        super().__init__()
+        MoleculeList.__init__(self)
+"""
     

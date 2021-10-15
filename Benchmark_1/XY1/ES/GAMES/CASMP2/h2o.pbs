@@ -1,0 +1,20 @@
+#PBS -S /bin/csh
+#PBS -N gamess
+#PBS -j oe
+#PBS -W umask=022
+#PBS -l walltime=1:00:00
+#PBS -l mem=1gb
+#PBS -l nodes=1:ppn=4
+
+source /usr/local/apps/intel/17/bin/compilervars.csh intel64
+source /usr/local/apps/intel/17/mkl/bin/mklvars.csh intel64
+setenv PATH /usr/local/apps/bin:$PATH
+setenv TMPDIR /tmp/pbs.$PBS_JOBID
+
+mkdir $TMPDIR
+
+cd $PBS_O_WORKDIR
+rungms h2o.inp  20160818 4 >& h2o.out
+
+rm -rf $TMPDIR
+

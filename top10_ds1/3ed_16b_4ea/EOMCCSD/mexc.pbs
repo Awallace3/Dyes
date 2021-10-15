@@ -1,0 +1,23 @@
+#!/bin/sh
+#PBS -N mexc
+#PBS -S /bin/bash
+#PBS -j oe
+#PBS -m abe
+#PBS -l mem=10gb
+#PBS -q r410
+
+module load pbspro molpro
+
+export WORKDIR=$PBS_O_WORKDIR
+export TMPDIR=/tmp/$USER/$PBS_JOBID
+mkdir -p $TMPDIR
+
+cd $WORKDIR
+
+date
+hostname
+molpro -t 4 mexc.com
+date
+
+rm -rf $TMPDIR
+

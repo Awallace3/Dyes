@@ -48,6 +48,13 @@ def gaussianInputFiles(output_num, method_opt,
     if dir_name=='':
         dir_name=baseName
     
+    if solvent != '':
+        # dir_name += '_%s'%solvent
+        print(dir_name)
+        solvent_line = 'SCRF=(Solvent=%s)' % solvent
+        print(dir_name)
+    print(dir_name)
+    
     if data == '':
         with open('tmp.txt') as fp:
             data = fp.read()
@@ -62,7 +69,7 @@ def gaussianInputFiles(output_num, method_opt,
             if solvent == '':
                 fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
             else:
-                fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
+                fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent_line ))
 
             fp.write("\n\n")
             fp.write("Name ModRedundant - Minimalist working constrained optimisation\n")
@@ -102,7 +109,7 @@ def gaussianInputFiles(output_num, method_opt,
             if solvent == '':
                 fp.write("#N %s/%s %s" % (method_opt, basis_set_opt, procedure))
             else:
-                fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent))
+                fp.write("#N %s/%s %s %s" % (method_opt, basis_set_opt, procedure, solvent_line))
 
             fp.write("\n\n")
             fp.write("Name \n")
@@ -518,7 +525,7 @@ def qsub(path='.'):
 
 def make_exc(method_mexc, basis_set_mexc, 
                 mem_com_mexc, mem_pbs_mexc, cluster,
-                geomDirName
+                geomDirName, solvent=''
                 ):
     
     #baseName = 'cam-b3lyp'
@@ -528,6 +535,8 @@ def make_exc(method_mexc, basis_set_mexc,
     else:
         baseName = 'mexc'
         dir_name = method_mexc.lower()
+    if solvent != '':
+        dir_name += '_%s' % solvent
     if os.path.exists(dir_name):
         print('\n%s directory already exists\n' % (dir_name))
         return 
@@ -536,14 +545,16 @@ def make_exc(method_mexc, basis_set_mexc,
     output_num = 0
     #basis_set_mexc='CAM-B3LYP'
 
-    #solvent = 'SCRF=(Solvent=Dichloromethane)'
-    solvent=''
-    outName = geomDirName 
+    #solvent = 'SCRF=(Solvent=dichloromethane)'
+
+    
+    
+    outName = geomDirName + '_%s_%s' % (baseName, solvent)
     gaussianInputFiles(output_num, method_mexc, 
                     basis_set_mexc, mem_com_mexc, 
                     mem_pbs_mexc, cluster,
                     baseName=baseName, procedure=procedure,
-                    data='', dir_name=dir_name, solvent='', 
+                    data='', dir_name=dir_name, solvent=solvent, 
                     outName=outName
                     )
     path = '%s' % dir_name
@@ -581,7 +592,7 @@ def main(index,
          method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
          method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
          resubmissions, delay,
-         cluster, geomDirName, xyzSmiles=True
+         cluster, geomDirName, xyzSmiles=True, solvent=''
          ):
 
     out_files = glob.glob("*.out*")
@@ -590,6 +601,11 @@ def main(index,
         qsub_dir = 'mexc'
     else:
         qsub_dir = method_mexc
+    if solvent != '':
+        qsub_dir += '_%s'%solvent
+
+    print("v2 %s %s" % (solvent, qsub_dir))
+
     if len(out_files) > 0:
 
         filename = out_files[-1]
@@ -662,7 +678,7 @@ def main(index,
             print("entering make_exc")
             make_exc(method_mexc, basis_set_mexc, 
                             mem_com_mexc, mem_pbs_mexc, cluster,
-                            geomDirName
+                            geomDirName, solvent
                             )
             
             os.remove("tmp.txt")
