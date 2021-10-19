@@ -43,6 +43,7 @@ def add_qsub_dir(qsub_dir, geom_dir, path_qsub_queue='../../qsub_queue'):
     if qsub_dir == 'None':
         return 0
     elif qsub_dir == './':
+        print("hello")
         qsub_path = geom_dir + '\n'
     else:
         qsub_path = "%s/%s\n" % (geom_dir, qsub_dir)
@@ -56,29 +57,34 @@ def fix_broken(resubmit, path_results='../results'):
     json = os.getcwd() + '/..'
     for i in resubmit:
         os.chdir(i)
-        print("i")
+        print(i)
         out_files = glob.glob("*.out*")
         out_completion = glob.glob("mex_o.*")
         if len(out_files) == 0 and len(out_completion) == 0:
             print("\topt")
             add_qsub_dir('./', i.lower())
-            cmd = 'qsub mex.pbs'
-            print(os.getcwd(), cmd)
-            subprocess.call(cmd, shell=True)
-        """
+            # cmd = 'qsub mex.pbs'
+            # print(os.getcwd(), cmd)
+            # subprocess.call(cmd, shell=True)
+        
         elif len(out_files) >= 1 and len(out_completion) == 1:
             cmd = 'touch name_o.o100000'
-            print("\tfiles")
+            print("\tfiles", i)
             subprocess.call(cmd, shell=True)
         else:
-            os.chdir("mexc")
-            out_files = glob.glob("*.out*")
-            out_completion = glob.glob("mex_o.*")
-            if len(out_files) == 0 and len(out_completion) == 0:
-                cmd = 'qsub mexc.pbs'
-                print(os.getcwd(), cmd)
-                subprocess.call(cmd, shell=True)
-        """
+            if os.path.exists('mexc'):
+                os.chdir("mexc")
+                out_files = glob.glob("*.out*")
+                out_completion = glob.glob("mex_o.*")
+                if len(out_files) == 0 and len(out_completion) == 0:
+                    print("fix_broken mexc else", i)
+                    # add_qsub_dir('./', i.lower())
+                    # cmd = 'qsub mexc.pbs'
+                    # print(os.getcwd(), cmd)
+                    # subprocess.call(cmd, shell=True)
+            else: 
+                print('\tno mexc')
+        
             
 
         os.chdir("..")
@@ -204,7 +210,7 @@ if __name__ == "__main__":
     dirs_to_check = ['mexc', 'bhandhlyp', 'pbe1pbe']
     #fix_mexc(failed)
 
-    failed_gathered_excitations(identified_zeros, dirs_to_check, qsubFailed1=True)
+    # failed_gathered_excitations(identified_zeros, dirs_to_check, qsubFailed1=True)
     # failed_gathered_excitations(monitor_jobs, dirs_to_check)
 
     #failed_gathered_excitations(failed, dirs_to_check, qsubFailed1=False)

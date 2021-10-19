@@ -726,7 +726,6 @@ def main():
                            cluster, route='results', add_methods=add_methods,
                            max_queue=200, results_json='results.json'
     )
-    """
     complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -735,6 +734,7 @@ def main():
                            max_queue=200, results_json='results.json',
                            identify_zeros=True, create_smiles=False
     )
+    """
     
     
     #gather_general_smiles(monitor_jobs)
@@ -747,9 +747,11 @@ def main():
 
     # DS1 update results.json before data analysis in src/gather_results.py
     # gather_excitation_data('./results_cp/ds1_results', ds1, add_methods, method_mexc, basis_set_mexc, results_json='../ds1_results.json')
-    
+
     # DS2
-    # gather_excitation_data('./results', ds2, add_methods, method_mexc, basis_set_mexc, results_json='results.json')
+    gather_excitation_data('./results', ds2, add_methods, method_mexc, basis_set_mexc, results_json='results.json')
+
+    # DS_ALL
     '''
     module load python
     '''
