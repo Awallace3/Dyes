@@ -23,7 +23,11 @@ json_pandas_molecules dataframe
 
 def json_pandas_molecule(path_results):
     dat = pd.read_json(path_results)
+<<<<<<< HEAD
+    print('dat', dat)
+=======
     # print('dat', dat)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
     FIELDS = ["name", "localName", "generalSMILES"]
     df = pd.json_normalize(dat["molecules"])
@@ -40,6 +44,30 @@ def json_pandas_molecule(path_results):
     df = df [[
     'name', 'exc', 'nm','osci', 'method_basis_set', 'orbital_Numbers', 'HOMO','LUMO', 'generalSMILES', 'localName', 'parts',  'SMILES' 
     ]]
+    
+    return df
+
+def json_pandas_molecule_BM(path_results):
+    dat = pd.read_json(path_results)
+    #print(path_results)
+    
+
+    FIELDS = ["name", "localName", "generalSMILES"]
+    df = pd.json_normalize(dat["molecules"])
+    df[FIELDS]
+    #['A', 'B', 'C'] <-this is your columns order
+    df = df[[
+            'name', 'parts',
+            'generalSMILES','localName',
+            'SMILES', 'excitations',
+            'HOMO', 'LUMO', 'exp'
+            ]]
+    df = pd.json_normalize(data=dat['molecules'], record_path='excitations', 
+                            meta=['name', 'HOMO','LUMO', 'SMILES', 'generalSMILES','localName', 'parts', 'exp' ])
+    df = df [[
+    'name', 'exc', 'nm','osci', 'method_basis_set', 'orbital_Numbers', 'HOMO','LUMO', 'generalSMILES', 'localName', 'parts',  'SMILES', 'exp' 
+    ]]
+    #print((df,'AAAAAAAAAAAAAAAA'))
     return df
 
 def json_pandas_molecule_BM(path_results):
@@ -103,6 +131,7 @@ def gen_allowed_dict (df):
 
 def acquire_averages(df, piece_dict, allowed_dict ):
     for key, val in  piece_dict.items():
+        #print((key,val))
         data = {
             'nm': [],
             'osci': [],
@@ -332,7 +361,14 @@ def df_molecules_BM_to_df_method_basisset(df_molecules, method_basis_set=[]):
         "Name": [],
     }
     for i in method_basis_set:
+<<<<<<< HEAD
+        print((i,'BBBBBBBBBBB'))
+
         df[i] = []
+    
+=======
+        df[i] = []
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     df['Exp'] = []
     df = pd.DataFrame(df)
     #print(df)
@@ -373,7 +409,12 @@ def df_molecules_BM_to_df_method_basisset(df_molecules, method_basis_set=[]):
             #df.ix[df['id'] == 12, ['uid','gid']] = ['IN','IN-1']
             for j in method_basis_set:                    
                 if str(j) == r1['method_basis_set']:
+<<<<<<< HEAD
+                    if r1['exc'] == 1:  
+                        #print(j)                      
+=======
                     if r1['exc'] == 1:                        
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
                         #df.loc[df['Name'] == r1['name'], [j]] = [r1['nm']]  
                         df.loc[df['Name'] == r1['name'], [j, 'Exp']] = [r1['nm'], r1['exp']]  
     #nm = df.sort_values([method_basis_set[0]], ascending=(False))
@@ -386,7 +427,15 @@ def convert_df_nm_to_eV(df, columns_convert=["Exp"]):
     Joules_to_eV = 1.602E-19
 
     for i in columns_convert:
+<<<<<<< HEAD
+        
         df[i] = df[i].apply(lambda x: h*c/(x*Joules_to_eV))
+        ###### Taylor edit that should be deleted #########
+        df[i] = df[i]
+
+=======
+        df[i] = df[i].apply(lambda x: h*c/(x*Joules_to_eV))
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     return df
 
 def convert_df_eV_to_nm(df, columns_convert=["Exp"]):
@@ -407,9 +456,12 @@ def plot_methods(df,
         outname='dye_plot_weighted.png',
         exp=False,
         weights=[0.6594543456, 0.3405456544],
+<<<<<<< HEAD
+=======
         units='eV',
         sort_by='Weighted Avg.',
         transparent=False,
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
     ):
     # 72 hours for calculation for each Dye vs. $10k and 3mnths
@@ -426,10 +478,16 @@ def plot_methods(df,
         dif = (df['Weighted Avg.'] - df['Exp']).abs().mean()    
         print("average difference", dif)
         headers_colors.insert( 3, ['Exp.', 'black'])
+<<<<<<< HEAD
+        
+    else:
+        df = df.sort_values(['Weighted Avg.'], ascending=False)
+=======
         df = df.sort_values(sort_by, ascending=False)
         
     else:
         df = df.sort_values([sort_by], ascending=False)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     
     
     fig = plt.figure(dpi=400)
@@ -440,6 +498,17 @@ def plot_methods(df,
         # print(col)
         # print(headers_colors[ind][0])
         # print(list(df[col]))
+<<<<<<< HEAD
+        plt.plot(
+            dye_cnt, list(df[col]),
+            label=headers_colors[ind][0],
+            color=headers_colors[ind][1], 
+            linewidth=1
+        )
+    plt.title('Methods on Theoretical Dyes')
+    plt.xlabel("Theoretical Dyes Sorted by the Weighted Average Excitation Energy")
+    plt.ylabel("Excitation Energy (nm)")
+=======
         try:
             plt.plot(
                 dye_cnt, list(df[col]),
@@ -456,12 +525,16 @@ def plot_methods(df,
     # plt.title('Methods on Theoretical Dyes')
     plt.xlabel("Theoretical Dyes Sorted by the Weighted Average Excitation Energy")
     plt.ylabel("Excitation Energy (%s)" % units)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     plt.grid(color='grey', which='major',
     axis='y',
     linestyle='-', linewidth=0.2)
     plt.legend()
     print(outname)
     print(os.getcwd())
+<<<<<<< HEAD
+    plt.savefig(outname)
+=======
     plt.savefig(outname, transparent=transparent)
 
 
@@ -532,6 +605,7 @@ def plot_solvents(df, outname, units='eV', exp=True, transparent=True,
         # print(col)
         print(os.getcwd(), k)
         plt.savefig("%s.png" % (k), transparent=transparent)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
 
 
@@ -733,6 +807,11 @@ def benchmarkFlow(path_benchmark="Benchmark/benchmarks.json"):
         "JW1": [2.320036,2.302322,1.910812,2.103091],
     }
     for key, val in unlucky.items():
+<<<<<<< HEAD
+        print((key,val,'Key, Value'))
+        
+=======
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
         row = {
             'Name': key, 
             methods_basissets[0]: val[0],
@@ -782,6 +861,11 @@ def benchamrkPredictPCE(
         "JW1": [2.320036,2.302322,1.910812,2.103091],
     }
     for key, val in unlucky.items():
+<<<<<<< HEAD
+        #print(val)
+        
+=======
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
         row = {
             'Name': key, 
             methods_basissets[0]: val[0],
@@ -796,6 +880,16 @@ def benchamrkPredictPCE(
     
     
     print(df)
+<<<<<<< HEAD
+    
+    ipce = pd.read_csv(path_ipce)
+    ipce['IPCE'] = ipce['IPCE'].astype(float)
+    ipce['Abs. Max'] = ipce['Abs. Max'].astype(float)
+    ipce = convert_df_nm_to_eV(ipce, ['IPCE', 'Abs. Max'])
+    ipce = ipce.sort_values(['Name'], axis=0).reset_index(drop=True)
+    del ipce['Name']
+    df = df.sort_values(['Name'], axis=0).reset_index(drop=True)
+=======
     
     ipce = pd.read_csv(path_ipce)
     ipce['IPCE'] = ipce['IPCE'].astype(float)
@@ -1115,7 +1209,77 @@ def benchmarks_solvation(
         df2.to_latex('%s.tex'%output_csv, index=False)
         
     # print(df)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     
+    df2 = pd.concat([df, ipce], axis=1).reindex(ipce.index)
+    
+
+    #print(ipce['Name'])
+    #print(df['Name'])
+    avg_ipce_from_abs_max = (df2['Abs. Max'] - df2['IPCE']).mean()
+    print('avg:', avg_ipce_from_abs_max)
+    df2['Comp. IPCE'] = df2['Weighted Avg.'] - avg_ipce_from_abs_max
+    h = 6.626E-34
+    c = 3E17
+    J_to_eV = 1.602E-19
+    del df2['CAM-B3LYP/6-311G(d,p)']
+    del df2['bhandhlyp/6-311G(d,p)']
+    del df2['PBE1PBE/6-311G(d,p)']
+    del df2['Exp']
+
+    FF_h = 0.75
+    FF_l = 0.60
+    I_o = 1
+    energy_cut_off = 400
+    #energy_cut_off = h*c/(energy_cut_off*J_to_eV)
+
+    
+    df2['Comp. Jsc'] = ((h*c/(df2['Comp. IPCE'] * J_to_eV)) - energy_cut_off)/100*7.5
+    df2['Comp. Voc_h'] = (df2['Weighted Avg.'] - 0.4) 
+    df2['Comp. Voc_l'] = (df2['Weighted Avg.'] - 0.6) 
+
+    df2['Comp. PCE Voc_l FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_l / I_o
+    df2['Comp. PCE Voc_l FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_h / I_o
+    df2['Comp. PCE Voc_h FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_l / I_o
+    df2['Comp. PCE Voc_h FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_h / I_o
+
+    df2['Exp. PCE Voc_l FF_l'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_l 
+    df2['Exp. PCE Voc_l FF_h'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_h
+    df2['Exp. PCE Voc_h FF_l'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_l
+    df2['Exp. PCE Voc_h FF_h'] = (((h*c)/(df2['IPCE'] * J_to_eV) - energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_h
+
+    """
+    df2['Comp. Jsc'] = h*c/((df2['Comp. IPCE'] + energy_cut_off)*J_to_eV) /100*7.5
+    df2['Comp. Voc_h'] = (df2['Weighted Avg.'] - 0.4) 
+    df2['Comp. Voc_l'] = (df2['Weighted Avg.'] - 0.6) 
+
+    df2['Comp. PCE Voc_l FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_l / I_o
+    df2['Comp. PCE Voc_l FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_l'] * FF_h / I_o
+    df2['Comp. PCE Voc_h FF_l'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_l / I_o
+    df2['Comp. PCE Voc_h FF_h'] = df2['Comp. Jsc'] * df2['Comp. Voc_h'] * FF_h / I_o
+
+    df2['Exp. PCE Voc_l FF_l'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_l 
+    df2['Exp. PCE Voc_l FF_h'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.6) * FF_h
+    df2['Exp. PCE Voc_h FF_l'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_l
+    df2['Exp. PCE Voc_h FF_h'] = ((df2['IPCE'] + energy_cut_off) / 100*7.5) * (df2['Abs. Max'] - 0.4) * FF_h
+    """
+
+
+    df2.to_csv("pce_predict.csv")
+    
+    print(df2)
+    
+
+def df_differences_exp(df, methods):
+    for i in methods:
+        print(i)
+        df['Dif. %s'%i] = df[i] - df['Exp']
+        print('Avg. Dif. %s'%i, df['Dif. %s'%i].mean(axis=0))
+    return df
+    
+### mean absolute error
+
+
 def main():
     
     location = os.getcwd().split('/')[-1]
@@ -1125,6 +1289,15 @@ def main():
         os.chdir("..")
     else:
         print("need to be in src, results or Dyes directory")
+<<<<<<< HEAD
+    # need to add a 
+    #df_molecules = json_pandas_molecule('Benchmark/benchmarks.json')
+    df_molecules = json_pandas_molecule_BM('Benchmark/benchmarks.json')
+    
+    
+    benchmarkFlow()
+    #benchamrkPredictPCE()
+=======
     """"""    
     # Theoretical data
     methods_basissets=['CAM-B3LYP/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
@@ -1153,12 +1326,32 @@ def main():
     
     #benchmarkFlow()
     # benchamrkPredictPCE()
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
         
 
 
     # df_method_baisset set 3 lines below
     
     methods_basissets = ['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)']
+<<<<<<< HEAD
+    #methods_basissets =['mexc_dichloromethane/6-311G(d,p)','bhandhlyp_dichloromethane/6-311G(d,p)','pbe1pbe_dichloromethane/6-311G(d,p)']
+    #methods_basissets =["mexc_nndimethylformamide/6-311G(d,p)","bhandhlyp_nndimethylformamide/6-311G(d,p)","pbe1pbe_nndimethylformamide/6-311G(d,p)"]
+    #methods_basissets = ['mexc_tetrahydrofuran/6-311G(d,p)','bhandhlyp_tetrahydrofuran/6-311G(d,p)','pbe1pbe_tetrahydrofuran/6-311G(d,p)']
+    df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
+    convert_lst = methods_basissets.copy()
+    convert_lst.append("Exp")
+    #df = convert_df_nm_to_eV(df, convert_lst)
+    print(df)
+    #df.to_csv("benchmarks_nosolv_nm.csv", index=False) 
+    df = df_differences_exp(df, methods_basissets)
+    print(df)
+    #df.to_csv("benchmarks_nosolv_differ_nm.csv", index=False) 
+    df = df_molecules_to_df_method_basisset(df_molecules, methods_basissets)
+    df.to_latex("test.tex")
+#    plot_methods_BM(df)
+
+   # df.to_csv("benchmarks_tetra.csv", index=False)
+=======
     #df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
     #convert_lst = methods_basissets.copy()
     #convert_lst.append("Exp")
@@ -1168,11 +1361,12 @@ def main():
     
     #df = df_molecules_to_df_method_basisset(df_molecules, methods_basissets)
     #df.to_csv("benchmarks.csv", index=False)
+>>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     
     #plot_methods(df)
-    #plot_methods_exp()
-    #df = df_conv_energy(df, 0)
-    #df = df_diff_std(df)
+    plot_methods_exp()
+    df = df_conv_energy(df, 0)
+    df = df_diff_std(df)
     
     """
     """ 
