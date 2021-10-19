@@ -749,6 +749,7 @@ def main():
     add_methods = {
         "methods" : ["bhandhlyp", "PBE1PBE"],
         "basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
+        "solvent" : ["", ''],
         "mem_com" : ["1600", "1600"],
         "mem_pbs" : ["10", "10"]
     }
