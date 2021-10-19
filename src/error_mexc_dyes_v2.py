@@ -509,6 +509,17 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
                     )
 
         #qsub()
+def clean_name(name):
+    return name.replace("-", '_').replace(",", '')
+
+def clean_input_name(method, basis_set, solvent):
+    clean = method
+    if basis_set != '6-311G(d,p)':
+        clean += basis_set.replace("(", '').replace(")", '').replace(",", '_')
+    if solvent != '':
+        clean += "_%s" % (clean_name(solvent))
+    return solvent
+
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
