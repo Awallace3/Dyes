@@ -963,7 +963,7 @@ def benchmarks_dyes_basis_set_out(
         print("working on graph")
         plot_methods(df, weighted_avg=plot_js['weighted_avg'], headers_colors=plot_js['headers_colors'], weights=plot_js['weights'], outname=output_graph, exp=True, sort_by='Exp', transparent=True)
     if output_latex != '':
-        df2 = df.sort_values(methods_basissets[0], ascending=False)    
+        df2 = df.sort_values(methods_basissets[0], ascending=True)    
         df2.to_latex('%s.tex'%output_csv, index=False)
         
     print(df)
@@ -1137,12 +1137,12 @@ def main():
         
         }
 
-    theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )    
+    # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )    
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)    
     """"""
     """"""
     # Benchmark data
-    # benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='test', output_latex='test', output_graph='test')
+    benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm')
     # benchmarks_solvation('Benchmark/benchmarks.json', output_graph='test')
     # benchmarks_solvation('Benchmark/benchmarks.json', )
     """"""
