@@ -203,6 +203,7 @@ if __name__ == "__main__":
 
     identified_zeros =['7ed_21b_9ea', '7ed_25b_11ea', '7ed_23b_9ea', '1ed_21b_9ea', '1ed_6b_5ea', '1ed_24b_10ea', '1ed_1b_8ea', '1ed_23b_6ea', '1ed_23b_4ea', '6ed_21b_11ea', '6ed_21b_10ea', '6ed_21b_9ea', '6ed_20b_9ea', '6ed_26b_6ea', '6ed_26b_7ea', '6ed_22b_11ea', '6ed_22b_9ea', '3ed_21b_7ea', '3ed_21b_9ea', '3ed_20b_8ea', '3ed_26b_3ea', '3ed_26b_5ea', '3ed_26b_4ea', '5ed_21b_9ea', '5ed_26b_11ea', '5ed_26b_2ea', '5ed_26b_4ea', '5ed_1b_1ea', '5ed_22b_6ea', '5ed_22b_3ea', '5ed_22b_10ea', '2ed_21b_11ea', '2ed_20b_9ea', '2ed_26b_11ea', '2ed_26b_7ea', '2ed_25b_5ea', '2ed_22b_11ea', '2ed_22b_10ea', '2ed_22b_9ea']
     
+    print(len(identified_zeros))
     fix_broken(identified_zeros)
 
     #failed = ['7ed_5b_2ea', '7ed_1b_3ea', '3ed_1b_3ea']
@@ -213,7 +214,7 @@ if __name__ == "__main__":
     # failed_gathered_excitations(identified_zeros, dirs_to_check, qsubFailed1=True)
     # failed_gathered_excitations(monitor_jobs, dirs_to_check)
 
-    #failed_gathered_excitations(failed, dirs_to_check, qsubFailed1=False)
+    failed_gathered_excitations(identified_zeros, dirs_to_check, qsubFailed1=False)
 
     #failed_gathered_excitations(monitor_jobs, dirs_to_check)
     
