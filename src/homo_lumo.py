@@ -15,50 +15,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 
-def weighted_avg_calc(
-        df,
-        methods_basissets_avg=['CAM-B3LYP/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)'],
-        debug=False,
-        verbose=False,
-        ):
-    dft1 = df[methods_basissets_avg[0]].to_numpy(dtype='float')
-    dft2 = df[methods_basissets_avg[1]].to_numpy(dtype='float')
-
-    exp = df['Exp'].to_numpy(dtype='float')
-
-    dfts = np.vstack((dft1, dft2)).transpose()
-    #test_co = np.array([0.71, 0.29])
-
-    #print("dfts", dfts)
-    #print(dft1.shape)
-    #print(dft2.shape)
-    if debug:
-        print(dfts, exp)
-        print(dfts.shape, exp.shape)
-    out = np.linalg.lstsq(dfts, exp)
-    # A*x - exp == close to zero
-    # plug in my values for A to test residuals
-    first, *_, last = out
-    if verbose:
-        print('coefficients =',first)
-        print('final = ', dft1[0], first[0], exp[0])
-
-    mult = np.matmul(dfts, first)
-    sub = np.subtract(mult, exp)
-    squared = np.square(sub)
-    summed = np.sum(squared)
-    if verbose:
-        print("residuel =", summed)
-
-    #mult = np.matmul(dfts, test_co)
-    #sub = np.subtract(mult, exp)
-    #squared = np.square(sub)
-    #summed = np.sum(squared)
-    #print("old", summed)
-
-    # say used least-squares fit
-    return first, summed
-
 def RSE(y_true, y_predicted):
     """
     - y_true: Actual values
@@ -153,37 +109,6 @@ def correlation_function(
 
 
     """
-
-
-    """
-    plt.plot(xs, ys, 'b--', label='Test')
-    plt.plot(xs, ys, 'b--', label='Test')
-    #plt.plot(meth_homo, exp_homo, 'k.', label=h[0])
-    #plt.plot(meth_homo2, exp_homo, 'r.', label=h[4])
-    plt.xlabel("Theoretical energies")
-    plt.ylabel("Experiment Energies")
-    plt.legend()
-    plt.show()
-    """
-    """
-    poly = np.polyfit(meth_homo, exp_homo, deg)
-
-    xs = np.arange(-5.5, -7, -0.05)
-    ys = []
-    for x in xs:
-        y = 0
-        for j in range(deg+1):
-            y += poly[j] * x**(deg-j)
-
-        ys.append(y)
-    ys = np.array(ys)
-    plt.plot(xs, ys, 'b--', label='Poly')
-    plt.plot(meth_homo, exp_homo, 'k-')
-    plt.show()
-    """
-
-
-
 
 def main():
     df = pd.read_csv('exp_homo_lumo.csv').dropna()
