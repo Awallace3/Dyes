@@ -24,3 +24,9 @@ og_results.json
 output.log
 *.png
 *.tex
+og_results.json
+*.txt
+tmp*
+results_exc_og.json
+theoretical_e2.csv
+
