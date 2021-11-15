@@ -1,6 +1,8 @@
 import os
 import glob
 import molecule_json
+from molecule_json import Excitation, Excitation_exc
+from ES_extraction import ES_extraction
 
 def cleanLine(line):
     aList = []
@@ -20,9 +22,11 @@ def cleanLine(line):
 def clean_solvent(solvent):
         return solvent.replace('-', '').replace(',', '')
 
-def absorpt(path, method_mexc, basis_set_mexc, solvent=''):
+def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False):
         filename = open(path,'r')
+        
         num = 0
+        
         nregion = False
         excitedState = " Excited State   "
         data = []
@@ -62,11 +66,20 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent=''):
         
         #print(data2)
         excitations = []
+        occVal, virtVal = ES_extraction(path)
+        if occVal == 0 and 0 == virtVal:
+                print(path, occVal, virtVal)
         for n,x in enumerate(data2):
                 #print(x)
                 if x[0] == 'Excited':
                         #print(x)
-                        mol = molecule_json.Excitation()
+                        if exc_json:
+                                mol = Excitation_exc()
+                                mol.setHOMO(occVal)
+                                mol.setLUMO(virtVal)
+                        else:
+                                mol = molecule_json.Excitation()
+                                print('reg')
                         mol.setExc(int(x[2][0]))
                         mol.setNm(float(x[6]))
                         mol.setOsci(float(x[8][2:]))
@@ -86,8 +99,10 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent=''):
                 if n < len(data2):
                         if x[0] == 'Excited':
                                 mol.setOrbital_Numbers(orbitalList)
-                                excitations.append(mol)
+                                excitations.append(mol.toDict())
                 elif n == len(data2):
                         mol.setOrbital_Numbers(orbitalList)
-                        excitations.append(mol)
+                        excitations.append(mol.toDict())
+        
+        
         return excitations
