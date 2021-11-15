@@ -576,7 +576,7 @@ def plot_methods(df,
         df = df.sort_values(['Weighted Avg.'], ascending=False)
         dif = (df['Weighted Avg.'] - df['Exp']).abs().mean()
         print("average difference", dif)
-        headers_colors.insert( 3, ['Exp.', 'black'])
+        headers_colors.insert( 3, ['Experiment', 'black'])
         df = df.sort_values(sort_by, ascending=False)
 
     else:
@@ -1030,6 +1030,7 @@ def theoretical_dyes_basis_set_out(
         },
         results_exc=False,
         homo_lumo=False,
+        LSF_csv=False
         ):
 
     df_molecules = json_pandas_molecule(path_results_json, results_exc)
@@ -1042,7 +1043,11 @@ def theoretical_dyes_basis_set_out(
             df2 = df_molecules_to_df_method_basisset_exc(df_molecules, methods_basissets)
         else:
             df2 = df
-        df2 = df2.sort_values(methods_basissets[0], ascending=True)
+        if LSF_csv:
+            df2['LSF'] = df2[ plot_js['weighted_avg'][0] ]*plot_js['weights'][0] + df2[ plot_js['weighted_avg'][1] ] * plot_js['weights'][1]
+            df2 = df2.sort_values('LSF', ascending=True)
+        else:
+            df2 = df2.sort_values(methods_basissets[0], ascending=True)
         df2.to_csv('%s.csv'%output_csv, index=False)
 
     if output_graph != '':
@@ -1069,7 +1074,7 @@ def benchmarks_dyes_basis_set_out(
         plot_js = {
         "weighted_avg" :['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'],
         "headers_colors":[
-            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['Weighted Average', 'green']
+            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'],  ['Weighted Average', 'green'], #['Weighted Average', 'green']
             ],
         "weights":[0.71, 0.29],
         },
@@ -1130,7 +1135,10 @@ def benchmarks_dyes_basis_set_out(
         df2.to_csv('%s.csv'%output_csv, index=False)
     if output_graph != '':
         print("working on graph")
-        plot_methods(df, weighted_avg=plot_js['weighted_avg'], headers_colors=plot_js['headers_colors'], weights=plot_js['weights'], outname=output_graph, exp=True, sort_by='Exp', transparent=True, LSF=LSF)
+        plot_methods(df,
+                weighted_avg=plot_js['weighted_avg'], headers_colors=plot_js['headers_colors'],
+                weights=plot_js['weights'], outname=output_graph, exp=True, sort_by='Exp',
+                transparent=True, LSF=LSF)
     if output_latex != '':
         if homo_lumo:
             df2 = df_molecules_to_df_method_basisset_exc(df_molecules, methods_basissets, exp=True, band_gap=band_gap)
@@ -1395,20 +1403,21 @@ def main():
     plot_js = {
         "weighted_avg" :['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'],
         "headers_colors":[
-            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['Weighted Average', 'green']
+            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['LSF', 'green']
             ],
         #"weights":[0.71, 0.29],
-        "weights" :  [ 1.25471048, -0.4079027 ],
+        "weights" :  [ 1.21364385, -0.35894991],
         #"weights" :  [ 0.7546616947, 0.2453383053 ]
         }
 
-    """"""
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
+
     theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e2',
         output_latex='theoretical_e2', output_graph='theoretical2',
-        plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, homo_lumo=True,
+        plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, #homo_lumo=True,
+        LSF_csv=True
         )
     """"""
 
@@ -1423,22 +1432,33 @@ def main():
    #     # output_graph='bm2',
    #     exc_json=True, homo_lumo=True
    # )
+    """
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
         output_csv='bm2',
         output_latex='bm2',
-        output_graph='bm2',
+        output_graph='bm3',
         exc_json=True, homo_lumo=True,
+        plot_js = {
+        "weighted_avg" :['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'],
+        "headers_colors":[
+            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'],  ['LSF', 'green'], #['Weighted Average', 'green']
+            ],
+        "weights":[0.71, 0.29],
+        },
         testing=True,
-        band_gap=True
+        band_gap=True,
+        LSF=True
     )
 
+    """
     """
     benchmarks_solvation('Benchmark/benchmarks.json',
             output_graph='test',
             exc_json=True, homo_lumo=True,
     )
+    #benchmarks_solvation('Benchmark/benchmarks.json', )
     """
-    benchmarks_solvation('Benchmark/benchmarks.json', )
+
     # df_molecules = json_pandas_molecule('og_results.json')
 
     # df_molecules = json_pandas_molecule_BM('Benchmark/benchmarks.json')

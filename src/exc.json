@@ -1,431 +1,200 @@
 {
-    "1ed_1b_8ea": [
+    "1ed_16b_4ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "1ed_21b_9ea": [
+    "1ed_16b_5ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "1ed_23b_4ea": [
+    "1ed_16b_8ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "1ed_23b_6ea": [
+    "1ed_16b_9ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "1ed_24b_10ea": [
+    "1ed_22b_8ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
             "bhandhlyp": 0
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "1ed_6b_5ea": [
+    "1ed_25b_10ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
             "bhandhlyp": 0
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_20b_9ea": [
+    "2ed_16b_4ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_21b_11ea": [
+    "2ed_16b_5ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_22b_10ea": [
+    "2ed_21b_7ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_22b_11ea": [
+    "3ed_16b_5ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_22b_9ea": [
+    "5ed_16b_4ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_25b_5ea": [
+    "5ed_16b_5ea": [
         {
-            "mexc": 1
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 1
+            "pbe1pbe": 3
         }
     ],
-    "2ed_26b_11ea": [
+    "5ed_16b_8ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "2ed_26b_7ea": [
+    "5ed_16b_9ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "3ed_20b_8ea": [
+    "6ed_16b_4ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "3ed_21b_7ea": [
+    "6ed_16b_5ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "3ed_21b_9ea": [
+    "6ed_23b_9ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
             "bhandhlyp": 0
         },
         {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ],
-    "3ed_26b_3ea": [
+    "7ed_16b_5ea": [
         {
-            "mexc": 0
+            "mexc": 3
         },
         {
-            "bhandhlyp": 0
+            "bhandhlyp": 3
         },
         {
-            "pbe1pbe": 0
-        }
-    ],
-    "3ed_26b_4ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "3ed_26b_5ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_1b_1ea": [
-        {
-            "mexc": 1
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 1
-        }
-    ],
-    "5ed_21b_9ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_22b_10ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_22b_3ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_22b_6ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_26b_11ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_26b_2ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "5ed_26b_4ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_20b_9ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_21b_10ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_21b_11ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_21b_9ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_22b_11ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_22b_9ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_26b_6ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "6ed_26b_7ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "7ed_21b_9ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "7ed_23b_9ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
-        }
-    ],
-    "7ed_25b_11ea": [
-        {
-            "mexc": 0
-        },
-        {
-            "bhandhlyp": 0
-        },
-        {
-            "pbe1pbe": 0
+            "pbe1pbe": 3
         }
     ]
 }

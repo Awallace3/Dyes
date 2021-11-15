@@ -609,14 +609,9 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
             mol.setHOMO(occVal)
             mol.setLUMO(virtVal)
 
-
         excitations = absorpt('mexc/mexc.out', method_mexc, basis_set_mexc, exc_json=True)
         if i == '7ed_6b_2ea':
             print(i, excitations)
-            # for k in excitations:
-            #     print(k)
-            #     if int(k['HOMO']) == int(0):
-            #         print('HOMO=0', i)
 
         if excitations == []:
             if i not in failed:
@@ -637,26 +632,11 @@ def gather_excitation_data(path_results, monitor_jobs, add_methods,
             except:
                 if i not in failed:
                     failed.append(i)
-
-
-
-        # mol.toJSON()
-        # mol.sendToFile('info.json')
-        # mol_lst = MoleculeList()
-        # mol_lst = MoleculeList_exc()
-        # mol_lst.setData("../%s" % results_json)
-        # print(mol)
         mol_lst.updateMolecule(mol, exc_json=exc_json)
-        # print(os.getcwd())
-        # mol_lst.sendToFile('../../%s' % results_json)
-
         os.chdir("..")
-    # print(mol_lst)
 
     mol_lst.sendToFile('%s%s' % (pops, results_json))
     print("FAILED:", failed)
-    # print(os.getcwd())
-
     return True
 
 def clean_dir_name(dir_name):
