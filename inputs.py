@@ -140,18 +140,26 @@ def inchlkeychecker(pb,pa,pd,struct,smi,bb,aa,dd,inchlkey,name):
         elif inchlkey not in BackboneDict.keys():
             for i in BackboneDict.keys():
                 print(i)
-            numoffiles = 0
-            for x in list(os.scandir(pb)):
-                if x.is_file():
-                    numoffiles += 1
+            numoffiles = []
+            for x in list(os.listdir(pb)):
+                if '.smi' in x:
+                    numoffiles.append(int(x.replace('b.smi','')))
+                    print(x)
+            numoffiles.sort()
+            print(numoffiles[-1])
+             #   if x.is_file():
+                   # print(x[11])
+              #      numoffiles += 1
             os.chdir(pb)
-            filename = open(str(numoffiles+1)+'b.smi','x+')
+        
+            filename = open(str(numoffiles[-1]+1)+'b.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
+            
             
     if struct == 'acceptor':
         AcceptorDict = aa
@@ -163,19 +171,30 @@ def inchlkeychecker(pb,pa,pd,struct,smi,bb,aa,dd,inchlkey,name):
         elif inchlkey not in AcceptorDict.keys():
             for i in AcceptorDict.keys():
                 print(i)
-            numoffiles = 0
-            for x in list(os.scandir(pa)):
-                if x.is_file():
-                    numoffiles += 1
+            numoffiles2 = []
+            for x in list(os.listdir(pa)):
+                print(x)
+                
+                if '.smi' in x:
+                    #print(x)
+                    numoffiles2.append(int(x.replace('ea.smi','')))
+                    #print(x)
+                
+            numoffiles2.sort()
+            print(numoffiles2[-1])
+             #   if x.is_file():
+                   # print(x[11])
+              #      numoffiles += 1
             os.chdir(pa)
-            filename = open(str(numoffiles+1)+'ea.smi','x+')
+            
+            filename = open(str(numoffiles2[-1]+1)+'ea.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-  
+            
     if struct == 'donor':
         DonorDict = dd    
         if inchlkey in DonorDict.keys():
@@ -185,12 +204,23 @@ def inchlkeychecker(pb,pa,pd,struct,smi,bb,aa,dd,inchlkey,name):
         elif inchlkey not in DonorDict.keys():
             for i in DonorDict.keys():
                 print(i)
-            numoffiles = 0
-            for x in list(os.scandir(pd)):
-                if x.is_file():
-                    numoffiles += 1
+            numoffiles3 = []
+            for x in list(os.listdir(pd)):
+                #print(x)
+                
+                if '.smi' in x:
+                    #print(x)
+                    numoffiles3.append(int(x.replace('ed.smi','')))
+                    #print(x)
+                
+            numoffiles3.sort()
+            print(numoffiles3[-1])
+             #   if x.is_file():
+                   # print(x[11])
+              #      numoffiles += 1
             os.chdir(pd)
-            filename = open(str(numoffiles+1)+'ed.smi','x+')
+            
+            filename = open(str(numoffiles3[-1]+1)+'ed.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
