@@ -53,10 +53,6 @@ def gaussianInputFiles(output_num, method_opt,
         print(dir_name)
         solvent_line = 'SCRF=(Solvent=%s)' % solvent
         print(dir_name)
-<<<<<<< HEAD
-    print(dir_name)
-=======
->>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
     
     if data == '':
         with open('tmp.txt') as fp:
@@ -622,11 +618,8 @@ def main(index,
         qsub_dir = method_mexc
     if solvent != '':
         qsub_dir += '_%s'%solvent
-<<<<<<< HEAD
-=======
     
     qsub_dir = clean_dir_name(qsub_dir)
->>>>>>> 1b9d1a5ba670a9d1789df84a5543d8fba8b80c8b
 
     print("v2 %s %s" % (solvent, qsub_dir))
 
