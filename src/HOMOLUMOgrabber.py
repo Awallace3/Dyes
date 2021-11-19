@@ -16,6 +16,7 @@ def LUMO(name,method):
     lll = data[-1].split(' ')
    #  print(lll)
     LUMO = float(lll[7])*27.2114
+   # LUMO = abs(LUMO)-3.9
     #print((name,'LUMO',method,LUMO))
   #  for i in filename:
   #      print(i)
@@ -31,6 +32,7 @@ def HOMO(name, method):
     lll = data[-2].split(' ')
     #print(lll)
     HOMO = float(lll[-1])*27.2114
+  #  HOMO = abs(HOMO)-4.2
     #print((name,'HOMO',method,HOMO))
 
     return [name,'HOMO',method,str(HOMO)] 
