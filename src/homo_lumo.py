@@ -155,6 +155,7 @@ def correlation_function_nhe(
             first, *_, last = out
             xyzs3 = coefficients_3D_line(meths, exp_homo, first)
             print("\n\t HOMO\n")
+            print('\ncoefficients =',first, '\n')
             print("Total    Residuel =", get_residual(out, meths, exp_homo))
             print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
             print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
@@ -163,6 +164,7 @@ def correlation_function_nhe(
             first2, *_, last = out2
             xyzs4 = coefficients_3D_line(meths2, exp_lumo, first2)
             print("\n\t LUMO\n")
+            print('\ncoefficients =',first2, '\n')
             print("Total    Residuel =", get_residual(out, meths2, exp_homo))
             print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
             print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
@@ -296,6 +298,7 @@ def correlation_function(
             first, *_, last = out
             xyzs3 = coefficients_3D_line(meths, exp_homo, first)
             print("\n\t HOMO\n")
+            print('\ncoefficients =',first, '\n')
             print("Total    Residuel =", get_residual(out, meths, exp_homo))
             print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
             print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
@@ -304,6 +307,7 @@ def correlation_function(
             first2, *_, last = out2
             xyzs4 = coefficients_3D_line(meths2, exp_lumo, first2)
             print("\n\t LUMO\n")
+            print('\ncoefficients =',first2, '\n')
             print("Total    Residuel =", get_residual(out, meths2, exp_homo))
             print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
             print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
@@ -375,8 +379,8 @@ def correlation_function(
 
 def main():
     df = pd.read_csv('exp_homo_lumo.csv').dropna()
-    #correlation_function(df, type='LSF', deg=9, train=False)
-    correlation_function_nhe(df, type='LSF', deg=9, train=False)
+    correlation_function(df, type='LSF', deg=9, train=False)
+    #correlation_function_nhe(df, type='LSF', deg=9, train=False)
 
 
 

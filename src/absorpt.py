@@ -11,11 +11,11 @@ def cleanLine(line):
         k = ' ' * i
         cropped_line = cropped_line.replace(k, " ")
     cropped_line = cropped_line.split(" ")
-    
+
     for i in cropped_line:
         if i == '':
             continue
-        else: 
+        else:
             aList.append(i)
     return aList
 
@@ -24,14 +24,14 @@ def clean_solvent(solvent):
 
 def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False):
         filename = open(path,'r')
-        
+
         num = 0
-        
+
         nregion = False
         excitedState = " Excited State   "
         data = []
         excitedStatenum = 0
-        jobComplete = False 
+        jobComplete = False
         for n, j in enumerate(filename):
                 if 'Normal termination' in j:
                         jobComplete = True
@@ -52,18 +52,18 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False):
                                 if excitedStatenum >= 4:
                                         break
                         data.append(i)
-                        
+
         data = data[2:]
         data2 = []
         for n,i in enumerate(data):
                 # new line
-                i = i.replace('->', ' ')
+                i = i.replace('->', ' ').replace('<-', ' ')
                 #
                 x = cleanLine(i)
                 if x == []:
                         continue
                 data2.append(x)
-        
+
         #print(data2)
         excitations = []
         occVal, virtVal = ES_extraction(path)
@@ -86,7 +86,7 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False):
                         orbitalList = []
                         if solvent == '':
                                 mol.setMethod_basis_set("%s/%s" % (method_mexc, basis_set_mexc))
-                        else: 
+                        else:
                                 mol.setMethod_basis_set("%s/%s_%s" % (method_mexc, basis_set_mexc, clean_solvent(solvent)))
 
                 else:
@@ -103,6 +103,6 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False):
                 elif n == len(data2):
                         mol.setOrbital_Numbers(orbitalList)
                         excitations.append(mol.toDict())
-        
-        
+
+
         return excitations
