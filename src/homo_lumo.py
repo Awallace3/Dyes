@@ -13,6 +13,10 @@ from scipy import stats
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+from gather_results import json_pandas_molecule_BM
+from gather_results import df_molecules_BM_to_df_method_basisset
+from gather_results import convert_df_nm_to_eV
+from gather_results import df_conv_energy
 
 
 import numba
@@ -66,7 +70,6 @@ def coefficients_3D_equation(xs, y_exp, coefficients, deg, x_range=False, plot_x
     if x_range:
         #ma, mi = minmax(xs)
         xs = np.arange(plot_x_range[0], plot_x_range[1], 0.01)
-        print(xs)
         ys = []
         for x in xs:
             y = 0
@@ -113,7 +116,7 @@ def correlation_function_nhe(
 
     df = df.sort_values(['HOMO'], ascending=True)
     for i in h:
-        df[i] = abs(df[i] + 4.5) * -1
+        df[i] = df[i] + 4.5
     df['dif'] = df[h[0]] - df[h[4]]
     df['z_score'] = stats.zscore(df['dif'])
     # 3 standard deviations away seems fine because most are less than 1
@@ -165,9 +168,9 @@ def correlation_function_nhe(
             xyzs4 = coefficients_3D_line(meths2, exp_lumo, first2)
             print("\n\t LUMO\n")
             print('\ncoefficients =',first2, '\n')
-            print("Total    Residuel =", get_residual(out, meths2, exp_homo))
-            print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
-            print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
+            print("Total    Residuel =", get_residual(out2, meths2, exp_lumo))
+            print("Total    RSE      =", RSE(exp_lumo, xyzs4[:, 2]) )
+            print("Total    RMSE     =", mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False ))
 
             """
         fig = plt.figure()
@@ -263,6 +266,7 @@ def correlation_function(
     df = df.loc[df['z_score'].abs()<=3]
     df = df.reset_index().drop(columns=['index'])
     df['count'] = df.index
+    print(df)
 
     exp_homo = df['HOMO'].to_numpy()
     exp_lumo = df['LUMO'].to_numpy()
@@ -308,9 +312,9 @@ def correlation_function(
             xyzs4 = coefficients_3D_line(meths2, exp_lumo, first2)
             print("\n\t LUMO\n")
             print('\ncoefficients =',first2, '\n')
-            print("Total    Residuel =", get_residual(out, meths2, exp_homo))
-            print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
-            print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
+            print("Total    Residuel =", get_residual(out2, meths2, exp_lumo))
+            print("Total    RSE      =", RSE(exp_lumo, xyzs4[:, 2]) )
+            print("Total    RMSE     =", mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False ))
 
             """
         fig = plt.figure()
@@ -331,6 +335,8 @@ def correlation_function(
         ax1.plot(df['count'], meths[:,1], label='PBE0 HOMO')
         ax1.plot(df['count'], xyzs3[:,2], label='LSF HOMO')
         ax1.legend()
+        ax1.set_xlabel("Benchmark Dyes")
+        ax1.set_ylabel("HOMO Energy (eV)")
         plt.savefig('../data_analysis/homo_fitting.png')
 
 
@@ -342,6 +348,8 @@ def correlation_function(
         ax2.plot(df['count'], meths2[:,1], label='PBE0 LUMO')
         ax2.plot(df['count'], xyzs4[:,2], label='LSF LUMO')
         ax2.legend()
+        ax2.set_xlabel("Benchmark Dyes")
+        ax2.set_ylabel("LUMO Energy (eV)")
         plt.savefig('../data_analysis/lumo_fitting.png')
 
     elif type == 'poly':
@@ -374,13 +382,129 @@ def correlation_function(
         plt.show()
 
 
+def correlation_homos_lumos_vertExcitations(
+        path_results_json,
+        methods_basissets=['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)'],
+        units='eV',
+        ):
+    df_molecules = json_pandas_molecule_BM(path_results_json, exc_json=True)
+    df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
+    convert_lst = methods_basissets.copy()
+    convert_lst.append("Exp")
+    df = convert_df_nm_to_eV(df, convert_lst)
+    unlucky = {
+        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        "D1": [2.337250,2.285609,1.742975,2.176884],
+        "D3": [2.301722,2.209749,1.549403,2.207872],
+        "XY1": [2.398999,2.314932,1.839675,2.247870],
+        "NL6": [2.250481,2.239272,1.383166,2.050367],
+        "ZL003": [2.488369,2.437129,2.031108,2.390798],
+        "JW1": [2.320036,2.302322,1.910812,2.103091],
+    }
+    for key, val in unlucky.items():
+        row = {
+            'Name': key,
+            methods_basissets[0]: val[0],
+            methods_basissets[1]: val[1],
+            methods_basissets[2]: val[2],
+            'Exp': val[3],
+        }
+        df = df.append(row, ignore_index=True)
+    if units.lower() == 'nm':
+        df = convert_df_nm_to_eV(df, convert_lst)
+    elif units.lower() == 'ev':
+        pass
+    else:
+        print("unit not acceptable")
+    df2 = convert_df_nm_to_eV(df, convert_lst)
+
+    # df = df_molecules_to_df_method_basisset(df, methods_basissets)
+    if units.lower() == 'ev':
+        df2 = df_conv_energy(df2)
+
+    df = pd.read_csv('exp_homo_lumo.csv').dropna()
+    nhe_to_ev=4.5
+    exp=['HOMO Ox', 'LUMO Ox']
+    h=[
+            "CAM-B3LYP HOMO",  "CAM-B3LYP LUMO",
+            "BhandLYP HOMO",  "BhandLYP LUMO",
+            "PBE0 HOMO",  "PBE0 LUMO",
+    ]
+
+    df2['name'] = df2['Name']
+    df = df.merge(df2, how= 'inner', on=['name'])
+
+    df['HOMO'] = -1*abs(df[exp[0]] + nhe_to_ev)
+    df['LUMO'] = -1*abs(df[exp[1]] + nhe_to_ev)
+    df = df.sort_values(['HOMO'], ascending=True)
+    df['dif'] = df[h[0]] - df[h[4]]
+    df['z_score'] = stats.zscore(df['dif'])
+    # 3 standard deviations away seems fine because most are less than 1
+    df = df.loc[df['z_score'].abs()<=3]
+    df = df.reset_index().drop(columns=['index'])
+    df['count'] = df.index
+
+    exp_homo = df['HOMO'].to_numpy()
+    exp_lumo = df['LUMO'].to_numpy()
+
+    ### START HERE
+
+    df[h[1]] = df[h[0]] + df["CAM-B3LYP/6-311G(d,p)"]
+    df[h[5]] = df[h[4]] + df["PBE1PBE/6-311G(d,p)"]
+    #print(df["CAM-B3LYP/6-311G(d,p)"])
+
+    meths = df[[h[0], h[4]]].to_numpy()
+    meths2 = df[[h[1], h[5]]].to_numpy()
+
+
+    out = np.linalg.lstsq(meths, exp_homo)
+    first, *_, last = out
+    xyzs3 = coefficients_3D_line(meths, exp_homo, first)
+    print("\n\t HOMO\n")
+    print('\ncoefficients =',first, '\n')
+    print("Total    Residuel =", get_residual(out, meths, exp_homo))
+    print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
+    print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
+
+    out2 = np.linalg.lstsq(meths2, exp_lumo)
+    first2, *_, last = out2
+    xyzs4 = coefficients_3D_line(meths2, exp_lumo, first2)
+    print("\n\t LUMO\n")
+    print('\ncoefficients =',first2, '\n')
+    print("Total    Residuel =", get_residual(out2, meths2, exp_lumo))
+    print("Total    RSE      =", RSE(exp_lumo, xyzs4[:, 2]) )
+    print("Total    RMSE     =", mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False ))
+
+    fig = plt.figure(dpi=400)
+    ax1 = fig.add_subplot()
+
+    ax1.plot(df['count'], exp_homo, 'k', label='Exp. HOMO')
+    ax1.plot(df['count'], meths[:,0], label='CAM-B3LYP HOMO')
+    ax1.plot(df['count'], meths[:,1], label='PBE0 HOMO')
+    ax1.plot(df['count'], xyzs3[:,2], label='LSF HOMO')
+    ax1.legend()
+    ax1.set_xlabel("Benchmark Dyes")
+    ax1.set_ylabel("HOMO Energy (eV)")
+    plt.savefig('../data_analysis/homo_fitting.png')
+
+    fig = plt.figure(dpi=400)
+    ax2 = fig.add_subplot()
+    ax2.plot(df['count'], exp_lumo, 'k', label='Exp. LUMO')
+    ax2.plot(df['count'], meths2[:,0], label='CAM-B3LYP HOMO + 1st Exc.')
+    ax2.plot(df['count'], meths2[:,1], label='PBE0 HOMO + 1st Exc.')
+    ax2.plot(df['count'], xyzs4[:,2], label='LSF LUMO')
+    ax2.legend()
+    ax2.set_xlabel("Benchmark Dyes")
+    ax2.set_ylabel("LUMO Energy (eV)")
+    plt.savefig('../data_analysis/lumo_fitting2.png')
 
 
 
 def main():
     df = pd.read_csv('exp_homo_lumo.csv').dropna()
-    correlation_function(df, type='LSF', deg=9, train=False)
+    #correlation_function(df, type='LSF', deg=9, train=False)
     #correlation_function_nhe(df, type='LSF', deg=9, train=False)
+    correlation_homos_lumos_vertExcitations('../Benchmark/benchmarks_exc.json')
 
 
 

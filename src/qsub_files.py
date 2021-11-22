@@ -5,16 +5,18 @@ import subprocess
 from typing import Tuple
 import json
 
-def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs"):
+def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs", monitor_jobs=[]):
     os.chdir(path_to_input_dirs)
-    directories = glob.glob("*")
+    if len(monitor_jobs) == 0:
+        directories = glob.glob("*")
+    else:
+        directories = monitor_jobs
     for i in directories:
         os.chdir(i)
         qsub = 'qsub %s' % pbs_name
-        print(i, qsub)
-        subprocess.call(qsub, shell=True)
+        print(i, qsub, os.getcwd())
+        #subprocess.call(qsub, shell=True)
         os.chdir("..")
-#qsubFiles('../inputs')
 
 def qsub(path='.'):
     resetDirNum = len(path.split("/"))
@@ -563,8 +565,9 @@ if __name__ == "__main__":
     '2ed_16b_5ea', '2ed_16b_2ea', '2ed_16b_7ea', '2ed_16b_4ea', '2ed_16b_10ea',
     '2ed_16b_9ea', '2ed_16b_1ea']
 
-    fix_broken(ds2)
-
+    benchmarks =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271',  'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A','ZL003','WS-6','NL4','NL6','JW1','AP25']
+    #fix_broken(ds2)
+    qsubFiles("../Benchmark/results", pbs_name="mex.pbs", monitor_jobs=benchmarks)
     dirs_to_check = ['mexc', 'bhandhlyp', 'pbe1pbe']
     #fix_mexc(failed)
 

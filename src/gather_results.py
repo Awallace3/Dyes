@@ -1060,7 +1060,7 @@ def theoretical_dyes_basis_set_out(
                 headers_colors=plot_js['headers_colors'], weights=plot_js['weights'],
                 exp=False,
                 outname=output_graph, transparent=True,
-                LSF=LSF_csv,
+                LSF=False,
                 )
     if output_latex != '':
         if homo_lumo:
@@ -1421,13 +1421,11 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
 
-    """
     theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e2',
         output_latex='theoretical_e2', output_graph='theoreticale2',
-        plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, #homo_lumo=True,
+        plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, homo_lumo=True,
         LSF_csv=True
         )
-    """
    # theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e3',
    #     output_latex='theoretical_e3', output_graph='theoreticale3',
    #     plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, #homo_lumo=True,
@@ -1440,12 +1438,14 @@ def main():
     # Benchmark data
     # benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
 
+    """
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
         output_csv='bm2',
         output_latex='bm2',
         # output_graph='bm2',
         exc_json=True, homo_lumo=True
     )
+    """
     """
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
         output_csv='bm2',
