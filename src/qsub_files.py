@@ -15,7 +15,7 @@ def qsubFiles(path_to_input_dirs, pbs_name="mex.pbs", monitor_jobs=[]):
         os.chdir(i)
         qsub = 'qsub %s' % pbs_name
         print(i, qsub, os.getcwd())
-        #subprocess.call(qsub, shell=True)
+        subprocess.call(qsub, shell=True)
         os.chdir("..")
 
 def qsub(path='.'):
