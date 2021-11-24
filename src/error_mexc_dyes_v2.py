@@ -13,9 +13,9 @@ from molecule_json import Molecule
 from molecule_json import MoleculeList
 
 def CFOUR_input_files(
-    method, basis_set, 
+    method, basis_set,
     mem_ZMAT, mem_pbs, data, dir_name, cluster='map',
-    baseName='mexc', 
+    baseName='mexc',
  ):
     if cluster == 'map':
         with open('%s/ZMAT' % (dir_name), 'w') as fp:
@@ -24,7 +24,7 @@ def CFOUR_input_files(
             fp.write('\n\n')
             fp.write("*CFOUR(CHARGE=0,REFERENCE=RHF,SPHERICAL=ON,BASIS=%s\n" % basis_set)
             fp.write("LINDEP_TOL=7,LINEQ_CONV=7,SCF_CONV=6,SCF_MAXCYC=250\n")
-            fp.write("CALC=%s,EXCITE=EOMEE,ESTATE_SYM=5\nESTATE_PROP=EXPECTATION\nCOORDS=CARTESIAN\n" % method) 
+            fp.write("CALC=%s,EXCITE=EOMEE,ESTATE_SYM=5\nESTATE_PROP=EXPECTATION\nCOORDS=CARTESIAN\n" % method)
             fp.write("FROZEN_CORE=ON,ABCDTYPE=AOBASIS\nCONVERGENCE=7,MEMORY_SIZE=%s,MEM_UNIT=GB)\n" % mem_ZMAT)
         with open('%s/%s.pbs' % (dir_name, baseName), 'w') as fp:
             fp.write("#!/bin/csh\n#\n#PBS -N %s\n" % baseName)
@@ -32,28 +32,28 @@ def CFOUR_input_files(
             fp.write('\n\ncd $PBS_O_WORKDIR\nsetenv NUM $NCPUS\necho "$NUM cores requested in PBS file"\necho " "\nsource /ddn/home1/r1621/.tschrc\n/ddn/home1/r1621/maple/bin/tempQC/bin/c4ext_old.sh 20\n')
     return
 
-def gaussianInputFiles(output_num, method_opt, 
-                    basis_set_opt, mem_com_opt, 
-                    mem_pbs_opt, cluster, 
+def gaussianInputFiles(output_num, method_opt,
+                    basis_set_opt, mem_com_opt,
+                    mem_pbs_opt, cluster,
                     baseName='mexc', procedure='OPT',
-                    data='', dir_name='', solvent='', 
+                    data='', dir_name='', solvent='',
                     outName='mexc_o'
                     ):
     # baseName = baseName.com / baseName.pbs / baseName.out
-    # dir_name = directory name 
+    # dir_name = directory name
     output_num = str(output_num)
     if output_num == '0':
         output_num = ''
 
     if dir_name=='':
         dir_name=baseName
-    
+
     if solvent != '':
         # dir_name += '_%s'%solvent
         print(dir_name)
         solvent_line = 'SCRF=(Solvent=%s)' % solvent
         print(dir_name)
-    
+
     if data == '':
         with open('tmp.txt') as fp:
             data = fp.read()
@@ -145,7 +145,7 @@ def cleanLine(line):
     for i in cropped_line:
         if i == '':
             continue
-        else: 
+        else:
             aList.append(float(i))
     return aList
 
@@ -160,27 +160,27 @@ def clean_many_txt(geomDirName, xyzSmiles=True, numbered=True):
     f = open('tmp.txt', 'r')
     """
     a = ['14.0 ','30.0 ' ,
-            '16.0 ', '6.0 ', 
-            '8.0 ', '1.0 ', 
-            '7.0 ' 
+            '16.0 ', '6.0 ',
+            '8.0 ', '1.0 ',
+            '7.0 '
         ]
     table = {
-        '6.0 ': 'C', '8.0 ': 'O', 
-        '1.0 ': 'H', '7.0 ': 'N', 
-        '16.0 ': 'S', '30.0 ': 'Zn', 
+        '6.0 ': 'C', '8.0 ': 'O',
+        '1.0 ': 'H', '7.0 ': 'N',
+        '16.0 ': 'S', '30.0 ': 'Zn',
         '14.0 ': 'Si'
     }
     """
     a = ['14.000000 ','30.000000 ' ,
             '16.000000 ', '6.000000 ',
             '8.000000 ', '1.000000 ',
-            '7.000000 '
+            '7.000000 ', '35.000000',
         ]
     table = {
         '6.000000 ': 'C', '8.000000 ': 'O',
         '1.000000 ': 'H', '7.000000 ': 'N',
         '16.000000 ': 'S', '30.000000 ': 'Zn',
-        '14.000000 ': 'Si'
+        '14.000000 ': 'Si','35.000000': 'F',
     }
 
 
@@ -198,7 +198,7 @@ def clean_many_txt(geomDirName, xyzSmiles=True, numbered=True):
                 else:
                     line = line.replace(word, convert_wrd + " ")
 
-                
+
 
         lst.append(line)
         xyzToMolLst.append(line2)
@@ -362,7 +362,7 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
                 for num, line in enumerate(search, 1):
                     if geom_start in line:
                         standards.append(num + 5)
-                        
+
             with open(filename) as search:
                 for num, line in enumerate(search, 1):
                     if geom_end in line:
@@ -413,12 +413,12 @@ def find_geom(lines, error, filename, imaginary, geomDirName,
     out_file = "tmp.txt"
     np.savetxt(out_file, new_geom,
                fmt="%f")
-    
+
     if not imaginary:
         clean_many_txt(geomDirName, xyzSmiles, numberedClean)
     elif error:
         clean_many_txt(geomDirName, xyzSmiles, numberedClean)
-    
+
 def xyzToSmiles(length, xyz, geomDirName):
     with open('molecule.xyz', 'w') as fp:
         fp.write('%s\ncharge=0=\n' % length)
@@ -432,7 +432,7 @@ def xyzToSmiles(length, xyz, geomDirName):
     cmd = 'python3 ../../src/xyz2mol.py ./molecule.xyz'
 
     val = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    
+
     os.remove('molecule.xyz')
     """
     cmd = 'obabel -ixyz molecule.xyz -osmi -molecule.smi'
@@ -502,10 +502,10 @@ def make_input_files_no_constraints(output_num, method_opt, basis_set_opt, mem_c
             fp.write("cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mex.com mex.out" +
                     str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == 'seq':
-        gaussianInputFiles(output_num, method_opt, 
-                    basis_set_opt, mem_com_opt, 
-                    mem_pbs_opt, cluster, 
-                    baseName='./', procedure='OPT' 
+        gaussianInputFiles(output_num, method_opt,
+                    basis_set_opt, mem_com_opt,
+                    mem_pbs_opt, cluster,
+                    baseName='./', procedure='OPT'
                     )
 
         #qsub()
@@ -536,11 +536,11 @@ def qsub(path='.'):
 def clean_dir_name(dir_name):
     return dir_name.replace("-", '').replace(",", '')
 
-def make_exc(method_mexc, basis_set_mexc, 
+def make_exc(method_mexc, basis_set_mexc,
                 mem_com_mexc, mem_pbs_mexc, cluster,
                 geomDirName, solvent=''
                 ):
-    
+
     #baseName = 'cam-b3lyp'
     if method_mexc == 'CAM-B3LYP':
         baseName = 'mexc'
@@ -552,7 +552,7 @@ def make_exc(method_mexc, basis_set_mexc,
         dir_name += '_%s' % solvent
     if os.path.exists(dir_name):
         print('\n%s directory already exists\n' % (dir_name))
-        return 
+        return
 
     dir_name = clean_dir_name(dir_name)
     os.mkdir(dir_name)
@@ -562,21 +562,21 @@ def make_exc(method_mexc, basis_set_mexc,
 
     #solvent = 'SCRF=(Solvent=dichloromethane)'
 
-    
-    
+
+
     outName = geomDirName + '_%s_%s' % (baseName, solvent)
-    gaussianInputFiles(output_num, method_mexc, 
-                    basis_set_mexc, mem_com_mexc, 
+    gaussianInputFiles(output_num, method_mexc,
+                    basis_set_mexc, mem_com_mexc,
                     mem_pbs_mexc, cluster,
                     baseName=baseName, procedure=procedure,
-                    data='', dir_name=dir_name, solvent=solvent, 
+                    data='', dir_name=dir_name, solvent=solvent,
                     outName=outName
                     )
     path = '%s' % dir_name
     #qsub(path)
 
 
-    
+
 def clean_energies(hf_1, hf_2, zero_point):
     zero_point = zero_point[30:].replace(" (Hartree/Particle)", "")
     for i in range(10):
@@ -618,7 +618,7 @@ def main(index,
         qsub_dir = method_mexc
     if solvent != '':
         qsub_dir += '_%s'%solvent
-    
+
     qsub_dir = clean_dir_name(qsub_dir)
 
     print("v2 %s %s" % (solvent, qsub_dir))
@@ -656,7 +656,7 @@ def main(index,
                     error = True
         cmd = "qsub mex.pbs"
         if error == True:
-            
+
             print("ERROR == TRUE")
             find_geom(lines, error=True, filename=filename,
                         imaginary=imaginary, geomDirName=geomDirName)
@@ -693,13 +693,13 @@ def main(index,
                 lines, filename=filename)
             '''
             print("entering make_exc")
-            make_exc(method_mexc, basis_set_mexc, 
+            make_exc(method_mexc, basis_set_mexc,
                             mem_com_mexc, mem_pbs_mexc, cluster,
                             geomDirName, solvent
                             )
-            
+
             os.remove("tmp.txt")
-             
+
             return False, resubmissions, qsub_dir
 
     else:
