@@ -1355,21 +1355,24 @@ def main():
     """
 
     add_methods = {
-        "methods" : ["bhandhlyp", "PBE1PBE"],
-        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
-        "solvent" : ["", ''],
-        "mem_com" : ["1600", "1600"],
-        "mem_pbs" : ["10", "10"]
+        "methods" : ["CAM-B3LYP","bhandhlyp", "PBE1PBE"],
+        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)"],
+        "solvent" : ["", '',''],
+        "mem_com" : ["1600", "1600","1600"],
+        "mem_pbs" : ["10", "10","10"]
     }
+#    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
+    monitor_jobs = ['RR6']
 
-    """
-    complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
+    
+    complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           #cluster, route='Benchmark/results', add_methods=add_methods,
-                           cluster, route='results', add_methods=add_methods,
-                           max_queue=200, results_json='results.json'
+                           cluster, route='Benchmark/results', add_methods=add_methods,
+                           #cluster, route='results', add_methods=add_methods,
+                           max_queue=200, results_json='benchmarks.json'
     )
+    """
     complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -1399,7 +1402,7 @@ def main():
     # gather_excitation_data('./results', ds2, add_methods, method_mexc, basis_set_mexc, results_json='results.json')
     # gather_excitation_data('./results_cp/ds_all', all_ds, add_methods, method_mexc, basis_set_mexc, results_json='../../results_exc.json', exc_json=True)
 
-    gather_excitation_data('./results_cp/ds_all', all_ds, add_methods, method_mexc, basis_set_mexc, results_json='results_exc.json', exc_json=True)
+    #gather_excitation_data('./results_cp/ds_all', all_ds, add_methods, method_mexc, basis_set_mexc, results_json='results_exc.json', exc_json=True)
     # gather_excitation_data('./results_cp/ds_all', all_ds, add_methods, method_mexc, basis_set_mexc, results_json='results.json', exc_json=False)
 
     # DS_ALL
