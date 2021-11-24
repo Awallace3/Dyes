@@ -97,7 +97,7 @@ def main():
 main()
 
 # Delcamp Dyes: ['D35','NL5','NL3','NL12','NL13']
-# Delcamp Dyes: ['ND1',']
+# Delcamp Dyes: ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
 
 
 

@@ -1355,14 +1355,16 @@ def main():
     """
 
     add_methods = {
-        "methods" : ["bhandhlyp", "PBE1PBE"],
-        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
-        "solvent" : ["", ''],
-        "mem_com" : ["1600", "1600"],
-        "mem_pbs" : ["10", "10"]
+        "methods" : ["CAM-B3LYP","bhandhlyp", "PBE1PBE"],
+        "basis_set" : ["6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)"],
+        "solvent" : ["", '',''],
+        "mem_com" : ["1600", "1600","1600"],
+        "mem_pbs" : ["10", "10","10"]
     }
-    monitor_jobs = []
+#    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
+    monitor_jobs = ['RR6']
 
+    
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
