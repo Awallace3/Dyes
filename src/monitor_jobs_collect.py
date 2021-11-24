@@ -83,11 +83,10 @@ def delete_calc_grouping(path, monitor_jobs, target):
 if __name__ == '__main__':
     #acquire_half_results_dir(False)
 
-    monitor_jobs =  []
     Delcamp_Dyes = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
-    delete_calc_grouping('../results', Delcamp_Dyes, 'bhandhlyp')
-    delete_calc_grouping('../results', Delcamp_Dyes, 'mexc_nndimethylformamide')
+    delete_calc_grouping('../Benchmark/results', Delcamp_Dyes, 'bhandhlyp')
+    delete_calc_grouping('../Benchmark/results', Delcamp_Dyes, 'mexc_nndimethylformamide')
 
     #results = jobs_list('../results')
     #complete_monitor_jobs(results)
-    acquire_results_dir('../Benchmark/results')
+    #acquire_results_dir('../Benchmark/results')
