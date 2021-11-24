@@ -20,16 +20,20 @@ def smilesinput(SMILES,name,path):
     return error
 
 def obabelxyzconverter(name, path):
-    cmd = 'obabel ' + str(name) + '.smi ' + '-oxyz --Gen3D -O coords.txt'
+    cmd = 'obabel ' + str(name) + '.smi ' + '-oxyz --Gen3D -O ../tmp.txt'
     os.system(cmd) 
     return
 def coordsexteditor(path):
-    filename = open(path + '/' + 'coords.txt','r')
+    #print(path,'AAAAAAAA')
+    os.system('ls')
+    print(' ')
+    print(' ')
+    filename = open('../tmp.txt','r')
     data = filename.readlines()
     data.pop(0)
     data.pop(0)
    # print(data)
-    filename2 = open(path + '/' + 'coords.txt', 'w+')
+    filename2 = open('../tmp.txt', 'w+')
     for i in data:
         filename2.write(i)
 #    filename2.write('\n')
@@ -37,21 +41,21 @@ def coordsexteditor(path):
     return
 
 def xyzadder(path):
-    filename = open(str(path) + '/' + 'coords' + '.txt','r')
+    filename = open('../tmp' + '.txt','r')
     data = filename.readlines()
    # print(data)
-    filename2 = open(str(path) + '/' + 'mex.com', 'a')
+    filename2 = open('mex.com', 'a')
     for coords in data:
         print(coords)
         filename2.write(coords)
     filename2.write('\n')
     filename.close()
     filename2.close()
-    filename3 = open(str(path) + '/' + 'mex.com', 'r')
+    filename3 = open('mex.com', 'r')
     data = filename3.readlines()
    # print(data[6:])
     data.pop(7)
-    filename4 = open(str(path) + '/' + 'mex.com', 'w+')
+    filename4 = open('mex.com', 'w+')
     for i in data:
         filename4.write(i)
 
@@ -62,7 +66,7 @@ def xyzadder(path):
 
 def main():
 
-    path_to_benchmark = '/ddn/home6/r2532/chem/Dyes/Benchmark/results'
+    path_to_benchmark = '../Benchmark/results'
     SMILES = input('What is the SMILES str for Benchmark Dye ')
     name = input('What is the name of Benchmark Dye ')
 #    SMILES = 'CCCC'
@@ -74,9 +78,12 @@ def main():
        
         obabelxyzconverter(name, path_to_benchmark)
         path_to_coords = path_to_benchmark + '/'  + str(name)
-        coordsexteditor(path_to_coords) 
+        coordsexteditor(path_to_benchmark + '/'  + str(name)) 
         dir_name = name
-        os.chdir(path_to_benchmark)
+      #  os.chdir(path_to_benchmark + '/'  + str(name))
+        xyzadder(path_to_benchmark + '/'  + str(name))
+        os.chdir('..')
+
         gaussianInputFiles(output_num='0', method_opt='B3LYP', 
                             basis_set_opt='6-311G(d,p)', mem_com_opt='1600', 
                             mem_pbs_opt='10', cluster='map', 
@@ -84,6 +91,14 @@ def main():
                             data='', dir_name=str(name), solvent='', 
                             outName='mex_o'
                             )
-        xyzadder(path_to_coords)
+        os.system('rm tmp.txt')
+    #    xyzadder(path_to_benchmark + '/'  + str(name))
     return
 main()
+
+# Delcamp Dyes: ['D35','NL5','NL3','NL12','NL13']
+# Delcamp Dyes: ['ND1',']
+
+
+
+
