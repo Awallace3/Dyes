@@ -150,7 +150,7 @@ def main():
 	add_methods = {
 		"methods" : ["B3LYP", 'B3LYP', 'M062X', 'M062X', 'BHandHLYP', 'BHandHLYP', 'VSXC', "VSXC", "N12", "N12" ],
 		"basis_sets" : ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)",  "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)" , "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
-		"solvents" : ["Dichloromethane", "", 'Dichloromethane', "", 'Dichloromethane', "", 'Dichloromethane', "", 'Dichloromethane', "", ], 
+		"solvents" : ["dichloromethane", "", 'dichloromethane', "", 'dichloromethane', "", 'dichloromethane', "", 'dichloromethane', "", ], 
 		"mem_com" : ["1600", "1600", "1600", "1600", "1600", "1600" ,"1600", "1600","1600", "1600"   ],
 		"mem_pbs" : ["10", "10", "10", "10", "10", "10" , "10", "10", "10", "10" ],
 	}
