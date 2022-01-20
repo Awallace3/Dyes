@@ -1,0 +1,66 @@
+
+
+
+{
+
+
+    "user":{
+        "user":"r2532"
+    },
+    "path":{
+        "path_to_inputs_json":"/Users/tsantaloci/Desktop/python_projects/austin/Dyes/src",
+        "path_to_results_json":"/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results",
+        "path_to_src":"/Users/tsantaloci/Desktop/python_projects/austin/Dyes/src",
+        "path_to_results":"/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test",
+        "path_to_final":"/Users/tsantaloci/Desktop/python_projects/austin/Dyes"
+    },
+    
+    "generateMolecules":{
+        "enable":"False",
+        "banned":["TPA2"],
+        "three_types":["eDonors","backbones","eAcceptors"],
+        "resubmit_delay_min": 0.001,
+        "resubmit_max_attempts":2,
+        "method_opt":"B3LYP",
+        "basis_set_opt":"6-311G(d,p)",
+        "mem_com_opt":"2400", 
+        "mem_pbs_opt":"10", 
+        "cluster":"map"
+    },
+    "geomopt":{
+        "enable":"True",
+        "dyeoptlist":["9ed_8b_4ea","9ed_8b_5ea"],
+        "method_opt":"B3LYP",
+        "basis_set_opt":"6-311G(d,p)",
+        "mem_com_opt":"2400", 
+        "mem_pbs_opt":"10",
+        "solvent":"",
+        "cluster":"seq",
+        "submit":"no"
+    },
+    "add_methods":{
+        "methods":["CAM-B3LYP","bhandhlyp", "PBE1PBE"],
+        "basis_set":["6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)"],
+        "solvent":["","",""],
+        "mem_com":["1600","1600","1600"],
+        "mem_pbs":["10","10","10"]
+    },
+    "excitation":{
+        "enable":"False",
+        "dyeList":[],
+        "resubmit_delay_min": 0.001,
+        "resubmit_max_attempts":2,
+        "method_opt":"B3LYP",
+        "basis_set_opt":"6-311G(d,p)",
+        "mem_com_opt":"2400", 
+        "mem_pbs_opt":"10",
+        "method_mexc":"CAM-B3LYP",
+        "basis_set_mexc":"6-311G(d,p)",
+        "mem_com_mexc":"1600",
+        "mem_pbs_mexc":"10",
+        "cluster":"map",
+        "max_queue":200,
+        "results_json":"results_json='results.json'"
+    }
+}
+
