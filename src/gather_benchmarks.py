@@ -212,17 +212,31 @@ def main():
 		"ZL003": 519,
 		"JW1": 590,
 		"TTAR-B8": 485,
+
+		"AP11":377,
+		"AP14": 399,
+		"AP16":384,
+		"AP17":379,
+		"C218":550,
+		"CC3":377,
+		"JD21":582,
+		"ND1":646,
+		"ND2":641,
+		"ND3":668,
+		"NL12":565,
+		"NL13":590,
+		"NL3":651,
+		"NL5":672,
+		"QL4":386,
+		"RR9":399,
+		"YZ12":543,
+		"YZ15":549,
+		"YZ7":532
 	}
 	convert_Molecule_to_Molecule_BM("../Benchmark/results/", exp_values, exc_json=True)
 
 	method_mexc = "CAM-B3LYP"
 	basis_set_mexc = "6-311G(d,p)"
-	add_methods = {
-		"methods" : ["bhandhlyp", "PBE1PBE"],
-		"basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
-		"mem_com" : ["1600", "1600"],
-		"mem_pbs" : ["10", "10"]
-	}
 
 	add_methods = {
         "methods" : ["CAM-B3LYP", "PBE1PBE", 'bhandhlyp', "PBE1PBE", 'bhandhlyp', "CAM-B3LYP", "PBE1PBE", 'bhandhlyp', "CAM-B3LYP", "PBE1PBE", 'bhandhlyp', ],
@@ -231,10 +245,21 @@ def main():
         "solvent" : ["dichloromethane", 'dichloromethane', 'dichloromethane', '','', 'n,n-dimethylformamide', 'n,n-dimethylformamide','n,n-dimethylformamide', 'tetrahydrofuran', 'tetrahydrofuran', 'tetrahydrofuran', ],
         "mem_pbs" : ["10", "10", "10", "10", "10", "10",  "10", "10", "10", "10", "10", ]
     }
-	monitor_jobs =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271', 'WS-6', 'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A']
-	monitor_jobs =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271', 'WS-6', 'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A', 'AP25', 'D1', 'D3', 'XY1', 'NL6', 'ZL003', 'JW1']
 
-	gather_benchmark_excitations('../Benchmark/results', monitor_jobs, add_methods, method_mexc, basis_set_mexc, results_json='benchmarks_exc.json', exc_json=True)
+	add_methods = {
+		"methods" : ["bhandhlyp", "PBE1PBE"],
+		"basis_set" : ["6-311G(d,p)", "6-311G(d,p)"],
+		"mem_com" : ["1600", "1600"],
+        "solvent" : ["", ""],
+		"mem_pbs" : ["10", "10"]
+	}
+
+	monitor_jobs =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271', 'WS-6', 'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A']
+
+	monitor_jobs_bm2 =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271',  'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A','ZL003','WS-6','NL4','NL6','JW1','AP25','AP11','AP14','AP16','AP17','C218','CC3','JD21','ND1','ND2','ND3','NL12','NL13','NL3','NL5','QL4','RR9','YZ12','YZ15','YZ7']
+
+
+	gather_benchmark_excitations('../Benchmark/results', monitor_jobs_bm2, add_methods, method_mexc, basis_set_mexc, results_json='benchmarks_exc.json', exc_json=True)
 
 
 if __name__ == "__main__":
