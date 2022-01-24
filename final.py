@@ -802,7 +802,6 @@ def clean_dir_name(dir_name):
 
 
 def main():
-<<<<<<< HEAD
     #print("\n\tstart\n")
     three_types = ["eDonors", "backbones", "eAcceptors"] # Name of subdirectories holding the local structures
 
@@ -818,7 +817,6 @@ def main():
     #localStructuresDict = {'local1': [ ('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('C(BBA)1=C2C(N=CC=N2)=C((BBD))S1', '1b', "test"),     ], 'local3': [('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ea', 'acid'), ]}
     smiles_tuple_list = permutationDict(localStructuresDict)
     print("smiles_tuple_list", smiles_tuple_list)
-=======
     # print("\n\tstart\n")
     three_types = [
         "eDonors",
@@ -893,7 +891,6 @@ def main():
     # localStructuresDict = {'local1': [ ('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('C(BBA)1=C2C(N=CC=N2)=C((BBD))S1', '1b', "test"),     ], 'local3': [('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ea', 'acid'), ]}
     # smiles_tuple_list = permutationDict(localStructuresDict)
     # print("smiles_tuple_list", smiles_tuple_list)
->>>>>>> c8794f5a7b0070e391a61152284b0871936c42bb
     """
     """
     resubmit_delay_min = 0.001
@@ -919,13 +916,10 @@ def main():
     cluster = "seq"
 
     # comment for testing
-<<<<<<< HEAD
     monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
                 mem_com_opt, mem_pbs_opt, cluster)
-=======
     # monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
     #            mem_com_opt, mem_pbs_opt, cluster)
->>>>>>> c8794f5a7b0070e391a61152284b0871936c42bb
     """
     ds1 =  ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea',
     '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea',
@@ -3723,12 +3717,10 @@ def main():
         "mem_com": ["1600", "1600", "1600"],
         "mem_pbs": ["10", "10", "10"],
     }
-<<<<<<< HEAD
 #    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
     #monitor_jobs = ['RR6']
 
     '''    
-=======
     #    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
     monitor_jobs = ["RR6"]
 
@@ -3744,7 +3736,6 @@ def main():
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
->>>>>>> c8794f5a7b0070e391a61152284b0871936c42bb
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -3753,11 +3744,6 @@ def main():
                            #max_queue=200, results_json='results.json'
                            max_queue=200, results_json='benchmarks.json'
     )
-<<<<<<< HEAD
-    '''
-    """
-=======
->>>>>>> c8794f5a7b0070e391a61152284b0871936c42bb
     complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
