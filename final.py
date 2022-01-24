@@ -665,12 +665,13 @@ def main():
             '5b', '7b', '8b', '9b', "TPA2",'26b','27b','28b','1ed','2ed','3ed',
             '17b', '19b', '20b', '21b', '22b', '7ed', '8ed']
     banned =  ['10b', '11b', '12b', '13b', '14b', '15b', '2b', '3b', '4b', '5b', '7b', '8b', '9b', "TPA2"]
+    banned = ["TPA2"]
 
-    #localStructuresDict = collectLocalStructures(three_types, banned) # p
+    localStructuresDict = collectLocalStructures(three_types, banned) # p
     #localStructuresDict = {'local1': [ ('N((BBD))(C1=CC=CC=C1)C2=CC=CC=C2', '2ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('CC(C=C1)=CC=C1C(C2=C3SC4=C2SC5=C4C(    C6=CC=C(C)C=C6)(C7=CC=C(C)C=C7)C8=C9C5=C(C=CC=C%10)C%10=C((BBA))C9=CC=C8)(C%11=CC=C(C)C=C%11)C%12=CC=CC%13=C((BBD))C%14=C(C=CC=C%14)C3=C%1    3%12', '26b', "9,9,19,19-tetra-p-tolyl-9,19-dihydrobenzo[10',1']phenanthro[3',4':4,5]thieno[3,2-b]benzo[10,1]phenanthro[3,4-d]thiophene"),     ], 'local3': [('OC(C1=C(O)C=C(C#C(BBA))C=C1)=O', '11ea', '4-ethynyl-2-hydroxybenzoic acid'), ]}
     #localStructuresDict = {'local1': [ ('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('C(BBA)1=C2C(N=CC=N2)=C((BBD))S1', '1b', "test"),     ], 'local3': [('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ea', 'acid'), ]}
-    #smiles_tuple_list = permutationDict(localStructuresDict)
-    #print("smiles_tuple_list", smiles_tuple_list)
+    smiles_tuple_list = permutationDict(localStructuresDict)
+    print("smiles_tuple_list", smiles_tuple_list)
     """
     """
     resubmit_delay_min = 0.001
@@ -697,8 +698,8 @@ def main():
     cluster='seq'
 
     # comment for testing
-    #monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
-    #            mem_com_opt, mem_pbs_opt, cluster)
+    monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
+                mem_com_opt, mem_pbs_opt, cluster)
     """
     ds1 =  ['3ed_11b_3ea', 'TPA2_4b_2ea', '7ed_6b_3ea',
     '6ed_6b_3ea', '7ed_14b_3ea', '5ed_7b_1ea', '5ed_14b_1ea',
@@ -1362,9 +1363,9 @@ def main():
         "mem_pbs" : ["10", "10","10"]
     }
 #    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
-    monitor_jobs = ['RR6']
+    #monitor_jobs = ['RR6']
 
-    
+    '''    
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -1373,6 +1374,7 @@ def main():
                            #max_queue=200, results_json='results.json'
                            max_queue=200, results_json='benchmarks.json'
     )
+    '''
     """
     complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,

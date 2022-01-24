@@ -6,9 +6,8 @@ import subprocess
 # Input smiles string
 # Adds smiles string depending on if theres a BBA or BBD or both in the string
 # Depending on whether there is a BBA or BBD place the file in the directory
-
-#name = input('What is name of chemdraw stucture without the Kr and Ar: ')
-#smile = input('What is the smile string from Chemdraw (Place Ar for electron acceptor connection and Kr for electron donor connection): ')
+name = input('What is name of chemdraw stucture without the Kr and Ar: ')
+smile = input('What is the smile string from Chemdraw (Place Ar for electron acceptor connection and Kr for electron donor connection): ')
 #inchlkey = input('Copy and paste the inchlkey with the Ar and Kr: ')
 def arkysmiconv(smile):
     '''
@@ -23,44 +22,47 @@ def arkysmiconv(smile):
         #print(a)
     #print(a)
     return a
-def typeofstruct(pa,pd,pb,smi):
+
+def typeofstruct():
     '''
     Places Smiles in file and inputs in correct directory
     '''
-  #  smi = arkysmiconv(smile)
+    smi = arkysmiconv(smile)
     print(smi)
     if 'BBA' in smi and 'BBD' not in smi:
        # print('acceptor')
-        os.chdir('..')
+        #os.chdir('..')
         #print(len(os.listdir(os.getcwd())))
-        numoffiles = 0
-        for x in list(os.scandir(pa)):
-            if x.is_file():
-                numoffiles += 1
-        os.chdir(pa)
-        print(numoffiles)
-        os.system('ls')
+       # numoffiles = 0
+       # for x in list(os.scandir('../eAcceptors')):
+       #     if x.is_file():
+       #         numoffiles += 1
+       # os.chdir('eAcceptors/')
+       # print(numoffiles)
+      #  os.system('ls')
         x = 'acceptor'
         print('This structure is an acceptor')
-
+      #  os.chdir('../../')
 
     elif 'BBD' in smi and 'BBA' not in smi:
-        numoffiles = 0
-        for x in list(os.scandir(pd)):
-            if x.is_file():
-                numoffiles += 1
-        os.chdir(pd)
-        print(numoffiles)
+      #  os.chdir('..')
+      #  numoffiles = 0
+      ##  for x in list(os.scandir('../eDonors')):
+       #     if x.is_file():
+       #         numoffiles += 1
+    #    os.chdir('eDonors/')
+      #  print(numoffiles)
         x = 'donor'
         print('This structure is an donor')
+    #    os.chdir('../../')
     elif 'BBD' in smi and 'BBA' in smi:
-        numoffiles = 0
-        for x in list(os.scandir(pb)):
-            if x.is_file():
-                numoffiles += 1
-        os.chdir(pb)
-        print(numoffiles)
+   #    for x in list(os.scandir('../eDonors')):
+   #         if x.is_file():
+   #             numoffiles += 1
+    #    os.chdir('eDonors/')
+   #     print(numoffiles)
         print('This structure is an backbone') 
+     #   os.chdir('../../')
         x = 'backbone'
     else:
         print('Error')
@@ -68,7 +70,6 @@ def typeofstruct(pa,pd,pb,smi):
 #typeofstruct()
 
 def CreatesInchlKey(smile):
-    print(smile)
     filename = open('creator.smi','w+')
     filename.write(str(smile))
     filename.close()
@@ -76,9 +77,9 @@ def CreatesInchlKey(smile):
     carts = subprocess.check_output(key, shell=True)
         #subprocess.call(cmd, shell=True)
     carts = str(carts)
+    
     l = []
     for i in carts:
-        #print(i)
         l.append(i)
     l.remove('b')
     l.remove("'")
@@ -92,164 +93,99 @@ def CreatesInchlKey(smile):
 
     return inchlkey
 
-def InchlKeyDicBackbone(pb):
+def InchlKeyDicBackbone():
     InchlKeyBackboneDict = {}
-    for h in os.listdir(pb):
+    for h in os.listdir('../backbones/'):
         if '.smi' in h:
-            with open(pb+'/' + str(h)) as f:
+            with open('../backbones/'+str(h)) as f:
                 data = f.readlines()[2].rstrip('\n')
-                #print(data)
+                print(data)
                 InchlKeyBackboneDict[data] = data
     return InchlKeyBackboneDict
 
-def InchlKeyDicAcceptor(pa):
+def InchlKeyDicAcceptor():
     InchlKeyAcceptorDict = {}
-    for h in os.listdir(pa):
+    for h in os.listdir('../eAcceptors/'):
         if '.smi' in h:
-            with open(pa+ '/' +str(h)) as f:
-            #    print(f)
-               # data = f.readlines()[2].rstrip('\n')
-                data = f.readlines()
-                smiles = data[0].rstrip('\n')
-                key = data[2].rstrip('\n')
-                
-             #   data = f.readlines()
-              #  print(data[2])
-                InchlKeyAcceptorDict[key] = key
+            with open('../eAcceptors/'+str(h)) as f:
+                data = f.readlines()[2].rstrip('\n')
+                print(data)
+                InchlKeyAcceptorDict[data] = data
     return InchlKeyAcceptorDict
 
-def InchlKeyDicDonor(pd):
+def InchlKeyDicDonor():
     InchlKeyDonorsDict = {}
-    for h in os.listdir(pd):
+    for h in os.listdir('../eDonors/'):
         if '.smi' in h:
-            with open(pd+'/' + str(h)) as f:
+            with open('../eDonors/'+str(h)) as f:
                 data = f.readlines()[2].rstrip('\n')
-                #print(data)
+                print(data)
                 InchlKeyDonorsDict[data] = data
     return InchlKeyDonorsDict
-def inchlkeychecker(pb,pa,pd,struct,smi,bb,aa,dd,inchlkey,name):
+def inchlkeychecker():
     '''
     Checks whether the backbone,acceptor or donor has been made before 
     '''
+    struct = typeofstruct()
+    smi = arkysmiconv(smile)
+    inchlkey = CreatesInchlKey(smile)
     if struct == 'backbone':
-        BackboneDict = bb
+        BackboneDict = InchlKeyDicBackbone()
         if inchlkey in BackboneDict.keys():
-            for i in BackboneDict.keys():
-                print(i)
             print('exists')
         elif inchlkey not in BackboneDict.keys():
-            for i in BackboneDict.keys():
-                print(i)
-            numoffiles = []
-            for x in list(os.listdir(pb)):
-                if '.smi' in x:
-                    numoffiles.append(int(x.replace('b.smi','')))
-                    print(x)
-            numoffiles.sort()
-            print(numoffiles[-1])
-             #   if x.is_file():
-                   # print(x[11])
-              #      numoffiles += 1
-            os.chdir(pb)
-        
-            filename = open(str(numoffiles[-1]+1)+'b.smi','x+')
+            numoffiles = 0
+            for x in list(os.scandir('../backbones')):
+                if x.is_file():
+                    numoffiles += 1
+         #   os.chdir('Dyes/backbones/')
+            filename = open('../backbones/' + str(numoffiles+1)+'b.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-            
-            
+        #    os.chdir('../../')
     if struct == 'acceptor':
-        AcceptorDict = aa
+        AcceptorDict = InchlKeyDicAcceptor()
         if inchlkey in AcceptorDict.keys():
-            for i in AcceptorDict.keys():
-                print(i)
-
             print('exists')
         elif inchlkey not in AcceptorDict.keys():
-            for i in AcceptorDict.keys():
-                print(i)
-            numoffiles2 = []
-            for x in list(os.listdir(pa)):
-                print(x)
-                
-                if '.smi' in x:
-                    #print(x)
-                    numoffiles2.append(int(x.replace('ea.smi','')))
-                    #print(x)
-                
-            numoffiles2.sort()
-            print(numoffiles2[-1])
-             #   if x.is_file():
-                   # print(x[11])
-              #      numoffiles += 1
-            os.chdir(pa)
-            
-            filename = open(str(numoffiles2[-1]+1)+'ea.smi','x+')
+            numoffiles = 0
+            for x in list(os.scandir('../eAcceptors')):
+                if x.is_file():
+                    numoffiles += 1
+        #    os.chdir('Dyes/eAcceptors/')
+            filename = open('../eAcceptors/' + str(numoffiles+1)+'ea.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-            
+         #   os.chdir('../../')   
     if struct == 'donor':
-        DonorDict = dd    
+        DonorDict = InchlKeyDicDonor()    
         if inchlkey in DonorDict.keys():
-            for i in DonorDict.keys():
-                print(i)
             print('exists')
         elif inchlkey not in DonorDict.keys():
-            for i in DonorDict.keys():
-                print(i)
-            numoffiles3 = []
-            for x in list(os.listdir(pd)):
-                #print(x)
-                
-                if '.smi' in x:
-                    #print(x)
-                    numoffiles3.append(int(x.replace('ed.smi','')))
-                    #print(x)
-                
-            numoffiles3.sort()
-            print(numoffiles3[-1])
-             #   if x.is_file():
-                   # print(x[11])
-              #      numoffiles += 1
-            os.chdir(pd)
-            
-            filename = open(str(numoffiles3[-1]+1)+'ed.smi','x+')
+            numoffiles = 0
+            for x in list(os.scandir('../eDonors')):
+                if x.is_file():
+                    numoffiles += 1
+        #    os.chdir('Dyes/eDonors/')
+            filename = open('../eDonors/' +str(numoffiles+1)+'ed.smi','x+')
             filename.write(str(smi))
             filename.write('\n')
             filename.write(str(name))
             filename.write('\n')
             filename.write(str(inchlkey))
             filename.close()
-         
+       #     os.chdir('../../')           
 
     return
-
-
-
-def main():
-    path_to_acceptors = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/eAcceptors'
-    path_to_donors = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/eDonors'
-    path_to_backbone = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/backbones'
-    name = input('What is name of chemdraw stucture without the Kr and Ar: ')
-  #  name = 'ffff'
-    smile = input('What is the smile string from Chemdraw (Place Ar for electron acceptor connection and Kr for electron donor connection): ')
-  #  smile = 'CCC[Kr]CCC[Ar]'
-    inchlkey = CreatesInchlKey(smile)
-    smi = arkysmiconv(smile)
-    struct = typeofstruct(path_to_acceptors,path_to_donors,path_to_backbone,smi)
-    inchlkeychecker(path_to_backbone,path_to_acceptors,path_to_donors,struct,smi,InchlKeyDicBackbone(path_to_backbone),InchlKeyDicAcceptor(path_to_acceptors),InchlKeyDicDonor(path_to_donors),CreatesInchlKey(smile),name)
-    
-
-    return
-
-main()
+inchlkeychecker()
 
 
 
