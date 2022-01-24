@@ -59,7 +59,7 @@ def coefficients_3D_line(xs, y_exp, coefficients):
     for i in range(len(xyzs[:, 0])):
         y = coefficients[0] * xyzs[i, 0] + coefficients[1] * xyzs[i, 1]
         xyzs[i, 2] = y
-    xyzs = xyzs[xyzs[:, 2].argsort()]
+    #xyzs = xyzs[xyzs[:, 2].argsort()]
     return xyzs
 
 def coefficients_3D_equation(xs, y_exp, coefficients, deg, x_range=False, plot_x_range=[-7, -5.5]):
@@ -381,11 +381,11 @@ def correlation_function(
         plt.legend()
         plt.show()
 
-
 def correlation_homos_lumos_vertExcitations(
         path_results_json,
         methods_basissets=['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)'],
         units='eV',
+        banned_lst = [],
         ):
     df_molecules = json_pandas_molecule_BM(path_results_json, exc_json=True)
     df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
@@ -418,6 +418,11 @@ def correlation_homos_lumos_vertExcitations(
         print("unit not acceptable")
     df2 = convert_df_nm_to_eV(df, convert_lst)
 
+    if len(banned_lst) > 0:
+        df2 = df2[~df2['Name'].isin(banned_lst)]
+        df2 = df2.reset_index().drop(columns=['index'])
+
+    print(df2)
     # df = df_molecules_to_df_method_basisset(df, methods_basissets)
     if units.lower() == 'ev':
         df2 = df_conv_energy(df2)
@@ -485,7 +490,7 @@ def correlation_homos_lumos_vertExcitations(
     ax1.legend()
     ax1.set_xlabel("Benchmark Dyes")
     ax1.set_ylabel("HOMO Energy (eV)")
-    plt.savefig('../data_analysis/homo_fitting.png')
+    #plt.savefig('../data_analysis/homo_fitting.png')
 
     fig = plt.figure(dpi=400)
     ax2 = fig.add_subplot()
@@ -496,16 +501,240 @@ def correlation_homos_lumos_vertExcitations(
     ax2.legend()
     ax2.set_xlabel("Benchmark Dyes")
     ax2.set_ylabel("LUMO Energy (eV)")
+    #plt.savefig('../data_analysis/lumo_fitting2.png')
+
+def correlation_homos_lumos_vertExcitations_SepDF(
+        df,
+        h=[
+                "HOMO CAM-B3LYP/6-311G(d,p)",  "LUMO CAM-B3LYP/6-311G(d,p)",
+                "HOMO bhandhlyp/6-311G(d,p)",  "LUMO bhandhlyp/6-311G(d,p)",
+                "HOMO PBE1PBE/6-311G(d,p)",       "LUMO PBE1PBE/6-311G(d,p)",
+
+        ],
+        exp=['HOMO Ox', 'LUMO Ox'],
+        nhe_to_ev=4.5,
+        plot_name=True,
+        add_exc_to_homo=False,
+        units='nhe' # 'ev'
+        #units='ev' # 'ev'
+    
+        ):
+
+    if units=='ev':
+        df['HOMO'] = -1*abs(df[exp[0]] + nhe_to_ev)
+        df['LUMO'] = -1*abs(df[exp[1]] + nhe_to_ev)
+    else:
+        df['HOMO'] = df[exp[0]]
+        df['LUMO'] = df[exp[1]]
+        for l in h:
+            df[l] = df[l] + nhe_to_ev
+    #df = df.sort_values(['HOMO'], ascending=True)
+    df = df.sort_values(['Exp'], ascending=True)
+    print(df)
+
+    df['dif'] = df[h[0]] - df[h[4]]
+
+    df['z_score'] = stats.zscore(df['dif'])
+    # 3 standard deviations away seems fine because most are less than 1
+    df = df.loc[df['z_score'].abs()<=3]
+    df = df.reset_index().drop(columns=['index'])
+    df['count'] = df.index
+
+    exp_homo = df['HOMO'].to_numpy()
+    exp_lumo = df['LUMO'].to_numpy()
+
+    ### START HERE
+
+    #print(df["CAM-B3LYP/6-311G(d,p)"] )
+
+    if add_exc_to_homo:
+        df[h[1]] = df[h[0]] + df["CAM-B3LYP/6-311G(d,p)"]
+        df[h[5]] = df[h[4]] + df["PBE1PBE/6-311G(d,p)"]
+
+    meths = df[[h[0], h[4]]].to_numpy()
+    meths2 = df[[h[1], h[5]]].to_numpy()
+
+
+    out = np.linalg.lstsq(meths, exp_homo, rcond=None)
+    first, *_, last = out
+    xyzs3 = coefficients_3D_line(meths, exp_homo, first)
+    print("\n\t HOMO\n")
+    print('\ncoefficients =',first, '\n')
+    print("Total    Residuel =", get_residual(out, meths, exp_homo))
+    print("Total    RSE      =", RSE(exp_homo, xyzs3[:, 2]) )
+    print("Total    RMSE     =", mean_squared_error(exp_homo, xyzs3[:, 2], squared=False ))
+
+    out2 = np.linalg.lstsq(meths2, exp_lumo, rcond=None)
+    first2, *_, last = out2
+    xyzs4 = coefficients_3D_line(meths2, exp_lumo, first2)
+    print("\n\t LUMO\n")
+    print('\ncoefficients =',first2, '\n')
+    print("Total    Residuel =", get_residual(out2, meths2, exp_lumo))
+    print("Total    RSE      =", RSE(exp_lumo, xyzs4[:, 2]) )
+    print("Total    RMSE     =", mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False))
+
+    fig = plt.figure(dpi=400)
+    ax1 = fig.add_subplot()
+
+    if plot_name:
+        x_plot = df['Name']
+        fig = plt.gcf()
+        fig.autofmt_xdate(bottom=0.2, rotation=90, ha='center', which='major')
+    else:
+        x_plot = df['count']
+    ax1.plot(x_plot, exp_homo, 'k', label='Exp. HOMO')
+    ax1.plot(x_plot, meths[:,0], label='CAM-B3LYP HOMO')
+    ax1.plot(x_plot, meths[:,1], label='PBE0 HOMO')
+    ax1.plot(x_plot, xyzs3[:,2], label='LSF HOMO')
+    ax1.legend()
+    ax1.set_xlabel("Benchmark Dyes")
+    if units == 'ev':
+        ax1.set_ylabel("HOMO Energy (eV)")
+    else:
+        ax1.set_ylabel("HOMO Energy (NHE)")
+    plt.savefig('../data_analysis/homo_fitting.png')
+
+    fig = plt.figure(dpi=400)
+    ax2 = fig.add_subplot()
+
+    if plot_name:
+        x_plot = df['Name']
+        fig = plt.gcf()
+        fig.autofmt_xdate(bottom=0.2, rotation=90, ha='center', which='major')
+    else:
+        x_plot = df['count']
+
+    ax2.plot(x_plot, exp_lumo, 'k', label='Exp. LUMO')
+
+    if add_exc_to_homo:
+        ax2.plot(x_plot, meths2[:,0], label='CAM-B3LYP HOMO + 1st Exc.')
+        ax2.plot(x_plot, meths2[:,1], label='PBE0 HOMO + 1st Exc.')
+    else:
+        ax2.plot(x_plot, meths2[:,0], label='CAM-B3LYP LUMO')
+        ax2.plot(x_plot, meths2[:,1], label='PBE0 LUMO')
+    ax2.plot(x_plot, xyzs4[:,2], label='LSF LUMO')
+    ax2.legend()
+    ax2.set_xlabel("Benchmark Dyes")
+    if units == 'ev':
+        ax2.set_ylabel("LUMO Energy (eV)")
+    else:
+        ax2.set_ylabel("LUMO Energy (NHE)")
     plt.savefig('../data_analysis/lumo_fitting2.png')
 
+    lsf_homo = xyzs3[:,2]
+    lsf_lumo = xyzs4[:,2]
 
+    return exp_homo, exp_lumo, lsf_homo, lsf_lumo 
+
+def theory_df(
+        path_results_json='../Benchmark/benchmarks_exc.json',
+        methods_basissets=['CAM-B3LYP/6-311G(d,p)', 'bhandhlyp/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)'],
+        units='eV',
+        banned_lst = [],
+        ):
+    df_molecules = json_pandas_molecule_BM(path_results_json, exc_json=True)
+    df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
+    convert_lst = methods_basissets.copy()
+    convert_lst.append("Exp")
+    df = convert_df_nm_to_eV(df, convert_lst)
+    unlucky = {
+        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        "D1": [2.337250,2.285609,1.742975,2.176884],
+        "D3": [2.301722,2.209749,1.549403,2.207872],
+        "XY1": [2.398999,2.314932,1.839675,2.247870],
+        "NL6": [2.250481,2.239272,1.383166,2.050367],
+        "ZL003": [2.488369,2.437129,2.031108,2.390798],
+        "JW1": [2.320036,2.302322,1.910812,2.103091],
+    }
+    for key, val in unlucky.items():
+        row = {
+            'Name': key,
+            methods_basissets[0]: val[0],
+            methods_basissets[1]: val[1],
+            methods_basissets[2]: val[2],
+            'Exp': val[3],
+        }
+        df = df.append(row, ignore_index=True)
+    if units.lower() == 'nm':
+        df = convert_df_nm_to_eV(df, convert_lst)
+    elif units.lower() == 'ev':
+        pass
+    else:
+        print("unit not acceptable")
+    df2 = convert_df_nm_to_eV(df, convert_lst)
+
+    if len(banned_lst) > 0:
+        df2 = df2[~df2['Name'].isin(banned_lst)]
+        df2 = df2.reset_index().drop(columns=['index'])
+    if units.lower() == 'ev':
+        df2 = df_conv_energy(df2)
+
+    return df2
+
+def combine_exp_theory_orbs(
+        banned_lst,
+        exp_orbs_path='delcamp.csv',
+        theory_orbs_path= 'delcamp_theoretical.csv',
+        #theory_orbs_path='../Benchmark/benchmarks_exc.json',
+
+        ):
+
+    #t_df = theory_df(theory_orbs_path)
+    e_df = pd.read_csv(exp_orbs_path).dropna()
+
+    t_df = pd.read_csv(theory_orbs_path).dropna()
+    df = e_df.merge(t_df, how= 'inner', on=['Name'])
+    return df
+
+def s_plot_LSF_Exp(
+        theoretical=[],
+        exp=[],
+        names=[],
+        units='NHE',
+        output_name='scatter.png'
+        ):
+    for i in range(len(theoretical)):
+        fig = plt.figure(dpi=400)
+        ax1 = fig.add_subplot()
+
+        if len(names) > 0:
+            x_plot = names
+            fig = plt.gcf()
+            fig.autofmt_xdate(bottom=0.2, rotation=90, ha='center', which='major')
+        else:
+            x_plot = [i for i in range(len(theoretical)) ]
+
+        ax1.plot(exp[i], theoretical[i])
+        ax1.legend()
+        ax1.set_xlabel("Experiment (%s)" % units)
+        ax1.set_ylabel("LSF Energy (%s)" % units)
+        plt.savefig('../data_analysis/%s' % output_name)
 
 def main():
+    prev_bms =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A',  'C271', 'WS-6', 'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304',  'C258', 'TTAR-9', 'SGT-121', 'TTAR-15',  'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A']
+    prev_bms =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'C271', 'WS-6', 'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15',  'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A']
+    
     df = pd.read_csv('exp_homo_lumo.csv').dropna()
     #correlation_function(df, type='LSF', deg=9, train=False)
     #correlation_function_nhe(df, type='LSF', deg=9, train=False)
-    correlation_homos_lumos_vertExcitations('../Benchmark/benchmarks_exc.json')
 
+    #correlation_homos_lumos_vertExcitations('../Benchmark/benchmarks_exc.json', 
+    #    banned_lst=prev_bms
+    #        )
+
+    #correlation_homos_lumos_vertExcitations_SepDF('../Benchmark/benchmarks_exc.json',
+    #        df,
+    #        banned_lst=prev_bms, 
+    #        )
+
+    df= combine_exp_theory_orbs(prev_bms)
+    #df.to_csv('tmp.csv')
+    exp_homo, exp_lumo, lsf_homo, lsf_lumo = correlation_homos_lumos_vertExcitations_SepDF(df)
+
+    s_plot_LSF_Exp(
+            theoretical=[lsf_homo, lsf_lumo],
+            exp=[exp_homo, exp_lumo],
+            )
 
 
 if __name__ == '__main__':

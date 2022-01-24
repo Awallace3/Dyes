@@ -11,6 +11,8 @@ import json
 import io
 import matplotlib.pyplot as plt
 
+from homo_lumo import * 
+
 
 # Genetic algorithm in the future?
 
@@ -20,6 +22,9 @@ json_pandas_molecules dataframe
     'name', 'exc', 'nm','osci', 'method_basis_set', 'orbital_Numbers', 'HOMO','LUMO', 'generalSMILES', 'localName', 'parts',  'SMILES'
 
 """
+
+
+
 
 def json_pandas_molecule(path_results, results_exc=False):
     dat = pd.read_json(path_results)
@@ -546,7 +551,7 @@ def convert_df_eV_to_nm(df, columns_convert=["Exp"]):
 def plot_methods(df,
         weighted_avg=['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'],
         headers_colors=[
-            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['Weighted Average', 'green']
+            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'], ['LSF', 'green']
             ],
         outname='dye_plot_weighted.png',
         exp=False,
@@ -565,28 +570,47 @@ def plot_methods(df,
     df = df.apply(lambda x: pd.to_numeric(x, errors='coerce')).dropna()
 
     if LSF:
-        co, residuals = weighted_avg_calc(df, weighted_avg)
+        co, residuals, lsf = least_squares(df, weighted_avg)
         print("Coefficients = ", co, "\nresidual = ", residuals )
-        df['Weighted Avg.'] = df['CAM-B3LYP/6-311G(d,p)']*co[0] + df['PBE1PBE/6-311G(d,p)']*co[1]
+        #df['Weighted Avg.'] = df['CAM-B3LYP/6-311G(d,p)']*co[0] + df['PBE1PBE/6-311G(d,p)']*co[1]
+        df['LSF'] = lsf
+        print("lsf:", df['LSF'])
         #df['LSF'] = df['CAM-B3LYP/6-311G(d,p)']*co[0] + df['PBE1PBE/6-311G(d,p)']*co[1]
         #df = df.drop('Weighted Avg.', 1)
+        if exp:
+            #df = df.sort_values(['Exp'], ascending=False)
+            df = df.sort_values(['Exp'], ascending=False)
+            dif = (df['LSF'] - df['Exp']).abs().mean()
+            a, b = above_below( df[weighted_avg[ 0 ]], df[ 'Exp' ] )
+            print( weighted_avg[ 0 ], a/( a+b ), b/( a+b ) )
+
+            a, b = above_below( df[weighted_avg[ 1 ]], df[ 'Exp' ] )
+            print( weighted_avg[ 1 ], a/( a+b ), b/( a+b ) )
+
+            print("average difference", dif)
+            headers_colors.insert( 3, ['Experiment', 'black'])
+
+        else:
+            df = df.sort_values([sort_by], ascending=False)
     else:
         df['Weighted Avg.'] = df['CAM-B3LYP/6-311G(d,p)']*weights[0] + df['PBE1PBE/6-311G(d,p)']*weights[1]
-    if exp:
+        if exp:
+            #df = df.sort_values(['Exp'], ascending=False)
+            df = df.sort_values(['Weighted Avg.'], ascending=False)
+            dif = (df['Weighted Avg.'] - df['Exp']).abs().mean()
+            print("average difference", dif)
+            headers_colors.insert( 3, ['Experiment', 'black'])
+            df = df.sort_values(sort_by, ascending=False)
 
-        #df = df.sort_values(['Exp'], ascending=False)
-        df = df.sort_values(['Weighted Avg.'], ascending=False)
-        dif = (df['Weighted Avg.'] - df['Exp']).abs().mean()
-        print("average difference", dif)
-        headers_colors.insert( 3, ['Experiment', 'black'])
-        df = df.sort_values(sort_by, ascending=False)
-
-    else:
-        df = df.sort_values([sort_by], ascending=False)
+        else:
+            df = df.sort_values([sort_by], ascending=False)
 
 
     fig = plt.figure(dpi=400)
-    dye_cnt = range(len(df['Weighted Avg.']))
+    if LSF:
+        dye_cnt = range(len(df['LSF']))
+    else:
+        dye_cnt = range(len(df['Weighted Avg.']))
     print(df)
 
     for ind, col in enumerate(df[::-1]):
@@ -872,7 +896,8 @@ def benchmarkFlow(path_benchmark="Benchmark/benchmarks.json"):
     print(df)
     df = convert_df_nm_to_eV(df, convert_lst)
     unlucky = {
-        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        "AP25": [2.329644,2.295717,1.920780,1.9342315],
+        #"AP25": [2.329644,2.295717,1.920780,1.880036],
         "D1": [2.337250,2.285609,1.742975,2.176884],
         "D3": [2.301722,2.209749,1.549403,2.207872],
         "XY1": [2.398999,2.314932,1.839675,2.247870],
@@ -903,7 +928,8 @@ def benchamrkPredictPCE(
     path_benchmark="Benchmark/benchmarks.json",
     path_ipce="src/ipce.csv",
     extra_values={
-        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        #"AP25": [2.329644,2.295717,1.920780,1.880036],
+        "AP25": [2.329644,2.295717,1.920780,1.9342315],
         "D1": [2.337250,2.285609,1.742975,2.176884],
         "D3": [2.301722,2.209749,1.549403,2.207872],
         "XY1": [2.398999,2.314932,1.839675,2.247870],
@@ -921,7 +947,8 @@ def benchamrkPredictPCE(
 
     df = convert_df_nm_to_eV(df, convert_lst)
     unlucky = {
-        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        #"AP25": [2.329644,2.295717,1.920780,1.880036],
+        "AP25": [2.329644,2.295717,1.920780,1.9342315],
         "D1": [2.337250,2.285609,1.742975,2.176884],
         "D3": [2.301722,2.209749,1.549403,2.207872],
         "XY1": [2.398999,2.314932,1.839675,2.247870],
@@ -1080,7 +1107,7 @@ def benchmarks_dyes_basis_set_out(
         plot_js = {
         "weighted_avg" :['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'],
         "headers_colors":[
-            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'],  ['Weighted Average', 'green'], #['Weighted Average', 'green']
+            ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'],  ['LSF', 'green'], #['Weighted Average', 'green']
             ],
         "weights":[0.71, 0.29],
         },
@@ -1100,7 +1127,8 @@ def benchmarks_dyes_basis_set_out(
     print(df)
     df = convert_df_nm_to_eV(df, convert_lst)
     unlucky = {
-        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        #"AP25": [2.329644,2.295717,1.920780,1.880036],
+        "AP25": [2.329644,2.295717,1.920780,1.9342315],
         "D1": [2.337250,2.285609,1.742975,2.176884],
         "D3": [2.301722,2.209749,1.549403,2.207872],
         "XY1": [2.398999,2.314932,1.839675,2.247870],
@@ -1157,7 +1185,7 @@ def benchmarks_dyes_basis_set_out(
 
     if testing:
         df2 = df.sort_values(methods_basissets[0], ascending=False)
-        weighted_avg_calc(df2)
+        least_squares(df2)
 
 
     # print(df)
@@ -1178,7 +1206,7 @@ def clean_solvent(solvent):
 
 #     df['Weighted Avg.'] = df[methods[0]]*weights[0] + df[methods[1]]*weights[1]
 #     return df
-def weighted_avg_calc(
+def least_squares(
         df,
         methods_basissets_avg=['CAM-B3LYP/6-311G(d,p)', 'PBE1PBE/6-311G(d,p)'],
         debug=False,
@@ -1199,9 +1227,17 @@ def weighted_avg_calc(
         print(dfts, exp)
         print(dfts.shape, exp.shape)
     out = np.linalg.lstsq(dfts, exp)
+    first, *_, last = out
+    xyzs3 = coefficients_3D_line(dfts, exp, first)
+
+    # TODO: ensure functions exists
+    print('\ncoefficients =',first, '\n')
+    print("Total    Residuel =", get_residual(out, dfts, exp))
+    print("Total    RSE      =", RSE(exp, xyzs3[:, 2]) )
+    print("Total    RMSE     =", mean_squared_error(exp, xyzs3[:, 2], squared=False ))
+
     # A*x - exp == close to zero
     # plug in my values for A to test residuals
-    first, *_, last = out
     if verbose:
         print('coefficients =',first)
         print('final = ', dft1[0], first[0], exp[0])
@@ -1220,7 +1256,8 @@ def weighted_avg_calc(
     #print("old", summed)
 
     # say used least-squares fit
-    return first, summed
+    lsf = xyzs3[:, 2]
+    return first, summed, lsf
 
 
 
@@ -1234,7 +1271,7 @@ def solvent_mean_abs_error(
     if LSF:
         solvents=[clean_solvent(i) for i in solvents]
 
-        co, residuals = weighted_avg_calc(df, methods_basissets_avg)
+        co, residuals = least_squares(df, methods_basissets_avg)
         df['vacuum_MAE'] = df[methods_basissets_avg[0]]*co[0] + df[methods_basissets_avg[1]]*co[1]
         weighted_avg = (df['vacuum_MAE'] - df['Exp']).mean() #should be approximately zero.
         mae = (df['vacuum_MAE'] - df['Exp']).abs().mean()
@@ -1245,7 +1282,7 @@ def solvent_mean_abs_error(
         for i in solvents:
             print('solvent = ', i)
             solv_meth = ["%s_%s" % (methods_basissets_avg[0], i), "%s_%s" % (methods_basissets_avg[1], i)]
-            co, residuals = weighted_avg_calc(df, solv_meth)
+            co, residuals = least_squares(df, solv_meth)
             df["%s_MAE" % i]  = df[solv_meth[0]]*co[0] + df[solv_meth[1]]*co[1]
             weighted_avg = (df["%s_MAE" % i] - df['Exp']).mean() #should be approximately zero.
             mae = (df['%s_MAE'%i] - df['Exp']).abs().mean()
@@ -1337,7 +1374,8 @@ def benchmarks_solvation(
     # print(df)
     df = convert_df_nm_to_eV(df, convert_lst)
     unlucky = {
-        "AP25": [2.329644,2.295717,1.920780,1.880036],
+        #"AP25": [2.329644,2.295717,1.920780,1.880036],
+        "AP25": [2.329644,2.295717,1.920780,1.9342315],
         "D1": [2.337250,2.285609,1.742975,2.176884],
         "D3": [2.301722,2.209749,1.549403,2.207872],
         "XY1": [2.398999,2.314932,1.839675,2.247870],
@@ -1390,7 +1428,15 @@ def df_differences_exp(df, methods):
 
 ### mean absolute error
 
-
+def above_below( d1, d2 ):
+    above, below = 0, 0
+    for i in range( len( d1 ) ):
+        if d1[ i ] > d2 [ i ]:
+            above += 1
+        else:
+            below += 1 
+    return above, below
+        
 
 
 def main():
@@ -1421,8 +1467,8 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
 
-    theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e2',
-        output_latex='theoretical_e2', output_graph='theoreticale2',
+    theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e3',
+        output_latex='theoretical_e3', output_graph='theoreticale3',
         plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, homo_lumo=True,
         LSF_csv=True
         )
@@ -1442,7 +1488,7 @@ def main():
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
         output_csv='bm2',
         output_latex='bm2',
-        # output_graph='bm2',
+        output_graph='bm3',
         exc_json=True, homo_lumo=True
     )
     """
