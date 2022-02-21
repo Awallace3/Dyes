@@ -469,7 +469,9 @@ class MoleculeList_exc():
                 #self.addMolecule(i)
         '''
     def sendToFile(self, fileName):
+        print('The excited state information is being written')
         with open(fileName, 'w') as fp:
+            #print(fp)
             fp.write(self.toJSON())
 
     def toJSON(self):

@@ -60,6 +60,8 @@ def collectLocalStructures(subdirectories, banned=[]):
     return localStructuresDict
 
 
+
+
 def permutationDict(localStructuresDict):
 
     pre_perm = []
@@ -72,6 +74,8 @@ def permutationDict(localStructuresDict):
     return post_perm
 
 
+
+
 def smilesRingCleanUp(f, s, t):
     print()
     smi1, na1, form1 = f
@@ -82,6 +86,8 @@ def smilesRingCleanUp(f, s, t):
     cmd = "../src/number_rings.pl '%s' '%s' '%s'" % (smi1, smi2, smi3)
     line = subprocess.getoutput(cmd)
     return line, name, formalName
+
+
 
 
 def generateMolecules(
@@ -200,6 +206,7 @@ def add_excitation_data(
         print("failed to add")
         return 0, 0
     mol = Molecule()
+    print((mol,'BABEEEE'))
     mol.setData("info.json")
     mol.setHOMO(occVal)
     mol.setLUMO(virtVal)
@@ -738,8 +745,10 @@ def gather_excitation_data(
             os.chdir("..")
             continue
         if exc_json:
+            print('HELPPPPPPP!)))))))))))))')
             mol = Molecule_exc()
             mol.setData("info.json")
+
         else:
             mol = Molecule()
             mol.setData("info.json")
@@ -755,9 +764,7 @@ def gather_excitation_data(
         excitations = absorpt(
             "mexc/mexc.out", method_mexc, basis_set_mexc, exc_json=True
         )
-        if i == "5ed_16b_8ea":
-            print(i, excitations)
-
+        
         if excitations == []:
             if i not in failed:
                 failed.append(i)
@@ -772,6 +779,7 @@ def gather_excitation_data(
             method = add_methods["methods"][j]
             basis_set = add_methods["basis_set"][j]
             lPath = "%s/%s.out" % (method.lower(), baseName)
+            print(lPath)
             if os.path.exists(lPath):
 
                 mol.appendExcitations(
@@ -779,7 +787,9 @@ def gather_excitation_data(
                 )
             else:
                 if i not in failed:
+                    print((i,'AAAAAAAAAA'))
                     failed.append(i)
+                    
         # for j in range(methods_len):
         #    try:
         #        method = add_methods['methods'][j]
@@ -791,7 +801,7 @@ def gather_excitation_data(
         #            failed.append(i)
         mol_lst.updateMolecule(mol, exc_json=exc_json)
         os.chdir("..")
-
+    print(pops)
     mol_lst.sendToFile("%s%s" % (pops, results_json))
     print("FAILED:", failed)
     return True
@@ -812,11 +822,11 @@ def main():
     banned =  ['10b', '11b', '12b', '13b', '14b', '15b', '2b', '3b', '4b', '5b', '7b', '8b', '9b', "TPA2"]
     banned = ["TPA2"]
 
-    localStructuresDict = collectLocalStructures(three_types, banned) # p
+  #  localStructuresDict = collectLocalStructures(three_types, banned) # p
     #localStructuresDict = {'local1': [ ('N((BBD))(C1=CC=CC=C1)C2=CC=CC=C2', '2ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('CC(C=C1)=CC=C1C(C2=C3SC4=C2SC5=C4C(    C6=CC=C(C)C=C6)(C7=CC=C(C)C=C7)C8=C9C5=C(C=CC=C%10)C%10=C((BBA))C9=CC=C8)(C%11=CC=C(C)C=C%11)C%12=CC=CC%13=C((BBD))C%14=C(C=CC=C%14)C3=C%1    3%12', '26b', "9,9,19,19-tetra-p-tolyl-9,19-dihydrobenzo[10',1']phenanthro[3',4':4,5]thieno[3,2-b]benzo[10,1]phenanthro[3,4-d]thiophene"),     ], 'local3': [('OC(C1=C(O)C=C(C#C(BBA))C=C1)=O', '11ea', '4-ethynyl-2-hydroxybenzoic acid'), ]}
     #localStructuresDict = {'local1': [ ('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('C(BBA)1=C2C(N=CC=N2)=C((BBD))S1', '1b', "test"),     ], 'local3': [('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ea', 'acid'), ]}
-    smiles_tuple_list = permutationDict(localStructuresDict)
-    print("smiles_tuple_list", smiles_tuple_list)
+  #  smiles_tuple_list = permutationDict(localStructuresDict)
+    #print("smiles_tuple_list", smiles_tuple_list)
     # print("\n\tstart\n")
     three_types = [
         "eDonors",
@@ -894,9 +904,9 @@ def main():
     """
     """
     resubmit_delay_min = 0.001
-    resubmit_max_attempts = 2
-    resubmit_delay_min = 60 * 6  # 60 * 12
-    resubmit_max_attempts = 120
+    resubmit_max_attempts = 1
+    resubmit_delay_min = 0.001  # 60 * 12
+    resubmit_max_attempts = 1
 
     # geometry optimization options
     method_opt = "B3LYP"
@@ -916,8 +926,8 @@ def main():
     cluster = "seq"
 
     # comment for testing
-    monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
-                mem_com_opt, mem_pbs_opt, cluster)
+  #  monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
+                #mem_com_opt, mem_pbs_opt, cluster)
     # monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
     #            mem_com_opt, mem_pbs_opt, cluster)
     """
@@ -3709,6 +3719,7 @@ def main():
         "2ed_32b_9ea",
         "2ed_32b_1ea",
     ]
+   
 
     add_methods = {
         "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
@@ -3717,22 +3728,17 @@ def main():
         "mem_com": ["1600", "1600", "1600"],
         "mem_pbs": ["10", "10", "10"],
     }
-#    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
-    #monitor_jobs = ['RR6']
-
-    '''    
-    #    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
-    monitor_jobs = ["RR6"]
-
-    """
-    complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
+    '''
+    complete = jobResubmit_v2(dyes_gather, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
                            #cluster, route='Benchmark/results', add_methods=add_methods,
                            cluster, route='results', add_methods=add_methods,
                            max_queue=200, results_json='results.json',
-                           identify_zeros=True, create_smiles=False
+                           identify_zeros=True, create_smiles=True
     )
+    '''
+    """
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -3781,7 +3787,7 @@ def main():
     # DS2
     # gather_excitation_data('./results', ds2, add_methods, method_mexc, basis_set_mexc, results_json='results.json')
     # gather_excitation_data('./results_cp/ds_all', all_ds, add_methods, method_mexc, basis_set_mexc, results_json='../../results_exc.json', exc_json=True)
-
+    '''
     with open("results_cp/ds_all3/dyes", "r") as fp:
         ds_all = fp.readlines()
         for i in range(len(ds_all)):
@@ -3797,7 +3803,22 @@ def main():
         results_json="results_exc.json",
         exc_json=True,
     )
-    #   gather_excitation_data('./results_cp/ds_all', all_ds, add_methods, method_mexc, basis_set_mexc, results_json='results.json', exc_json=False)
+    '''
+    dyes_gather = ["10ed_11b_8ea","9ed_33b_4ea","11ed_9b_11ea"]
+    '''    
+    complete = jobResubmit_v2(dyes_gather, resubmit_delay_min, resubmit_max_attempts,
+                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           #cluster, route='Benchmark/results', add_methods=add_methods,
+                           cluster, route='results', add_methods=add_methods,
+                           max_queue=200, results_json='results.json',
+                           identify_zeros=True, create_smiles=True
+    )
+
+    '''
+    method_mexc = 'CAM-B3LYP'
+    basis_set_mexc = '6-311G(d,p)'
+    gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc, basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
 
     # DS_ALL
     # ds2 = 727 dyes

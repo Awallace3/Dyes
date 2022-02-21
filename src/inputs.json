@@ -47,7 +47,7 @@
     },
     "excitation":{
         "enable":"True",
-        "dyeList":["1ed_7b_2ea","1ed_7b_3ea"],
+        "dyeList":["1ed_7b_2ea/mexc","1ed_7b_3ea/mexc"],
         "resubmit_delay_min": 0.001,
         "resubmit_max_attempts":2,
         "method_opt":"STO-3G",
