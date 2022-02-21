@@ -1,0 +1,82 @@
+{
+  "user": {
+    "user": "r2532"
+  },
+  "path": {
+    "path_to_inputs_json": "/ddn/home6/r2532/chem/test_Dyes/Dyes/src",
+    "path_to_results_json": "/ddn/home6/r2532/chem/test_Dyes/Dyes/",
+    "path_to_src": "/ddn/home6/r2532/chem/test_Dyes/Dyes/src",
+    "path_to_results": "/ddn/home6/r2532/chem/test_Dyes/Dyes/results",
+    "path_to_final": "/ddn/home6/r2532/chem/test_Dyes/Dyes/"
+  },
+  "generateMolecules": {
+    "enable": "False",
+    "banned": ["TPA2", "1ea", "8b", "5b", "3ed", "5ed"],
+    "three_types": ["eDonors", "backbones", "eAcceptors"],
+    "resubmit_delay_min": 0.001,
+    "resubmit_max_attempts": 3,
+    "method_opt": "STO-3G",
+    "basis_set_opt": "6-31G",
+    "mem_com_opt": "2600",
+    "mem_pbs_opt": "10",
+    "cluster": "seq",
+    "max_queue": 200,
+    "results_json": "results_json='results.json'"
+  },
+  "qmgr": {
+    "options": {
+      "opt": true,
+      "exc": true,
+      "cluster": "map",
+      "max_queue": 200,
+      "minDelay": 0.01,
+      "maxAttempts": 3,
+      "pathResults": "results",
+      "datasetNamesPath": "dataset_names/ds3.txt"
+    },
+    "opt": {
+      "method_opt": "STO-3G",
+      "basis_set_opt": "6-31G",
+      "mem_com_opt": "1600",
+      "mem_pbs_opt": "10",
+      "solvent": "",
+      "GuassianKeyWord": "",
+      "submit": true
+    },
+    "exc": [
+      {
+        "method_opt": "CAM-B3LYP",
+        "basis_set_opt": "6-311G(d,p)",
+        "mem_com_opt": "1600",
+        "mem_pbs_opt": "10",
+        "solvent": "",
+        "nstates": 10,
+        "GuassianKeyWord": "",
+        "submit": true
+      },
+      {
+        "method_opt": "PBE1PBE",
+        "basis_set_opt": "6-311G(d,p)",
+        "mem_com_opt": "1600",
+        "mem_pbs_opt": "10",
+        "solvent": "",
+        "nstates": 10,
+        "GuassianKeyWord": "",
+        "submit": true
+      },
+      {
+        "method_opt": "bhandhlyp",
+        "basis_set_opt": "6-311G(d,p)",
+        "mem_com_opt": "1600",
+        "mem_pbs_opt": "10",
+        "solvent": "",
+        "nstates": 10,
+        "GuassianKeyWord": "",
+        "submit": true
+      }
+    ]
+  },
+  "error": {
+    "enable": "false"
+  }
+}

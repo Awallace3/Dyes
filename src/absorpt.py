@@ -1,8 +1,10 @@
 import os
 import glob
-import molecule_json
+# import molecule_json
 from molecule_json import Excitation, Excitation_exc
 from ES_extraction import ES_extraction
+# from .ES_extraction import ES_extraction
+# from .molecule_json import Excitation, Excitation_exc
 
 def cleanLine(line):
     aList = []
