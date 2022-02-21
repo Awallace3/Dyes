@@ -1,0 +1,70 @@
+{
+
+
+    "user":{
+        "user":"r2532"
+    },
+    "path":{
+        "path_to_inputs_json":"/ddn/home6/r2532/chem/test_Dyes/Dyes/src",
+        "path_to_results_json":"/ddn/home6/r2532/chem/test_Dyes/Dyes/",
+        "path_to_src":"/ddn/home6/r2532/chem/test_Dyes/Dyes/src",
+        "path_to_results":"/ddn/home6/r2532/chem/test_Dyes/Dyes/results",
+        "path_to_final":"/ddn/home6/r2532/chem/test_Dyes/Dyes/"
+    },
+    
+    "generateMolecules":{
+        "enable":"False",
+        "banned":["TPA2","1ea","8b","5b","3ed","5ed"],
+        "three_types":["eDonors","backbones","eAcceptors"],
+        "resubmit_delay_min": 0.001,
+        "resubmit_max_attempts":2,
+        "method_opt":"STO-3G",
+        "basis_set_opt":"6-31G",
+        "mem_com_opt":"2600", 
+        "mem_pbs_opt":"10", 
+        "cluster":"seq",
+        "max_queue":200,
+        "results_json":"results_json='results.json'"
+    },
+    "geomopt":{
+        "enable":"False",
+        "procedure":"opt",
+        "dyeoptlist":["9ed_11b_10ea", "9ed_11b_5ea",  "9ed_1b_11ea",  "9ed_31b_1ea",  "9ed_31b_7ea"],
+        "method_opt":"B3LYP",
+        "basis_set_opt":"6-311G(d,p)",
+        "mem_com_opt":"1600", 
+        "mem_pbs_opt":"10",
+        "solvent":"",
+        "cluster":"map",
+        "submit":"yes"
+    },
+    "add_methods":{
+        "methods":["CAM-B3LYP","bhandhlyp", "PBE1PBE"],
+        "basis_set":["6-311G(d,p)", "6-311G(d,p)","6-311G(d,p)"],
+        "solvent":["","",""],
+        "mem_com":["1600","1600","1600"],
+        "mem_pbs":["10","10","10"]
+    },
+    "excitation":{
+        "enable":"True",
+        "dyeList":["1ed_7b_2ea/mexc","1ed_7b_3ea/mexc"],
+        "resubmit_delay_min": 0.001,
+        "resubmit_max_attempts":2,
+        "method_opt":"STO-3G",
+        "basis_set_opt":"6-31G",
+        "mem_com_opt":"2400", 
+        "mem_pbs_opt":"10",
+        "method_mexc":"STO-3G",
+        "basis_set_mexc":"6-31G",
+        "mem_com_mexc":"1600",
+        "mem_pbs_mexc":"10",
+        "cluster":"seq",
+        "max_queue":200,
+        "results_json":"results_json='results.json'"
+    },
+    "error":{
+        "enable":"false"
+    }
+
+}
+
