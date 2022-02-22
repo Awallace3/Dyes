@@ -417,6 +417,7 @@ class MoleculeList_exc():
     """
 
 
+
     def updateMolecule(self, molecule, exc_json=False):
         # print(molecule)
         size = len(self.molecules)
