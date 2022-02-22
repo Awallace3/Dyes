@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# from homo_lumo import *
+from homo_lumo import *
 
 
 # Genetic algorithm in the future?
@@ -111,6 +111,9 @@ def json_pandas_molecule_BM(path_results, exc_json=False):
     FIELDS = ["name", "localName", "generalSMILES"]
     df = pd.json_normalize(dat["molecules"])
     df[FIELDS]
+    for x in dat["molecules"]:
+        print(x["name"])
+        print(x["exp"])
     # ['A', 'B', 'C'] <-this is your columns order
     if exc_json:
         df = df[
@@ -683,6 +686,7 @@ def convert_df_nm_to_eV(df, columns_convert=["Exp"]):
 
     for i in columns_convert:
         df[i] = df[i].apply(lambda x: h * c / (x * Joules_to_eV))
+
     return df
 
 
@@ -1367,16 +1371,16 @@ def theoretical_dyes_basis_set_out(
 def benchmarks_dyes_basis_set_out(
     path_results_json,
     methods_basissets=[
-        "CAM-B3LYP/6-311G(d,p)",
-        "bhandhlyp/6-311G(d,p)",
-        "PBE1PBE/6-311G(d,p)",
+        "CAM-B3LYP/6-311G(d,p)_dichloromethane",
+        "bhandhlyp/6-311G(d,p)_dichloromethane",
+        "PBE1PBE/6-311G(d,p)_dichloromethane",
     ],
-    units="eV",
+    units="",
     output_csv="",
     output_graph="",
     output_latex="",
     plot_js={
-        "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
+        "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
         "headers_colors": [
             ["CAM-B3LYP/6-311G(d,p)", "blue"],
             ["BHandHLYP/6-311G(d,p)", "red"],
@@ -1385,7 +1389,7 @@ def benchmarks_dyes_basis_set_out(
         ],
         "weights": [0.71, 0.29],
     },
-    exc_json=False,
+    exc_json=True,
     homo_lumo=False,
     band_gap=False,
     testing=False,
@@ -1401,8 +1405,12 @@ def benchmarks_dyes_basis_set_out(
     )
     convert_lst = methods_basissets.copy()
     convert_lst.append("Exp")
-    print(df)
+    df=df.dropna()
+    df.to_csv('ll.csv')
     df = convert_df_nm_to_eV(df, convert_lst)
+    """
+    
+    
     unlucky = {
         # "AP25": [2.329644,2.295717,1.920780,1.880036],
         "AP25": [2.329644, 2.295717, 1.920780, 1.9342315],
@@ -1421,7 +1429,12 @@ def benchmarks_dyes_basis_set_out(
             methods_basissets[2]: val[2],
             "Exp": val[3],
         }
+    
         df = df.append(row, ignore_index=True)
+    
+    
+    """
+
     if units.lower() == "nm":
         df = convert_df_nm_to_eV(df, convert_lst)
     elif units.lower() == "ev":
@@ -1560,7 +1573,7 @@ def solvent_mean_abs_error(
 
     if LSF:
         solvents = [clean_solvent(i) for i in solvents]
-
+        print(least_squares(df, methods_basissets_avg))
         co, residuals = least_squares(df, methods_basissets_avg)
         df["vacuum_MAE"] = (
             df[methods_basissets_avg[0]] * co[0]
@@ -1702,6 +1715,7 @@ def benchmarks_solvation(
     # print(df)
     # print(df)
     df = convert_df_nm_to_eV(df, convert_lst)
+    """
     unlucky = {
         # "AP25": [2.329644,2.295717,1.920780,1.880036],
         "AP25": [2.329644, 2.295717, 1.920780, 1.9342315],
@@ -1721,6 +1735,7 @@ def benchmarks_solvation(
             "Exp": val[3],
         }
         df = df.append(row, ignore_index=True)
+    """
     if units.lower() == "nm":
         df = convert_df_nm_to_eV(df, convert_lst)
     elif units.lower() == "ev":
@@ -1750,7 +1765,7 @@ def benchmarks_solvation(
 
 def df_differences_exp(df, methods):
     for i in methods:
-        print(i)
+        #print((i,'HELPPPPPPPPPPPPP'))
         df["Dif. %s" % i] = df[i] - df["Exp"]
         print("Avg. Dif. %s" % i, df["Dif. %s" % i].mean(axis=0))
     return df
@@ -1801,7 +1816,7 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
-
+    """
     theoretical_dyes_basis_set_out(
         "./json_files/results_exc.json",
         output_csv="data_analysis/t3t",
@@ -1814,6 +1829,8 @@ def main():
         # homo_lumo=True,
         LSF_csv=True,
     )
+    """
+    
     # theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e3',
     #     output_latex='theoretical_e3', output_graph='theoreticale3',
     #     plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, #homo_lumo=True,
@@ -1824,42 +1841,50 @@ def main():
     """"""
     """"""
     # Benchmark data
-    # benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
+    #benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
 
-    """
+    
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
         output_csv='bm2',
         output_latex='bm2',
         output_graph='bm3',
-        exc_json=True, homo_lumo=True
+        exc_json=True, homo_lumo=False
     )
     """
-    """
+    
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
-        output_csv='bm2',
-        output_latex='bm2',
-        output_graph='bm3',
-        exc_json=True, homo_lumo=True,
+        output_csv='test',
+        output_latex='test_2',
+        output_graph='test_4',
+        exc_json=True, homo_lumo=False,
         plot_js = {
         "weighted_avg" :['CAM-B3LYP/6-311G(d,p)','PBE1PBE/6-311G(d,p)'],
         "headers_colors":[
             ['CAM-B3LYP/6-311G(d,p)', 'blue'], ['BHandHLYP/6-311G(d,p)', 'red'], ['PBE0/6-311G(d,p)', 'orange'],  ['LSF', 'green'], #['Weighted Average', 'green']
             ],
-        "weights":[0.71, 0.29],
+      #  "weights":[0.71, 0.29],
         },
         testing=True,
-        band_gap=True,
-        LSF=True
-    )
+        band_gap=False,
+        LSF=True,
 
-    """
-    """
-    benchmarks_solvation('Benchmark/benchmarks.json',
-            output_graph='test',
-            exc_json=True, homo_lumo=True,
     )
-    #benchmarks_solvation('Benchmark/benchmarks.json', )
     """
+    
+    
+    
+    
+
+    
+    """
+    benchmarks_solvation('Benchmark/benchmarks_exc.json',
+            output_graph='test_ttt',
+            exc_json=True, homo_lumo=True,
+            
+    )
+    """
+    #benchmarks_solvation('Benchmark/benchmarks.json', )
+    
 
     # df_molecules = json_pandas_molecule('og_results.json')
 
