@@ -18,6 +18,7 @@ import ES_extraction
 from absorpt import absorpt
 
 from molecule_json import *
+from SMILES_COMB import *
 
 # requires obabel installed...
 # brew install obabel
@@ -83,8 +84,20 @@ def smilesRingCleanUp(f, s, t):
     smi3, na3, form3 = t
     name = na1 + "_" + na2 + "_" + na3
     formalName = form1 + "::" + form2 + "::" + form3
-    cmd = "../src/number_rings.pl '%s' '%s' '%s'" % (smi1, smi2, smi3)
-    line = subprocess.getoutput(cmd)
+   # cmd = "../src/number_rings.pl '%s' '%s' '%s'" % (smi1, smi2, smi3)
+    
+    smi1 = f[0]
+    smi2 = s[0]
+    smi3 = t[0]
+    line = SMILES_COMB(smi1,smi2,smi3)
+
+
+    
+   # print(SMILES_COMB)
+  #  cmd = "../src/SMILES_COMB.py '%s' '%s' '%s'" % (smi1, smi2, smi3)
+    
+  #  line = subprocess.getoutput(cmd)
+    print((line,'I am the train'))
     return line, name, formalName
 
 
@@ -828,13 +841,13 @@ def main():
     three_types = ["eDonors", "backbones", "eAcceptors"]
     # Name of subdirectories holding the local structures
 
-    banned = ["TPA2"]
-
-    # localStructuresDict = collectLocalStructures(three_types, banned) # p
+#    banned = ["TPA2",'1b','2b','3b','4b','5b','6b','7b','8b','9b','10b','11b','12b','13b','14b','15b','16b','17b','18b','19b','20b','21b','22b','23b','24b','26b','27b','28b','29b','30b','31b','32b','33b','34b','35b','38b','39b','40b','41b','42b','43b','44b','45b']
+    banned = []
+    localStructuresDict = collectLocalStructures(three_types, banned) # p
     # localStructuresDict = {'local1': [ ('N((BBD))(C1=CC=CC=C1)C2=CC=CC=C2', '2ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('CC(C=C1)=CC=C1C(C2=C3SC4=C2SC5=C4C(    C6=CC=C(C)C=C6)(C7=CC=C(C)C=C7)C8=C9C5=C(C=CC=C%10)C%10=C((BBA))C9=CC=C8)(C%11=CC=C(C)C=C%11)C%12=CC=CC%13=C((BBD))C%14=C(C=CC=C%14)C3=C%1    3%12', '26b', "9,9,19,19-tetra-p-tolyl-9,19-dihydrobenzo[10',1']phenanthro[3',4':4,5]thieno[3,2-b]benzo[10,1]phenanthro[3,4-d]thiophene"),     ], 'local3': [('OC(C1=C(O)C=C(C#C(BBA))C=C1)=O', '11ea', '4-ethynyl-2-hydroxybenzoic acid'), ]}
     # localStructuresDict = {'local1': [ ('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('C(BBA)1=C2C(N=CC=N2)=C((BBD))S1', '1b', "test"),     ], 'local3': [('C(BBD)(C=C1)=CC=C1N(C2=CC=CC=C2)C3=CC=CC=C3', '1ea', 'acid'), ]}
-    # smiles_tuple_list = permutationDict(localStructuresDict)
-    # print("smiles_tuple_list", smiles_tuple_list)
+    smiles_tuple_list = permutationDict(localStructuresDict)
+    print("smiles_tuple_list", smiles_tuple_list)
     # print("\n\tstart\n")
     three_types = [
         "eDonors",
@@ -869,8 +882,9 @@ def main():
     # cluster='map'
     cluster = "seq"
 
-    # monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
-    #             mem_com_opt, mem_pbs_opt, cluster)
+    monitor_jobs = generateMolecules(smiles_tuple_list, method_opt, basis_set_opt,
+                 mem_com_opt, mem_pbs_opt, cluster)
+    '''
 
     add_methods = {
         "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
@@ -881,6 +895,7 @@ def main():
     }
     ds3 = read_ds_from_file("ds3.txt")
     ds4 = read_ds_from_file("ds4.txt")
+    '''
 
     """
     complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
@@ -907,6 +922,7 @@ def main():
     #     for i in range(len(ds_all)):
     #         ds_all[i] = ds_all[i].rstrip()
     # print(ds_all)
+    '''
     gather_excitation_data(
         "./results_cp/ds_all3",
         # "./results",
@@ -929,11 +945,13 @@ def main():
                            max_queue=200, results_json='results.json',
                            identify_zeros=True, create_smiles=True
     )
+    '''
 
     '''
     method_mexc = 'CAM-B3LYP'
     basis_set_mexc = '6-311G(d,p)'
     gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc, basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
+    '''
 
     # DS_ALL
     # ds2 = 727 dyes

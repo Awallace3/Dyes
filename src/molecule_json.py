@@ -1,76 +1,97 @@
 import json
 
+
 class Excitation:
-    def __init__(self): #intializing the class
-        self.exc = '' # Excitation number
-        self.method_basis_set = ''
+    def __init__(self):  # intializing the class
+        self.exc = ""  # Excitation number
+        self.method_basis_set = ""
         self.nm = 0
         self.osci = 0
         self.orbital_Numbers = []
 
-    def setExc(self, exc): # setter function
+    def setExc(self, exc):  # setter function
         self.exc = exc
-    def setNm(self, nm): # setter function
+
+    def setNm(self, nm):  # setter function
         self.nm = nm
+
     def setOsci(self, osci):
         self.osci = osci
-    def setOrbital_Numbers(self,orbital_Numbers):
+
+    def setOrbital_Numbers(self, orbital_Numbers):
         self.orbital_Numbers = orbital_Numbers
+
     def setMethod_basis_set(self, method_basisSet):
         self.method_basis_set = method_basisSet
+
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
+
 
 class Excitation_exc(Excitation):
-    def __init__(self): #intializing the class
+    def __init__(self):  # intializing the class
         super().__init__()
         Excitation.__init__(self)
         self.HOMO = 0
         self.LUMO = 0
 
-    def setHOMO(self, HOMO): # setter function
+    def setHOMO(self, HOMO):  # setter function
         self.HOMO = HOMO
+
     def setLUMO(self, LUMO):
         self.LUMO = LUMO
 
     def giveOldData(self, data):
         # print("DATA:", data)
-        self.exc = data['exc']
-        self.method_basis_set = data['method_basis_set']
-        self.nm = data['nm']
-        self.osci = data['osci']
-        self.orbital_Numbers = data['orbital_Numbers']
+        self.exc = data["exc"]
+        self.method_basis_set = data["method_basis_set"]
+        self.nm = data["nm"]
+        self.osci = data["osci"]
+        self.orbital_Numbers = data["orbital_Numbers"]
         self.LUMO = 0
         self.HOMO = 0
+
+    def giveData(self, data):
+        self.exc = data["exc"]
+        self.method_basis_set = data["method_basis_set"]
+        self.nm = data["nm"]
+        self.osci = data["osci"]
+        self.orbital_Numbers = data["orbital_Numbers"]
+        self.LUMO = data["LUMO"]
+        self.HOMO = data["HOMO"]
 
     def getEXC(self):
         print(self.HOMO, self.LUMO)
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
+
     def toDict(self):
         return vars(self)
+
     """
     def giveData(self, data):
-
         self.exc = data["exc"]
     """
 
     def __str__(self):
-       return self.toJSON()
+        return self.toJSON()
+
 
 class Molecule:
     def __init__(self):
-        self.name = ''
+        self.name = ""
         self.LUMO = 0
         self.HOMO = 0
         self.excitations = []
-        self.SMILES = ''
-        self.generalSMILES = ''
-        self.parts = ''
-        self.localName = ''
+        self.SMILES = ""
+        self.generalSMILES = ""
+        self.parts = ""
+        self.localName = ""
 
     def setName(self, name):
         self.name = name
@@ -96,6 +117,7 @@ class Molecule:
 
     def setGeneralSMILES(self, smiles):
         self.generalSMILES = smiles
+
     def toDict(self):
         return vars(self)
 
@@ -106,7 +128,7 @@ class Molecule:
         self.localName = localName
 
     def sendToFile(self, name):
-        with open(name, 'w') as fp:
+        with open(name, "w") as fp:
             fp.write(self.toJSON())
 
     def giveData(self, data):
@@ -120,7 +142,7 @@ class Molecule:
         self.localName = data["localName"]
 
     def setData(self, fileName):
-        with open(fileName, 'r') as json_file:
+        with open(fileName, "r") as json_file:
             data = json.load(json_file)
 
         self.name = data["name"]
@@ -133,20 +155,30 @@ class Molecule:
         self.localName = data["localName"]
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
 
     def __str__(self):
-       return self.toJSON()
+        return self.toJSON()
 
-class Molecule_exc():
+
+def Molecule_exc_excitation_to_obj(excs):
+    for n, i in enumerate(excs):
+        e = Excitation_exc()
+        e.giveData(i)
+        excs[n] = e
+    return excs
+
+
+class Molecule_exc:
     def __init__(self):
-        self.name = ''
+        self.name = ""
         self.excitations = []
-        self.SMILES = ''
-        self.generalSMILES = ''
-        self.parts = ''
-        self.localName = ''
+        self.SMILES = ""
+        self.generalSMILES = ""
+        self.parts = ""
+        self.localName = ""
 
     def setName(self, name):
         self.name = name
@@ -154,9 +186,12 @@ class Molecule_exc():
     def getName(self):
         return self.name
 
-
     def setExictations(self, energy_osc):
         self.excitations = energy_osc
+
+    def getExcitations(self):
+        return Molecule_exc_excitation_to_obj(self.excitations)
+        # return self.excitations
 
     def appendExcitations(self, excitation_objs_lst):
         for i in excitation_objs_lst:
@@ -175,7 +210,7 @@ class Molecule_exc():
         self.localName = localName
 
     def sendToFile(self, name):
-        with open(name, 'w') as fp:
+        with open(name, "w") as fp:
             fp.write(self.toJSON())
 
     def giveData(self, data):
@@ -187,10 +222,10 @@ class Molecule_exc():
             self.parts = data["parts"]
             self.localName = data["localName"]
         else:
-            print('uh oh')
+            print("uh oh")
 
     def setData(self, fileName):
-        with open(fileName, 'r') as json_file:
+        with open(fileName, "r") as json_file:
             data = json.load(json_file)
 
         self.name = data["name"]
@@ -201,19 +236,21 @@ class Molecule_exc():
         self.localName = data["localName"]
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
 
     def toDict(self):
         return vars(self)
+
     def __str__(self):
-       return self.toJSON()
+        return self.toJSON()
+
 
 class Molecule_exc_BM(Molecule_exc):
     def __init__(self):
         super().__init__()
         self.exp = 0
-
 
     def setExp(self, exp):
         self.exp = exp
@@ -227,12 +264,11 @@ class Molecule_exc_BM(Molecule_exc):
         self.parts = data["parts"]
         self.localName = data["localName"]
 
-
     def setData(self, fileName):
-        with open(fileName, 'r') as json_file:
+        with open(fileName, "r") as json_file:
             data = json.load(json_file)
 
-        if 'exp' in data:
+        if "exp" in data:
             self.exp = data["exp"]
         else:
             self.exp = 0
@@ -243,7 +279,6 @@ class Molecule_exc_BM(Molecule_exc):
         self.generalSMILES = data["generalSMILES"]
         self.parts = data["parts"]
         self.localName = data["localName"]
-
 
 
 class Molecule_BM(Molecule):
@@ -268,10 +303,10 @@ class Molecule_BM(Molecule):
         self.localName = data["localName"]
 
     def setData(self, fileName):
-        with open(fileName, 'r') as json_file:
+        with open(fileName, "r") as json_file:
             data = json.load(json_file)
 
-        if 'exp' in data:
+        if "exp" in data:
             self.exp = data["exp"]
         else:
             self.exp = 0
@@ -286,8 +321,7 @@ class Molecule_BM(Molecule):
         self.localName = data["localName"]
 
 
-
-class MoleculeList():
+class MoleculeList:
     def __init__(self):
         self.molecules = []
 
@@ -295,11 +329,9 @@ class MoleculeList():
         self.molecules.append(molecule)
 
     def setData(self, fileName):
-        with open(fileName, 'r') as json_file:
+        with open(fileName, "r") as json_file:
             data = json.load(json_file)
-        self.molecules = data['molecules']
-
-
+        self.molecules = data["molecules"]
 
     def removeMolecule(self, name):
         for i in range(len(self.molecules)):
@@ -315,17 +347,17 @@ class MoleculeList():
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             mol.giveData(i)
-            #print(mol.SMILES, smiles)
+            # print(mol.SMILES, smiles)
             if mol.SMILES == smiles:
                 found = True
         return found
+
     """
     def checkExc(self):
         for i in self.molecules:
             mol = Molecule()
             mol.giveData(i)
     """
-
 
     def updateMolecule(self, molecule, exc_json=False):
         size = len(self.molecules)
@@ -345,11 +377,14 @@ class MoleculeList():
                 break
 
         if found == False:
-            print('Creating new Molecule in results.json for %s' % molecule.getName())
-            #self.addMolecule(mol)
-            #mol = Molecule()
+            print(
+                "Creating new Molecule in results.json for %s"
+                % molecule.getName()
+            )
+            # self.addMolecule(mol)
+            # mol = Molecule()
             self.addMolecule(molecule)
-        '''
+        """
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             #print(type(i))
@@ -363,33 +398,41 @@ class MoleculeList():
                 print('Creating new Molecule in results.json')
                 self.addMolecule(mol)
                 #self.addMolecule(i)
-        '''
+        """
+
     def sendToFile(self, fileName):
-        with open(fileName, 'w') as fp:
+        with open(fileName, "w") as fp:
             fp.write(self.toJSON())
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
 
     def __str__(self):
-       return self.toJSON()
+        return self.toJSON()
 
 
+def Molecule_exc_dict_to_obj(mol):
+    molecule = Molecule_exc()
+    molecule.giveData(mol)
+    return molecule
 
-class MoleculeList_exc():
+
+class MoleculeList_exc:
     def __init__(self):
         self.molecules = []
+
+    def setMolecules(self, data):
+        self.molecules = data
 
     def addMolecule(self, molecule):
         self.molecules.append(molecule)
 
     def setData(self, fileName):
-        with open(fileName, 'r') as json_file:
+        with open(fileName, "r") as json_file:
             data = json.load(json_file)
-        self.molecules = data['molecules']
-
-
+        self.molecules = data["molecules"]
 
     def removeMolecule(self, name):
         for i in range(len(self.molecules)):
@@ -405,18 +448,17 @@ class MoleculeList_exc():
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             mol.giveData(i)
-            #print(mol.SMILES, smiles)
+            # print(mol.SMILES, smiles)
             if mol.SMILES == smiles:
                 found = True
         return found
+
     """
     def checkExc(self):
         for i in self.molecules:
             mol = Molecule()
             mol.giveData(i)
     """
-
-
 
     def updateMolecule(self, molecule, exc_json=False):
         # print(molecule)
@@ -449,11 +491,14 @@ class MoleculeList_exc():
                     break
 
         if found == False:
-            print('Creating new Molecule in results.json for %s' % molecule.getName())
-            #self.addMolecule(mol)
-            #mol = Molecule()
+            print(
+                "Creating new Molecule in results.json for %s"
+                % molecule.getName()
+            )
+            # self.addMolecule(mol)
+            # mol = Molecule()
             self.addMolecule(molecule)
-        '''
+        """
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             #print(type(i))
@@ -467,16 +512,21 @@ class MoleculeList_exc():
                 print('Creating new Molecule in results.json')
                 self.addMolecule(mol)
                 #self.addMolecule(i)
-        '''
+        """
+
     def sendToFile(self, fileName):
-        print('The excited state information is being written')
-        with open(fileName, 'w') as fp:
-            #print(fp)
+        print("The excited state information is being written")
+        with open(fileName, "w") as fp:
+            # print(fp)
             fp.write(self.toJSON())
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
 
     def __str__(self):
-       return self.toJSON()
+        return self.toJSON()
+
+    def getMoleculeList(self):
+        return [Molecule_exc_dict_to_obj(i) for i in self.molecules]
