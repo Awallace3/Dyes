@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from homo_lumo import *
+#from homo_lumo import *
 
 
 # Genetic algorithm in the future?
@@ -1373,7 +1373,7 @@ def benchmarks_dyes_basis_set_out(
         "bhandhlyp/6-311G(d,p)_dichloromethane",
         "PBE1PBE/6-311G(d,p)_dichloromethane",
     ],
-    units="",
+    units="nm",
     output_csv="",
     output_graph="",
     output_latex="",
@@ -1842,15 +1842,44 @@ def main():
     """"""
     """"""
     # Benchmark data
-    # benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
+    #benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
 
-    benchmarks_dyes_basis_set_out(
-        "Benchmark/benchmarks_exc.json",
-        output_csv="bm2",
-        output_latex="bm2",
-        output_graph="bm3",
-        exc_json=True,
-        homo_lumo=False,
+    
+    benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
+        methods_basissets=[
+        "CAM-B3LYP/6-311G(d,p)",
+        "bhandhlyp/6-311G(d,p)",
+        "PBE1PBE/6-311G(d,p)",
+     #   "CAM-B3LYP/6-311G(d,p)_dichloromethane",
+     #   "bhandhlyp/6-311G(d,p)_dichloromethane",
+     #   "PBE1PBE/6-311G(d,p)_dichloromethane",
+     #   "CAM-B3LYP/6-311G(d,p)_tetrahydrofuran",
+     #   "bhandhlyp/6-311G(d,p)_tetrahydrofuran",
+     #   "PBE1PBE/6-311G(d,p)_tetrahydrofuran",
+     #   "CAM-B3LYP/6-311G(d,p)_nndimethylformamide",
+     #   "bhandhlyp/6-311G(d,p)_nndimethylformamide",
+     #   "PBE1PBE/6-311G(d,p)_nndimethylformamide",
+
+        
+
+        ],
+        plot_js={
+        "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
+     #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"], 
+     #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
+     #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
+        "headers_colors": [
+            ["CAM-B3LYP/6-311G(d,p)", "blue"],
+            ["BHandHLYP/6-311G(d,p)", "red"],
+            ["PBE0/6-311G(d,p)", "orange"],
+            ["LSF", "green"],  # ['Weighted Average', 'green']
+        ],
+        "weights": [0.71, 0.29],
+    },
+        output_csv='vac',
+        output_latex='vac',
+        output_graph='vac',
+        exc_json=True, homo_lumo=False
     )
     """
 
