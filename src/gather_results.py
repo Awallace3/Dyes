@@ -788,9 +788,7 @@ def plot_methods(
     if exp:
         plt.xlabel("Benchmark Dyes")
     else:
-        plt.xlabel(
-            "Theoretical Dyes"
-        )
+        plt.xlabel("Theoretical Dyes")
     plt.ylabel("Excitation Energy (%s)" % units)
     plt.grid(
         color="grey", which="major", axis="y", linestyle="-", linewidth=0.2
@@ -1380,7 +1378,10 @@ def benchmarks_dyes_basis_set_out(
     output_graph="",
     output_latex="",
     plot_js={
-        "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
+        "weighted_avg": [
+            "CAM-B3LYP/6-311G(d,p)_dichloromethane",
+            "PBE1PBE/6-311G(d,p)_dichloromethane",
+        ],
         "headers_colors": [
             ["CAM-B3LYP/6-311G(d,p)", "blue"],
             ["BHandHLYP/6-311G(d,p)", "red"],
@@ -1405,12 +1406,12 @@ def benchmarks_dyes_basis_set_out(
     )
     convert_lst = methods_basissets.copy()
     convert_lst.append("Exp")
-    df=df.dropna()
-    df.to_csv('ll.csv')
+    df = df.dropna()
+    df.to_csv("ll.csv")
     df = convert_df_nm_to_eV(df, convert_lst)
     """
-    
-    
+
+
     unlucky = {
         # "AP25": [2.329644,2.295717,1.920780,1.880036],
         "AP25": [2.329644, 2.295717, 1.920780, 1.9342315],
@@ -1429,10 +1430,10 @@ def benchmarks_dyes_basis_set_out(
             methods_basissets[2]: val[2],
             "Exp": val[3],
         }
-    
+
         df = df.append(row, ignore_index=True)
-    
-    
+
+
     """
 
     if units.lower() == "nm":
@@ -1765,7 +1766,7 @@ def benchmarks_solvation(
 
 def df_differences_exp(df, methods):
     for i in methods:
-        #print((i,'HELPPPPPPPPPPPPP'))
+        # print((i,'HELPPPPPPPPPPPPP'))
         df["Dif. %s" % i] = df[i] - df["Exp"]
         print("Avg. Dif. %s" % i, df["Dif. %s" % i].mean(axis=0))
     return df
@@ -1830,7 +1831,7 @@ def main():
         LSF_csv=True,
     )
     """
-    
+
     # theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e3',
     #     output_latex='theoretical_e3', output_graph='theoreticale3',
     #     plot_js=plot_js, methods_basissets=methods_basissets, results_exc=True, #homo_lumo=True,
@@ -1881,7 +1882,7 @@ def main():
         exc_json=True, homo_lumo=False
     )
     """
-    
+
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
         output_csv='test',
         output_latex='test_2',
@@ -1900,21 +1901,15 @@ def main():
 
     )
     """
-    
-    
-    
-    
 
-    
     """
     benchmarks_solvation('Benchmark/benchmarks_exc.json',
             output_graph='test_ttt',
             exc_json=True, homo_lumo=True,
-            
+
     )
     """
-    #benchmarks_solvation('Benchmark/benchmarks.json', )
-    
+    # benchmarks_solvation('Benchmark/benchmarks.json', )
 
     # df_molecules = json_pandas_molecule('og_results.json')
 
