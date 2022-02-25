@@ -647,7 +647,7 @@ def cleanResultsExcEmpty():
 
 def main():
     three_types = ["eDonors", "backbones", "eAcceptors"]
-    banned = ['42b']
+    banned = ["42b", '26b', '27b']
     three_types = [
         "eDonors",
         "backbones",
@@ -696,14 +696,29 @@ def main():
     # ds3 = read_ds_from_file("ds3.txt")
     # ds4 = read_ds_from_file("ds4.txt")
 
-    complete = jobResubmit_v2(ds2, resubmit_delay_min, resubmit_max_attempts,
-                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
-                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           #cluster, route='Benchmark/results', add_methods=add_methods,
-                           cluster, route='results', add_methods=add_methods,
-                           max_queue=200, results_json='results.json',
-                           identify_zeros=True, create_smiles=True
+    complete = jobResubmit_v2(
+        monitor_jobs,
+        resubmit_delay_min,
+        resubmit_max_attempts,
+        method_opt,
+        basis_set_opt,
+        mem_com_opt,
+        mem_pbs_opt,
+        method_mexc,
+        basis_set_mexc,
+        mem_com_mexc,
+        mem_pbs_mexc,
+        # cluster, route='Benchmark/results', add_methods=add_methods,
+        cluster,
+        route="results",
+        add_methods=add_methods,
+        max_queue=200,
+        results_json="results.json",
+        identify_zeros=True,
+        create_smiles=True,
     )
+
+    print("Complete", complete)
 
     # gather_general_smiles(monitor_jobs)
 
