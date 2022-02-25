@@ -78,7 +78,6 @@ def permutationDict(localStructuresDict):
 
 
 def smilesRingCleanUp(f, s, t):
-    print()
     smi1, na1, form1 = f
     smi2, na2, form2 = s
     smi3, na3, form3 = t

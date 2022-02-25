@@ -18,6 +18,8 @@ import ES_extraction
 from absorpt import absorpt
 
 from molecule_json import *
+from SMILES_COMB import *
+
 
 # requires obabel installed...
 # brew install obabel
@@ -78,23 +80,29 @@ def permutationDict(localStructuresDict):
 
 
 def smilesRingCleanUp(f, s, t):
-    
     smi1, na1, form1 = f
-    
     smi2, na2, form2 = s
     smi3, na3, form3 = t
-    name = ''
-    formalName = ''
     line = ''
-    
+    name=''
+    formalName=''
     if na1==na3:
+        name += na1 + "_" + na2 + "_" + na3
+        formalName += form1 + "::" + form2 + "::" + form3
+   # cmd = "../src/number_rings.pl '%s' '%s' '%s'" % (smi1, smi2, smi3)
     
-        name = na1 + "_" + na2 + "_" + na3
-        formalName = form1 + "::" + form2 + "::" + form3
-        cmd = "../src/number_rings.pl '%s' '%s' '%s'" % (smi1, smi2, smi3)
-        line = subprocess.getoutput(cmd)
-        print(line)
+        smi1 = f[0]
+        smi2 = s[0]
+        smi3 = t[0]
+        line += SMILES_COMB(smi1,smi2,smi3)
 
+
+    
+   # print(SMILES_COMB)
+  #  cmd = "../src/SMILES_COMB.py '%s' '%s' '%s'" % (smi1, smi2, smi3)
+    
+  #  line = subprocess.getoutput(cmd)
+        print((line,'I am the train'))
     return line, name, formalName
 
 
@@ -834,7 +842,8 @@ def main():
     banned =  ['10b', '11b', '12b', '13b', '14b', '15b', '2b', '3b', '4b', '5b', '7b', '8b', '9b', "TPA2"]
     banned = ["TPA2"]
     '''
-    banned = ['1b','2b','3b','4b','5b','6b','7b','8b','9b','10b','11b','12b','13b','14b','15b','16b','17b','18b','19b','20b','21b','22b','23b','24b','25b','26b','27b','28b','30b','33b']
+   # banned = ['1b','2b','3b','4b','5b','6b','7b','8b','9b','10b','11b','12b','13b','14b','15b','16b','17b','18b','19b','20b','21b','22b','23b','24b','25b','26b','27b','28b','30b','33b']
+    banned=[]
 
   #  localStructuresDict = collectLocalStructures(three_types, banned) # p
     #localStructuresDict = {'local1': [ ('N((BBD))(C1=CC=CC=C1)C2=CC=CC=C2', '2ed', 'N-methyl-N-phenylaniline'), ], 'local2': [ ('CC(C=C1)=CC=C1C(C2=C3SC4=C2SC5=C4C(    C6=CC=C(C)C=C6)(C7=CC=C(C)C=C7)C8=C9C5=C(C=CC=C%10)C%10=C((BBA))C9=CC=C8)(C%11=CC=C(C)C=C%11)C%12=CC=CC%13=C((BBD))C%14=C(C=CC=C%14)C3=C%1    3%12', '26b', "9,9,19,19-tetra-p-tolyl-9,19-dihydrobenzo[10',1']phenanthro[3',4':4,5]thieno[3,2-b]benzo[10,1]phenanthro[3,4-d]thiophene"),     ], 'local3': [('OC(C1=C(O)C=C(C#C(BBA))C=C1)=O', '11ea', '4-ethynyl-2-hydroxybenzoic acid'), ]}
