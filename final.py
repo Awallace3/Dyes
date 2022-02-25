@@ -161,7 +161,7 @@ def generateMolecules(
         for line in carts_cleaned:
             data += line + "\n"
 
-        error_mexc_dyes_v1.gaussianInputFiles(
+        error_mexc_dyes_v2.gaussianInputFiles(
             0,
             method_opt,
             basis_set_opt,
@@ -272,7 +272,7 @@ def qsub_to_max(max_queue=100, user=""):
     # with open('../qsub_len', 'r') as fp:
     #     current_queue = len(fp.readlines())-5
     # os.remove('../qsub_len')
-    cmd = "qstat -u %s | wc -l > ../qsub_len" % user
+    cmd = "qstat -u %s | grep r410 |  wc -l > ../qsub_len" % user
     subprocess.call(cmd, shell=True)
     # print("qsub_to_max", os.getcwd(), "../qsub_len", "../qsub_queue")
     with open("../qsub_len", "r") as fp:
@@ -344,13 +344,13 @@ def jobResubmit_v2(
 
     add_methods_length = len(add_methods["methods"])
     mol_lst = MoleculeList_exc()
-    if os.path.exists("results.json"):
-        mol_lst.setData("results.json")
+    if os.path.exists(results_json):
+        mol_lst.setData(results_json)
     else:
-        mol_lst.sendToFile("results.json")
+        print("Creating %s\n" % results_json)
+        mol_lst.sendToFile(results_json)
 
     min_delay = min_delay * 60
-    # cluster_list = glob.glob("%s/*" % route)
     complete = []
     resubmissions = []
     for i in range(len(monitor_jobs)):
@@ -359,11 +359,9 @@ def jobResubmit_v2(
         # resubmissions.append(resubmission_max)
     calculations_complete = False
     # comment change directory below in production
-    print(os.getcwd())
     os.chdir(route)
 
     for i in range(number_delays):
-        # time.sleep(min_delay)
         for num, j in enumerate(monitor_jobs):
             os.chdir(j)
             delay = i
@@ -473,7 +471,7 @@ def jobResubmit_v2(
 
         qsub_to_max(max_queue, user)
         # qsub_to_max(max_queue, 'r2652')
-        if calculations_complete == True:
+        if calculations_complete:
             print(complete)
             print("\nCalculations are complete.")
             print("Took %.2f hours" % (i * min_delay / 60))
@@ -560,12 +558,11 @@ def gather_excitation_data(
             os.chdir("..")
             continue
         if exc_json:
-            print("HELPPPPPPP!)))))))))))))")
             mol = Molecule_exc()
             mol.setData("info.json")
 
         else:
-            mol = Molecule()
+            mol = Molecule_exc()
             mol.setData("info.json")
             occVal, virtVal = ES_extraction.ES_extraction("mexc/mexc.out")
             if occVal == 0 and occVal == 0:
@@ -637,22 +634,23 @@ def read_ds_from_file(filename, path="./dataset_names/"):
     return clean
 
 
-def cleanResultsExcEmpty():
+def cleanResultsExcEmpty(results_json):
     molLst = MoleculeList_exc()
-    molLst.setData("./json_files/results_ds5.json")
+    molLst.setData(results_json)
     molLst.removeEmptyExcitations()
-    molLst.sendToFile("./json_files/results_ds5.json")
+    molLst.sendToFile(results_json)
     return
 
 
 def main():
     three_types = ["eDonors", "backbones", "eAcceptors"]
-    banned = ["42b", '26b', '27b']
+    banned = ["42b", "26b", "27b"]
     three_types = [
         "eDonors",
         "backbones",
         "eAcceptors",
     ]
+    cleanResultsExcEmpty(results_json="json_files/results_ds5.json")
     resubmit_delay_min = 0.001  # 60 * 12
     resubmit_max_attempts = 1
 
@@ -670,8 +668,8 @@ def main():
     mem_com_mexc = "1600"  # mb
     mem_pbs_mexc = "10"  # gb"
 
-    # cluster='map'
-    cluster = "seq"
+    cluster = "map"
+    # cluster = "seq"
 
     localStructuresDict = collectLocalStructures(three_types, banned)
     smiles_tuple_list = permutationDict(localStructuresDict)
@@ -684,6 +682,7 @@ def main():
         mem_com_opt,
         mem_pbs_opt,
         cluster,
+        results_json="json_files/results_ds5.json",
     )
 
     add_methods = {
@@ -712,8 +711,8 @@ def main():
         cluster,
         route="results",
         add_methods=add_methods,
-        max_queue=200,
-        results_json="results.json",
+        max_queue=500,
+        results_json="json_files/results_ds5.json",
         identify_zeros=True,
         create_smiles=True,
     )
