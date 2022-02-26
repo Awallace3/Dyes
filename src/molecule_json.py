@@ -222,6 +222,7 @@ class Molecule_exc:
             self.parts = data["parts"]
             self.localName = data["localName"]
         else:
+            print(data)
             print("uh oh")
 
     def setData(self, fileName):
@@ -443,13 +444,24 @@ class MoleculeList_exc:
                 del self.molecules[i]
                 break
 
-    def checkMolecule(self, smiles):
+    def removeEmptyExcitations(self):
+        for i in range(len(self.molecules) - 1, -1, -1):
+            mol = Molecule_exc()
+            mol.giveData(self.molecules[i])
+            if mol.excitations == []:
+                self.molecules.pop(i)
+        return self.molecules
+
+    def checkMolecule(self, smiles, name):
         found = False
         for n, i in enumerate(self.molecules):
-            mol = Molecule()
-            mol.giveData(i)
-            # print(mol.SMILES, smiles)
-            if mol.SMILES == smiles:
+            if isinstance(i, Molecule_exc):
+                mol = i
+            else:
+                mol = Molecule_exc()
+                mol.giveData(i)
+            if mol.SMILES == smiles or mol.localName == name:
+                print("Found", name)
                 found = True
         return found
 
@@ -515,9 +527,8 @@ class MoleculeList_exc:
         """
 
     def sendToFile(self, fileName):
-        print("The excited state information is being written")
+        # print("The excited state information is being written")
         with open(fileName, "w") as fp:
-            # print(fp)
             fp.write(self.toJSON())
 
     def toJSON(self):
