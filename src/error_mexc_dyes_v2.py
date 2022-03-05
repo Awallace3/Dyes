@@ -542,7 +542,7 @@ def xyzToSmiles(length, xyz, geomDirName, results_json):
         mol_lst = MoleculeList_exc()
         # mol_lst.setData("../../results.json")
         mol_lst.setData(results_json)
-        mol_lst.updateMolecule(mol)
+        mol_lst.updateMolecule(mol, exc_json=True)
         mol_lst.sendToFile(results_json)
     else:
 
