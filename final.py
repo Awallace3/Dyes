@@ -335,6 +335,8 @@ def jobResubmit_v2(
     """
     Modified from jobResubmit above
     """
+    results_json = os.getcwd() + "/" + results_json
+
     if identify_zeros:
         zeros_lst = []
     if not os.path.exists("qsub_queue"):
@@ -422,6 +424,7 @@ def jobResubmit_v2(
                     delay,
                     cluster,
                     j,
+                    results_json,
                     xyzSmiles=create_smiles,
                 )
                 if qsub_dir != "None":
@@ -452,6 +455,7 @@ def jobResubmit_v2(
                             delay,
                             cluster,
                             j,
+                            results_json,
                             xyzSmiles=False,
                             solvent=add_methods["solvent"][pos],
                         )
