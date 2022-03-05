@@ -11,7 +11,6 @@ def ds5():
         "7ed_40b_4ea",
         "7ed_40b_10ea",
         "7ed_40b_12ea",
-        "7ed_40b_9ea",
         "7ed_40b_1ea",
         "7ed_44b_6ea",
         "7ed_44b_3ea",
@@ -5989,3 +5988,7 @@ def ds5():
         "21ed_16b_9ea",
         "21ed_16b_1ea",
     ]
+def ds5_err():
+    return[
+        "7ed_40b_9ea",
+            ]
