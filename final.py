@@ -244,8 +244,7 @@ def qsub(path="."):
         os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = "qsub %s" % pbs_file
-    print(os.getcwd(), "cmd", cmd)
-    failure = subprocess.call(cmd, shell=True)
+    subprocess.call(cmd, shell=True)
     if path != ".":
         for i in range(resetDirNum):
             os.chdir("..")

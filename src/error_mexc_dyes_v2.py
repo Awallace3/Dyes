@@ -478,6 +478,7 @@ def find_geom(
         stand = len(standards)
     else:
         stand = 5
+    length = 0
     for i in range(-1, -orien, -1):
         for j in range(-1, -stand, -1):
             length = orientation[i] - standards[j]
@@ -487,7 +488,8 @@ def find_geom(
                 break
     if stand == 5:
         stand = -1
-    del lines[standards[stand] - 1 + length :]
+    print(stand, length)
+    del lines[standards[stand] - 1 + length:]
     del lines[: standards[stand] - 1]
 
     cleaned_lines = []
@@ -804,10 +806,10 @@ def main(
             find_geom(
                 lines,
                 error=True,
-                results_json=results_json,
                 filename=filename,
                 imaginary=imaginary,
                 geomDirName=geomDirName,
+                results_json=results_json,
             )
             make_input_files_no_constraints(
                 output_num,
