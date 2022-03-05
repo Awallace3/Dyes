@@ -808,7 +808,7 @@ def main(
                 cluster,
             )
             # os.system("qsub mex.pbs")
-            failure = subprocess.call(cmd, shell=True)
+            # failure = subprocess.call(cmd, shell=True)
             resubmissions[index] += 1
             qsub_dir = "./"
             return False, resubmissions, qsub_dir
@@ -834,7 +834,7 @@ def main(
                 cluster,
             )
             # os.system("qsub mex.pbs")
-            failure = subprocess.call(cmd, shell=True)
+            # failure = subprocess.call(cmd, shell=True)
             print("imaginary frequency handling...")
             resubmissions[index] += 1
             qsub_dir = "./"
