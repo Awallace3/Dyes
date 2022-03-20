@@ -790,6 +790,9 @@ def main(
 
         f = open(filename, "r")
         lines = f.readlines()
+        if len(lines) < 800:
+            print('job out file too short')
+            return True, resubmissions, "None"
         f.close()
 
         error = False
