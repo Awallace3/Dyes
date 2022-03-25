@@ -10,8 +10,8 @@ import pandas as pd
 # import re
 import glob
 import subprocess
-from molecule_json import Molecule
-from molecule_json import MoleculeList
+from molecule_json import Molecule_exc
+from molecule_json import MoleculeList_exc
 
 
 def CFOUR_input_files(
@@ -227,7 +227,12 @@ def conv_num(string):
     return li
 
 
-def clean_many_txt(geomDirName, xyzSmiles=True, numbered=True):
+def clean_many_txt(
+    geomDirName,
+    results_json,
+    xyzSmiles=True,
+    numbered=True,
+):
     """This will replace the numerical forms of the elements as their letters numbered in order"""
 
     f = open("tmp.txt", "r")
@@ -289,7 +294,7 @@ def clean_many_txt(geomDirName, xyzSmiles=True, numbered=True):
         length += 1
     f.close()
     if xyzSmiles:
-        xyzToSmiles(length, xyzToMolLst, geomDirName)
+        xyzToSmiles(length, xyzToMolLst, geomDirName, results_json)
 
 
 def i_freq_check(filename):
@@ -323,7 +328,9 @@ def i_freq_check(filename):
     return imaginary, freq_clean, freq_lst_len
 
 
-def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName):
+def add_imaginary(
+    freq_clean, freq_lst_len, filename, geomDirName, results_json
+):
     cnt = 0
     for k in freq_clean:
         if k < 0:
@@ -357,7 +364,7 @@ def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName):
         carts = carts.tolist() """
     np.savetxt("tmp.txt", carts, fmt="%f")
 
-    clean_many_txt(geomDirName)
+    clean_many_txt(geomDirName, results_json)
 
 
 def freq_hf_zero(lines, filename):
@@ -397,6 +404,7 @@ def find_geom(
     filename,
     imaginary,
     geomDirName,
+    results_json,
     xyzSmiles=True,
     numberedClean=True,
 ):
@@ -470,6 +478,7 @@ def find_geom(
         stand = len(standards)
     else:
         stand = 5
+    length = 0
     for i in range(-1, -orien, -1):
         for j in range(-1, -stand, -1):
             length = orientation[i] - standards[j]
@@ -479,7 +488,8 @@ def find_geom(
                 break
     if stand == 5:
         stand = -1
-    del lines[standards[stand] - 1 + length :]
+    print(stand, length)
+    del lines[standards[stand] - 1 + length:]
     del lines[: standards[stand] - 1]
 
     cleaned_lines = []
@@ -498,12 +508,12 @@ def find_geom(
     np.savetxt(out_file, new_geom, fmt="%f")
 
     if not imaginary:
-        clean_many_txt(geomDirName, xyzSmiles, numberedClean)
+        clean_many_txt(geomDirName, results_json, xyzSmiles, numberedClean)
     elif error:
-        clean_many_txt(geomDirName, xyzSmiles, numberedClean)
+        clean_many_txt(geomDirName, results_json, xyzSmiles, numberedClean)
 
 
-def xyzToSmiles(length, xyz, geomDirName):
+def xyzToSmiles(length, xyz, geomDirName, results_json):
     with open("molecule.xyz", "w") as fp:
         fp.write("%s\ncharge=0=\n" % length)
         for n, i in enumerate(xyz):
@@ -526,15 +536,16 @@ def xyzToSmiles(length, xyz, geomDirName):
         val = val.split("charge")
         val = val[0].rstrip()
 
-    mol = Molecule()
+    mol = Molecule_exc()
     if os.path.exists("info.json"):
         mol.setData("info.json")
         mol.setGeneralSMILES(val.rstrip())
         mol.sendToFile("info.json")
-        mol_lst = MoleculeList()
-        mol_lst.setData("../../results.json")
-        mol_lst.updateMolecule(mol)
-        mol_lst.sendToFile("../../results.json")
+        mol_lst = MoleculeList_exc()
+        # mol_lst.setData("../../results.json")
+        mol_lst.setData(results_json)
+        mol_lst.updateMolecule(mol, exc_json=True)
+        mol_lst.sendToFile(results_json)
     else:
 
         mol.setLocalName(geomDirName)
@@ -740,6 +751,7 @@ def main(
     delay,
     cluster,
     geomDirName,
+    results_json,
     xyzSmiles=True,
     solvent="",
 ):
@@ -778,6 +790,9 @@ def main(
 
         f = open(filename, "r")
         lines = f.readlines()
+        if len(lines) < 800:
+            print('job out file too short')
+            return True, resubmissions, "None"
         f.close()
 
         error = False
@@ -789,8 +804,7 @@ def main(
                 if word_error in line:
                     error = True
         cmd = "qsub mex.pbs"
-        if error == True:
-
+        if error:
             print("ERROR == TRUE")
             find_geom(
                 lines,
@@ -798,6 +812,7 @@ def main(
                 filename=filename,
                 imaginary=imaginary,
                 geomDirName=geomDirName,
+                results_json=results_json,
             )
             make_input_files_no_constraints(
                 output_num,
@@ -808,21 +823,26 @@ def main(
                 cluster,
             )
             # os.system("qsub mex.pbs")
-            failure = subprocess.call(cmd, shell=True)
+            # failure = subprocess.call(cmd, shell=True)
             resubmissions[index] += 1
             qsub_dir = "./"
             return False, resubmissions, qsub_dir
 
-        elif imaginary == True:
+        elif imaginary:
             find_geom(
                 lines,
                 error=False,
+                results_json=results_json,
                 filename=filename,
                 imaginary=imaginary,
                 geomDirName=geomDirName,
             )
             add_imaginary(
-                freq_clean, freq_lst_len, filename, geomDirName=geomDirName
+                freq_clean,
+                freq_lst_len,
+                filename,
+                geomDirName=geomDirName,
+                results_json=results_json,
             )
 
             make_input_files_no_constraints(
@@ -834,7 +854,7 @@ def main(
                 cluster,
             )
             # os.system("qsub mex.pbs")
-            failure = subprocess.call(cmd, shell=True)
+            # failure = subprocess.call(cmd, shell=True)
             print("imaginary frequency handling...")
             resubmissions[index] += 1
             qsub_dir = "./"
@@ -845,6 +865,7 @@ def main(
             find_geom(
                 lines,
                 error=False,
+                results_json=results_json,
                 filename=filename,
                 imaginary=imaginary,
                 geomDirName=geomDirName,
