@@ -4,6 +4,7 @@ import glob
 import subprocess
 import time
 import sys
+from dataset_names import ds
 
 
 sys.path.insert(
@@ -243,8 +244,7 @@ def qsub(path="."):
         os.chdir(path)
     pbs_file = glob.glob("*.pbs")[0]
     cmd = "qsub %s" % pbs_file
-    print(os.getcwd(), "cmd", cmd)
-    failure = subprocess.call(cmd, shell=True)
+    subprocess.call(cmd, shell=True)
     if path != ".":
         for i in range(resetDirNum):
             os.chdir("..")
@@ -334,6 +334,8 @@ def jobResubmit_v2(
     """
     Modified from jobResubmit above
     """
+    results_json = os.getcwd() + "/" + results_json
+
     if identify_zeros:
         zeros_lst = []
     if not os.path.exists("qsub_queue"):
@@ -421,6 +423,7 @@ def jobResubmit_v2(
                     delay,
                     cluster,
                     j,
+                    results_json,
                     xyzSmiles=create_smiles,
                 )
                 if qsub_dir != "None":
@@ -451,6 +454,7 @@ def jobResubmit_v2(
                             delay,
                             cluster,
                             j,
+                            results_json,
                             xyzSmiles=False,
                             solvent=add_methods["solvent"][pos],
                         )
@@ -650,7 +654,7 @@ def main():
         "backbones",
         "eAcceptors",
     ]
-    cleanResultsExcEmpty(results_json="json_files/results_ds5.json")
+    # cleanResultsExcEmpty(results_json="json_files/results_ds5.json")
     resubmit_delay_min = 0.001  # 60 * 12
     resubmit_max_attempts = 1
 
@@ -671,19 +675,19 @@ def main():
     cluster = "map"
     # cluster = "seq"
 
-    localStructuresDict = collectLocalStructures(three_types, banned)
-    smiles_tuple_list = permutationDict(localStructuresDict)
-    print("smiles_tuple_list", smiles_tuple_list)
+    # localStructuresDict = collectLocalStructures(three_types, banned)
+    # smiles_tuple_list = permutationDict(localStructuresDict)
+    # print("smiles_tuple_list", smiles_tuple_list)
 
-    monitor_jobs = generateMolecules(
-        smiles_tuple_list,
-        method_opt,
-        basis_set_opt,
-        mem_com_opt,
-        mem_pbs_opt,
-        cluster,
-        results_json="json_files/results_ds5.json",
-    )
+    # monitor_jobs = generateMolecules(
+    #     smiles_tuple_list,
+    #     method_opt,
+    #     basis_set_opt,
+    #     mem_com_opt,
+    #     mem_pbs_opt,
+    #     cluster,
+    #     results_json="json_files/results_ds5.json",
+    # )
 
     add_methods = {
         "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
@@ -694,6 +698,8 @@ def main():
     }
     # ds3 = read_ds_from_file("ds3.txt")
     # ds4 = read_ds_from_file("ds4.txt")
+
+    monitor_jobs = ds.ds5()
 
     complete = jobResubmit_v2(
         monitor_jobs,
@@ -716,8 +722,8 @@ def main():
         identify_zeros=True,
         create_smiles=True,
     )
-
-    print("Complete", complete)
+    #
+    # print("Complete", complete)
 
     # gather_general_smiles(monitor_jobs)
 
