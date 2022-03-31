@@ -84,7 +84,7 @@ def scatter_plot(file):
     s = 10
     a = homo
     plt.scatter(x, a, c='r', s=0, marker='s', label="HOMO")
-    plt.rc('font', size=8)
+    plt.rc('font', size=7)
 
     legend_elements = [
          #plt.plot([0], [0], 'b-.', label=r'TiO_2'),
@@ -106,11 +106,13 @@ def scatter_plot(file):
         p2 = a[v]
         rect = matplotlib.patches.Rectangle([ v, p2 ], .5, 0.03, color='red')
         plt.gca().add_patch(rect)
-        plt.text(v+0.3, p2-0.15, "%s \n %s" % (wave[v],name[v]), va="center", ha="center")
+        plt.text(v+0.3, p2-0.20, "%s \n %s" % (wave[v],name[v]), va="center", ha="center")
         #plt.annotate(v, p2, )
 
     b = lumo
-    plt.ylim([-5.5, -3])
+    mina=min(lumo)
+    maxa=max(lumo)
+    plt.ylim([-7, -2])
     
     xs_horiz = []
     ys_tio = []
@@ -130,7 +132,7 @@ def scatter_plot(file):
     top=False,         # ticks along the top edge are off
     labelbottom=False) # labels along the bottom edge are off
     plt.ylabel("Energy (eV)")
-    plt.xlabel("Dye")
+    plt.xlabel("Theoretical Dyes")
     
     
    
@@ -170,7 +172,7 @@ def scatter_plot(file):
 def main():
     file = '../data_analysis/800_1000.csv'
     #file = '../data_analysis/600_800.csv'
-    #file = '../data_analysis/400_600.csv' 
+   # file = '../data_analysis/400_600.csv' 
     
     numbs = HOMO_LUMO_dict(file)
     '''
@@ -179,32 +181,106 @@ def main():
         if numbs[name][1]>=-3.4 and numbs[name][1]<=-3.2  and numbs[name][0]<=-4.6 and numbs[name][0]>=-5.2:
             print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0]))
     '''
-            
-    
+    '''            
+    600 to 800 nm MO choices
     test_num = [
-'6ed_29b_5ea',
-'9ed_29b_7ea',
-'10ed_29b_7ea',
-'7ed_29b_7ea',
-'6ed_28b_7ea',
-'6ed_29b_7ea'
+'7ed_20b_5ea',
+'3ed_1b_5ea',
+'1ed_26b_11ea',
+'2ed_26b_10ea',
+'9ed_1b_7ea',
+'6ed_16b_7ea'
         ]
+    test_num = [
+        '7ed_26b_10ea',
+        '10ed_26b_9ea',
+        '10ed_26b_10ea',
+        '7ed_26b_9ea',
+        '9ed_20b_9ea',
+        '9ed_16b_7ea'
+    ]
+    test_num = [
+        '11ed_34b_2ea',
+        '1ed_32b_10ea',
+        '9ed_1b_4ea',
+        '5ed_35b_5ea',
+        '9ed_35b_3ea',
+        '9ed_32b_11ea'
+    ]
+    '''
+    '''
+    
+    800 to 1000 nm MO choices
+
+    test_num = [
+        '6ed_28b_11ea',
+        '7ed_28b_9ea',
+        '10ed_29b_6ea',
+        '6ed_28b_1ea',
+        '6ed_29b_4ea',
+        '6ed_28b_3ea'
+    ]
+    test_num=[
+        '6ed_29b_5ea',
+        '9ed_29b_7ea',
+        '10ed_29b_7ea',
+        '7ed_29b_7ea',
+        '6ed_28b_7ea',
+        '6ed_29b_7ea'
+    ]
+    test_num=[
+        '6ed_16b_5ea',
+        '5ed_29b_11ea',
+        '7ed_29b_3ea',
+        '7ed_29b_6ea',
+        '2ed_28b_7ea',
+        '10ed_29b_6ea'
+    ]
+    '''
+    
+    '''
+    test_num = [
+        '5ed_26b_4ea',
+        '3ed_26b_4ea',
+        '5ed_11b_4ea',
+        '3ed_11b_4ea',
+    #    '5ed_30b_4ea',
+        '3ed_12b_4ea',
+    ]
+    '''
+    
+    #800 to 1000 
+    test_num = [
+'1ed_29b_7ea',
+'7ed_29b_10ea',
+'10ed_29b_10ea',
+'6ed_28b_2ea',
+'11ed_29b_7ea'
+
+    ]
+    
+    '''
+    test_num = [
+'6ed_31b_5ea',
+'7ed_16b_11ea',
+'7ed_16b_10ea',
+'1ed_20b_4ea',
+'7ed_16b_3ea'
+    ]
+    '''
+
+  
     filename = open('test.csv','w+')
     for i in test_num:
         
-        a = str(i)+','+str(numbs[i][1])+','+str(numbs[i][0])+','+str(numbs[i][2]) 
+        a = str(i) +','+str(round(numbs[i][1],2))+','+str(round(numbs[i][0],2))+','+str(round(numbs[i][2],2)) 
+        print(a)
         filename.write(str(a)+'\n')
     filename.close()
+    
 
 
     scatter_plot('test.csv')
-
-    
-
-
-      #  print(str(i).replace(' ',''),',',str(numbs[i][1]).replace(' ','')+','+str(numbs[i][0]).replace(' ','')+','+str(numbs[i][2]).replace(' ',''))
-    
-
    # optimal_dyes(numbs)
 
 
