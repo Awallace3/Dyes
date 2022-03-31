@@ -75,7 +75,7 @@ def generate_lsf_exc(results_json="../Benchmark/benchmarks_exc.json"):
                 osci = nm_lsf[0] * cam_o + nm_lsf[1] * pbe0_o
                 new_d = {
                     "exc":
-                    e[-1],
+                    int(e[-1]),
                     "method_basis_set":
                     "LSF",
                     "nm":
