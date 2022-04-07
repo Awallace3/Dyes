@@ -4,10 +4,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from homo_lumo import *
-<<<<<<< HEAD
-
-=======
->>>>>>> 258d915aa06a51f8e01768b0bb867224ebd75baa
 
 # Genetic algorithm in the future?
 """
@@ -1815,7 +1811,6 @@ def main():
     benchmarks_dyes_basis_set_out(
         'Benchmark/benchmarks_exc.json',
         methods_basissets=[
-<<<<<<< HEAD
         "CAM-B3LYP/6-311G(d,p)",
         "bhandhlyp/6-311G(d,p)",
         "PBE1PBE/6-311G(d,p)",
@@ -1831,24 +1826,9 @@ def main():
 
         
 
-=======
-            "CAM-B3LYP/6-311G(d,p)",
-            "bhandhlyp/6-311G(d,p)",
-            "PBE1PBE/6-311G(d,p)",
-            #   "CAM-B3LYP/6-311G(d,p)_dichloromethane",
-            #   "bhandhlyp/6-311G(d,p)_dichloromethane",
-            #   "PBE1PBE/6-311G(d,p)_dichloromethane",
-            #   "CAM-B3LYP/6-311G(d,p)_tetrahydrofuran",
-            #   "bhandhlyp/6-311G(d,p)_tetrahydrofuran",
-            #   "PBE1PBE/6-311G(d,p)_tetrahydrofuran",
-            #   "CAM-B3LYP/6-311G(d,p)_nndimethylformamide",
-            #   "bhandhlyp/6-311G(d,p)_nndimethylformamide",
-            #   "PBE1PBE/6-311G(d,p)_nndimethylformamide",
->>>>>>> 258d915aa06a51f8e01768b0bb867224ebd75baa
         ],
     
         plot_js={
-<<<<<<< HEAD
         "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
     #    "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"], 
     #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
@@ -1868,25 +1848,6 @@ def main():
     )
     
 
-=======
-            "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
-            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
-            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
-            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
-            "headers_colors": [
-                ["CAM-B3LYP/6-311G(d,p)", "blue"],
-                ["BHandHLYP/6-311G(d,p)", "red"],
-                ["PBE0/6-311G(d,p)", "orange"],
-                ["LSF", "green"],  # ['Weighted Average', 'green']
-            ],
-            "weights": [0.71, 0.29],
-        },
-        output_csv='vac',
-        output_latex='vac',
-        output_graph='vac',
-        exc_json=True,
-        homo_lumo=False)
->>>>>>> 258d915aa06a51f8e01768b0bb867224ebd75baa
     """
 
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',
