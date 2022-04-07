@@ -6,10 +6,8 @@ import time
 import sys
 from dataset_names import ds
 
-
-sys.path.insert(
-    1, "./src"
-)  # this adds src to python path at runtime for modules
+sys.path.insert(1,
+                "./src")  # this adds src to python path at runtime for modules
 import error_mexc_dyes_v1
 import error_mexc_dyes_v2
 import ES_extraction
@@ -19,7 +17,6 @@ from absorpt import absorpt
 from molecule_json import MoleculeList_exc
 from molecule_json import Molecule_exc
 from SMILES_COMB import SMILES_COMB
-
 
 # requires obabel installed...
 # brew install obabel
@@ -49,8 +46,7 @@ def collectLocalStructures(subdirectories, banned=[]):
                     smiles = smiles.split("\n")
                     smiles[0] = smiles[0].rstrip()
                     localStructuresDict["local{0}".format(num + 1)].append(
-                        (smiles[0], j[:-4], smiles[1])
-                    )
+                        (smiles[0], j[:-4], smiles[1]))
                     #  smiles[0]==smiles, j[:-4]==local_name, smiles[1]==name
             else:
                 print(j[:-4], "skipped due to banned")
@@ -119,9 +115,8 @@ def generateMolecules(
 
         if mol_lst.checkMolecule(line, name):
             print(
-                "\nMolecule already exists and the name smiles is... \n%s\n"
-                % line
-            )
+                "\nMolecule already exists and the name smiles is... \n%s\n" %
+                line)
             continue
         else:
             print(name)
@@ -200,9 +195,8 @@ def add_excitation_data(
     method_mexc,
     basis_set_mexc,
 ):
-    occVal, virtVal = ES_extraction.ES_extraction(
-        "%s/%s.out" % (dir_name, baseName)
-    )
+    occVal, virtVal = ES_extraction.ES_extraction("%s/%s.out" %
+                                                  (dir_name, baseName))
     if occVal == virtVal and occVal == 0:
         print("failed to add")
         return 0, 0
@@ -210,9 +204,8 @@ def add_excitation_data(
     mol.setData("info.json")
     mol.setHOMO(occVal)
     mol.setLUMO(virtVal)
-    mol.appendExcitations(
-        absorpt("mexc/mexc.out", method_mexc, basis_set_mexc)
-    )
+    mol.appendExcitations(absorpt("mexc/mexc.out", method_mexc,
+                                  basis_set_mexc))
     mol.toJSON()
     mol.sendToFile("info.json")
     mol_lst = MoleculeList_exc()
@@ -223,17 +216,14 @@ def add_excitation_data(
 
 def check_add_methods(add_methods, funct_name):
     ln = len(add_methods["methods"])
-    if (
-        ln == len(add_methods["basis_set"])
-        and ln == len(add_methods["mem_com"])
-        and ln == len(add_methods["mem_pbs"])
-    ):
+    if (ln == len(add_methods["basis_set"])
+            and ln == len(add_methods["mem_com"])
+            and ln == len(add_methods["mem_pbs"])):
         return True
     else:
         print(
             "\nadd_methods must have values that have lists of the same length.\nTerminating %s before start\n"
-            % funct_name
-        )
+            % funct_name)
         return False
 
 
@@ -305,31 +295,31 @@ def r_qsub_dir(method_mexc, solvent):
 
 
 def jobResubmit_v2(
-    monitor_jobs,
-    min_delay,
-    number_delays,
-    method_opt,
-    basis_set_opt,
-    mem_com_opt,
-    mem_pbs_opt,
-    method_mexc,
-    basis_set_mexc,
-    mem_com_mexc,
-    mem_pbs_mexc,
-    cluster,
-    route="results",
-    add_methods={
-        "methods": [],
-        "basis_set": [],
-        "solvent": [],
-        "mem_com": [],
-        "mem_pbs": [],
-    },
-    max_queue=200,
-    results_json="results.json",
-    user=read_user(),
-    identify_zeros=False,
-    create_smiles=True,
+        monitor_jobs,
+        min_delay,
+        number_delays,
+        method_opt,
+        basis_set_opt,
+        mem_com_opt,
+        mem_pbs_opt,
+        method_mexc,
+        basis_set_mexc,
+        mem_com_mexc,
+        mem_pbs_mexc,
+        cluster,
+        route="results",
+        add_methods={
+            "methods": [],
+            "basis_set": [],
+            "solvent": [],
+            "mem_com": [],
+            "mem_pbs": [],
+        },
+        max_queue=200,
+        results_json="results.json",
+        user=read_user(),
+        identify_zeros=False,
+        create_smiles=True,
 ):
     """
     Modified from jobResubmit above
@@ -372,11 +362,8 @@ def jobResubmit_v2(
                 complete[num] = 1
                 mexc_check_out = glob.glob("mexc/mexc.o*")
                 mexc_check_out_complete = glob.glob("mexc/*_o*")
-                if (
-                    complete[num] < 2
-                    and len(mexc_check_out) > 0
-                    and len(mexc_check_out_complete) > 0
-                ):
+                if (complete[num] < 2 and len(mexc_check_out) > 0
+                        and len(mexc_check_out_complete) > 0):
                     """
                     #occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
                     #if occVal == virtVal and occVal == 0:
@@ -529,16 +516,15 @@ def gather_general_smiles(monitor_jobs, path_results="./results"):
         os.chdir("..")
 
 
-def gather_excitation_data(
-    path_results,
-    monitor_jobs,
-    add_methods,
-    method_mexc,
-    basis_set_mexc,
-    baseName="mexc",
-    results_json="results.json",
-    exc_json=False,
-):
+def gather_excitation_data(path_results,
+                           monitor_jobs,
+                           add_methods,
+                           method_mexc,
+                           basis_set_mexc,
+                           baseName="mexc",
+                           results_json="results.json",
+                           exc_json=False,
+                           states=8):
     def_dir = os.getcwd()
     if not check_add_methods(add_methods, "gather_excitation_data"):
         return
@@ -577,9 +563,11 @@ def gather_excitation_data(
             mol.setHOMO(occVal)
             mol.setLUMO(virtVal)
 
-        excitations = absorpt(
-            "mexc/mexc.out", method_mexc, basis_set_mexc, exc_json=True
-        )
+        excitations = absorpt("mexc/mexc.out",
+                              method_mexc,
+                              basis_set_mexc,
+                              exc_json=True,
+                              states=states)
         if excitations == []:
             if i not in failed:
                 failed.append(i)
@@ -598,8 +586,11 @@ def gather_excitation_data(
             if os.path.exists(lPath):
 
                 mol.appendExcitations(
-                    absorpt(lPath, method, basis_set, exc_json=exc_json)
-                )
+                    absorpt(lPath,
+                            method,
+                            basis_set,
+                            exc_json=exc_json,
+                            states=states))
             else:
                 if i not in failed:
                     print((i, "AAAAAAAAAA"))
@@ -638,11 +629,11 @@ def read_ds_from_file(filename, path="./dataset_names/"):
     return clean
 
 
-def cleanResultsExcEmpty(results_json):
+def cleanResultsExcEmpty(results_json, results_json_out="clean.json"):
     molLst = MoleculeList_exc()
     molLst.setData(results_json)
     molLst.removeEmptyExcitations()
-    molLst.sendToFile(results_json)
+    molLst.sendToFile(results_json_out)
     return
 
 
@@ -654,7 +645,8 @@ def main():
         "backbones",
         "eAcceptors",
     ]
-    # cleanResultsExcEmpty(results_json="json_files/results_ds5.json")
+    cleanResultsExcEmpty(results_json="json_files/results_ds5.json",
+                         results_json_out='json_files/p1.json')
     resubmit_delay_min = 0.001  # 60 * 12
     resubmit_max_attempts = 1
 
@@ -699,29 +691,29 @@ def main():
     # ds3 = read_ds_from_file("ds3.txt")
     # ds4 = read_ds_from_file("ds4.txt")
 
-    monitor_jobs = ds.ds5()
-
-    complete = jobResubmit_v2(
-        monitor_jobs,
-        resubmit_delay_min,
-        resubmit_max_attempts,
-        method_opt,
-        basis_set_opt,
-        mem_com_opt,
-        mem_pbs_opt,
-        method_mexc,
-        basis_set_mexc,
-        mem_com_mexc,
-        mem_pbs_mexc,
-        # cluster, route='Benchmark/results', add_methods=add_methods,
-        cluster,
-        route="results",
-        add_methods=add_methods,
-        max_queue=500,
-        results_json="json_files/results_ds5.json",
-        identify_zeros=True,
-        create_smiles=True,
-    )
+    # monitor_jobs = ds.ds5()
+    #
+    # complete = jobResubmit_v2(
+    #     monitor_jobs,
+    #     resubmit_delay_min,
+    #     resubmit_max_attempts,
+    #     method_opt,
+    #     basis_set_opt,
+    #     mem_com_opt,
+    #     mem_pbs_opt,
+    #     method_mexc,
+    #     basis_set_mexc,
+    #     mem_com_mexc,
+    #     mem_pbs_mexc,
+    #     # cluster, route='Benchmark/results', add_methods=add_methods,
+    #     cluster,
+    #     route="results",
+    #     add_methods=add_methods,
+    #     max_queue=500,
+    #     results_json="json_files/results_ds5.json",
+    #     identify_zeros=True,
+    #     create_smiles=True,
+    # )
     #
     # print("Complete", complete)
 
@@ -763,7 +755,24 @@ def main():
                            identify_zeros=True, create_smiles=True
     )
     """
+    with open('Benchmark/results/tmp', 'r') as fp:
+        dyes_gather = fp.read().splitlines()
+    p1 = ds.p1()
 
+    # gather_excitation_data('Benchmark/results',
+    #                        dyes_gather,
+    #                        add_methods,
+    #                        method_mexc,
+    #                        basis_set_mexc,
+    #                        results_json='json_files/benchmarks_exc.json',
+    #                        exc_json=True)
+    gather_excitation_data('results_cp/ds4_1',
+                           p1,
+                           add_methods,
+                           method_mexc,
+                           basis_set_mexc,
+                           results_json='json_files/p1.json',
+                           exc_json=True)
     """
     method_mexc = 'CAM-B3LYP'
     basis_set_mexc = '6-311G(d,p)'
