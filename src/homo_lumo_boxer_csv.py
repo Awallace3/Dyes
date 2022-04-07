@@ -8,9 +8,9 @@ from matplotlib.lines import Line2D
 
 def HOMO_LUMO_dict(file):
     '''
-    HOMO is       index 0
-    LUMO is       index 1
-    Wavelength is index 2
+    HOMO is       index 0 or the first two columns of the csv value
+    LUMO is       index 1 or the third and fourth columns of the csv 
+    Wavelength is index 2 or the last two columns of the csv
     '''
     filename = open(file, 'r')
     data = filename.readlines()
@@ -42,9 +42,10 @@ def HOMO_LUMO_dict(file):
             #print(name_dict)
 
         #print(line)
-    #     print(line)
-
-#  print(name_dict)
+       #     print(line)
+    
+    #print(name_dict)
+    
 
     return name_dict
 
@@ -124,11 +125,12 @@ def scatter_plot(file):
     #plt.xticks(name)
     plt.scatter(x, b, c='b', s=0, marker='s', label="LUMO")
     plt.tick_params(
-        axis='x',  # changes apply to the x-axis
-        which='both',  # both major and minor ticks are affected
-        bottom=True,  # ticks along the bottom edge are off
-        top=False,  # ticks along the top edge are off
-        labelbottom=False)  # labels along the bottom edge are off
+    axis='x',          # changes apply to the x-axis
+    which='both',      # both major and minor ticks are affected
+    bottom=True,  # ticks along the bottom edge are on 
+   # bottom=False,  # ticks alone the bottom are off 
+    top=False,         # ticks along the top edge are off
+    labelbottom=False) # labels along the bottom edge are off
     plt.ylabel("Energy (eV)")
     plt.xlabel("Theoretical Dyes")
 
@@ -162,14 +164,16 @@ def scatter_plot(file):
 
 def main():
     file = '../data_analysis/800_1000.csv'
-    #file = '../data_analysis/600_800.csv'
-    # file = '../data_analysis/400_600.csv'
-
+   # file = '../data_analysis/600_800.csv'
+   # file = '../data_analysis/400_600.csv' 
+    
     numbs = HOMO_LUMO_dict(file)
-    '''
+    a = 0
+    
+    
     for name in numbs.keys():
         #print(i)
-        if numbs[name][1]>=-3.4 and numbs[name][1]<=-3.2  and numbs[name][0]<=-4.6 and numbs[name][0]>=-5.2:
+        if numbs[name][0]>=-3.8 and numbs[name][0]<=-3.5:
             print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0]))
     '''
     '''
@@ -238,6 +242,16 @@ def main():
         '3ed_12b_4ea',
     ]
     '''
+    '''
+    
+    
+    #800 to 1000 
+    test_num = [
+'1ed_29b_7ea',
+'7ed_29b_10ea',
+'10ed_29b_10ea',
+'6ed_28b_2ea',
+'11ed_29b_7ea'
 
     #800 to 1000
     test_num = [
@@ -245,6 +259,8 @@ def main():
         '11ed_29b_7ea'
     ]
     '''
+    
+    
     test_num = [
 '6ed_31b_5ea',
 '7ed_16b_11ea',
@@ -253,6 +269,8 @@ def main():
 '7ed_16b_3ea'
     ]
     '''
+    '''
+    
 
     filename = open('test.csv', 'w+')
     for i in test_num:
