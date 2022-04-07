@@ -1,5 +1,6 @@
 import os
 import math
+
 def xyzcoords(file):
     filename = open(file,'r')
     data = filename.readlines()
@@ -143,6 +144,7 @@ def Bond_lengths_H_O(atomH,atomO,atom):
             dis = tot**.5
            # print(dis)
             if dis >= .96 and dis <= .98:
+                print(o,c)
                 bondlength[str(o)+' '+str(c)]=dis
                 double.append((o,c))
       #          print(dis) 
@@ -166,6 +168,7 @@ def Bond_lengths_O_C(atomO,atomC,atom):
             dis = tot**.5
             #print(dis)
             if dis >= 1.2 and dis <= 1.35:
+                #print(o,c)
                 bondlength[str(o)+' ' +str(c)]=dis
                 double.append((o,c))
                 #print(dis) 
@@ -207,6 +210,7 @@ def Bond_length(atom):
             #print(x)
                 tot = (atom['xcoord'][x]-atom['xcoord'][y])**2+(atom['ycoord'][x]-atom['ycoord'][y])**2+(atom['zcoord'][x]-atom['zcoord'][y])**2
                 dis = tot**.5
+                #print(x,y,'keys')
                 
             
                 Bond_length[str(x)+' '+str(y)]=dis
@@ -249,12 +253,20 @@ def Bond_angle_H_O_C(O,C,atom,tot,ang):
     oangl = []
     cangl=[]
 
+
     for o in O:
         for c in C:
-            test = tot[o+' '+c]
-            if test < 2.11:
-                oangl.append(o)
-                cangl.append(c)
+        
+           #print(c)
+           #print(o,c)
+           #print(c,h)
+           test = tot[o+' '+c]
+           
+           #print(test_H,'test')
+           if test < 2.11:
+               oangl.append(o)
+               cangl.append(c)
+
     final = {}
     for c in cangl:
         for o in oangl:
@@ -289,20 +301,20 @@ def Bond_angle_H_O_N(O,C,N,atom,tot,ang):
                 test_o_c = tot[o+' '+c]
                 test_n_c = tot[n+' '+c]
                 if test_o_c < 2.11:
-                    print(test_o_c,o,c)
+                    #print(test_o_c,o,c)
                     oangl.append(o)
                     cangl.append(c)
                 if test_n_c<2.11:
-                    print(test_n_c,n,c)
+                    #print(test_n_c,n,c)
 
                     nangl.append(n)
     final = {}
     for c in cangl:
         for o in oangl:
-            for ot in oangl:
+            for ot in nangl:
                 if c!=o and c!=ot and o!=ot:
                    tot = ang[str(c)+'-'+str(o)+'-'+str(ot)]
-                   print(tot)
+                   #print(tot)
                    if tot >= 115 and tot <= 135:
                        rep = sorted((int(c),int(o),int(ot)))
                        rep = str(rep[0])+'-'+str(rep[1])+'-'+str(rep[2])
@@ -315,18 +327,62 @@ def Bond_angle_H_O_N(O,C,N,atom,tot,ang):
     return final
 
 def bondistancecheck(fin,dis):
-    carboxylic = ''
+    '''
+    checks the distances of the angles to make sure atoms are next to each other
+    '''
+    final = []
     for i in fin:
         i = i.split('-')
-      #  print(i)
+        #print(i)
         a = dis[i[0]+' '+i[1]]
         b = dis[i[0]+' '+i[2]]
         c =dis[i[1]+' '+i[2]]
         if a < 4 and b<4 and c<4:
-            carboxylic += i
+            i = [str(i[0]),str(i[1]),str(i[2])]
+            #print(i)
+
+            for x in i:
+                final.append(x)
          #   print(i)
        # print(a,b,c)
-    return carboxylic
+    return final
+
+def atomnearchecker(atom_num_list,H,O,tot,atom,Carboxy=True,Amide=False):
+    atom_num_dict = {}
+    #print(atom_num_list)
+    if Amide == True:
+        for x in atom['atom_num']:
+            for y in atom_num_list:
+                dis = tot[x+' '+y]
+                if dis !=0 and dis <4.11:
+                    atom_num_dict[x]=x
+    if Carboxy == True:
+        for h in H:
+            for o in O:
+                dis2 = tot[o+' '+h]
+                if dis2 < 1.1:
+                    for x in atom['atom_num']:
+                        #print(x,o)
+                        dis = tot[h+' '+x]
+                        if dis < 4.11:
+                            atom_num_dict[x]=x
+                  #      dis_2 = tot['42',' ','1']
+                        #if dis <4.11:
+                        #    atom_num_dict[x]=x
+                 #   print(o,h)
+                           # print(dis)
+
+
+
+
+              #  print(x,y)
+              #  print(dis)
+    print(atom_num_dict)
+
+
+
+
+    return atom_num_dict
 
 
 
@@ -334,11 +390,15 @@ def bondistancecheck(fin,dis):
 
 
 def main():
-    filename = '../MO_start/10ed_29b_10ea/mo/10ed_29b_10ea.out'
+    '''
+    cartesians are in Angstroms
+    '''
+    #filename = '../MO_start/10ed_29b_10ea/mo/10ed_29b_10ea.out'
    # filename = '../MO_start/3ed_15b_3ea/mo/3ed_15b_3ea.out'
     #filename = '../MO_start/3ed_12b_4ea/mo/3ed_12b_4ea.out'
     #filename = '../MO_start/5ed_30b_4ea/mo/5ed_30b_4ea.out'
    # filename = '../MO_start/3ed_15b_3ea/mo/test.out'
+    """
     atom = xyzcoords(filename)
     O = atom_type_O(atom)
     N = atom_type_N(atom)
@@ -373,9 +433,15 @@ def main():
   
     carboxy = Bond_angle_H_O_C(O,C,atom,tot,ang) 
     amide = Bond_angle_H_O_N(O,C,N,atom,tot,ang)
+    
     print(amide)
-    bondistancecheck(amide,tot)
+    
+    atom_num_list = bondistancecheck(amide,tot)
+    """
     
     
-    return
-main()
+    
+    
+    
+if __name__=="__main__": 
+    main()
