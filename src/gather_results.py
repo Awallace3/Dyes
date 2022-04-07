@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from homo_lumo import *
-
+# from homo_lumo import *
 # Genetic algorithm in the future?
 """
 json_pandas_molecules dataframe
@@ -1246,7 +1245,7 @@ def df_differences_exp(df, methods):
 def theoretical_dyes_basis_set_out(
     path_results_json,
     methods_basissets=[
-        
+
         "CAM-B3LYP/6-311G(d,p)",
         "bhandhlyp/6-311G(d,p)",
         "PBE1PBE/6-311G(d,p)",
@@ -1401,7 +1400,7 @@ def benchmarks_dyes_basis_set_out(
     if units.lower() == "ev":
         df = df_conv_energy(df)
     if output_csv != "":
-        
+
         if homo_lumo:
             df2 = df_molecules_to_df_method_basisset_exc(df_molecules,
                                                          methods_basissets,
@@ -1424,7 +1423,7 @@ def benchmarks_dyes_basis_set_out(
             print(len(above_ap25["LSF"]))
         else:
             df2 = df2.sort_values(methods_basissets[0], ascending=True)
-        
+
         df2.to_csv("%s.csv" % output_csv, index=False)
     if output_graph != "":
         print("working on graph")
@@ -1778,7 +1777,7 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
-    """ 
+    """
     theoretical_dyes_basis_set_out(
         # "./json_files/results_exc.json",
         "./json_files/results_ds5.json",
@@ -1793,8 +1792,8 @@ def main():
         LSF_csv=True,
     )
     """
-    
-    
+
+
 
     # theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e3',
     #     output_latex='theoretical_e3', output_graph='theoreticale3',
@@ -1806,7 +1805,7 @@ def main():
     """"""
     # Benchmark data
     #benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
-    
+
 
     benchmarks_dyes_basis_set_out(
         'Benchmark/benchmarks_exc.json',
@@ -1823,31 +1822,48 @@ def main():
     #    "CAM-B3LYP/6-311G(d,p)_nndimethylformamide",
     #    "bhandhlyp/6-311G(d,p)_nndimethylformamide",
     #    "PBE1PBE/6-311G(d,p)_nndimethylformamide",
-
-        
-
         ],
-    
+
         plot_js={
-        "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
-    #    "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"], 
-    #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
-    #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
-        "headers_colors": [
-            ["CAM-B3LYP/6-311G(d,p)", "blue"],
-            ["BHandHLYP/6-311G(d,p)", "red"],
-            ["PBE0/6-311G(d,p)", "orange"],
-            ["LSF", "green"],  # ['Weighted Average', 'green']
-        ],
-        "weights": [0.71, 0.29],
-    },
-        output_csv='data_analysis/nuthin',
-        output_latex='data_analysis/nuthin',
-        output_graph='data_analysis_nuthin',
-        exc_json=True, homo_lumo=False
-    )
-    
-
+# <<<<<<< HEAD
+#         "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
+#     #    "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
+#     #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
+#     #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
+#         "headers_colors": [
+#             ["CAM-B3LYP/6-311G(d,p)", "blue"],
+#             ["BHandHLYP/6-311G(d,p)", "red"],
+#             ["PBE0/6-311G(d,p)", "orange"],
+#             ["LSF", "green"],  # ['Weighted Average', 'green']
+#         ],
+#         "weights": [0.71, 0.29],
+#     },
+#         output_csv='data_analysis/nuthin',
+#         output_latex='data_analysis/nuthin',
+#         output_graph='data_analysis_nuthin',
+#         exc_json=True, homo_lumo=False
+#     )
+#
+#
+# =======
+            "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
+            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
+            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
+            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
+            "headers_colors": [
+                ["CAM-B3LYP/6-311G(d,p)", "blue"],
+                ["BHandHLYP/6-311G(d,p)", "red"],
+                ["PBE0/6-311G(d,p)", "orange"],
+                ["LSF", "green"],  # ['Weighted Average', 'green']
+            ],
+            "weights": [0.71, 0.29],
+        },
+        output_csv='vac',
+        output_latex='vac',
+        output_graph='vac',
+        exc_json=True,
+        homo_lumo=False)
+# >>>>>>> 258d915aa06a51f8e01768b0bb867224ebd75baa
     """
 
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',

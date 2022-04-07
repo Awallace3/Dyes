@@ -3,7 +3,6 @@ import molecule_json
 
 class lsfExcGather():
     """ docstring for lsfExcGather."""
-
     def __init__(self, v_abs, v_homo, v_lumo, v_osci):
         self.v_abs = v_abs
         self.v_homo = v_homo
@@ -26,11 +25,11 @@ def conv_energy(val, rounding=3):
     return round(h * c / (float(val) * J_over_eV), rounding)
 
 
-def generate_lsf_exc(results_json="../Benchmark/benchmarks_exc.json"):
+def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json"):
     moleculeList = molecule_json.MoleculeList_exc()
     moleculeList.setData(results_json)
-    homo_lsf = [-0.36764963, -0.38964081]  # CAM - PBE
-    lumo_lsf = [-0.95798195, 0.93317353]  # CAM - PBE
+    homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
+    lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
     nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
 
     d = moleculeList.getMoleculeList()
@@ -99,15 +98,14 @@ def generate_lsf_exc(results_json="../Benchmark/benchmarks_exc.json"):
         d[n] = mol
     moleculeList.setMolecules(d)
     moleculeList.sendToFile("../json_files/test.json")
-
     return
 
 
 def main():
     moleculeList = molecule_json.MoleculeList_exc()
     moleculeList.setData("../json_files/results_exc.json")
-    homo_lsf = [-0.36764963, -0.38964081]  # CAM - PBE
-    lumo_lsf = [-0.95798195, 0.93317353]  # CAM - PBE
+    homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
+    lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
     nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
 
     d = moleculeList.getMoleculeList()
@@ -182,4 +180,4 @@ def main():
 
 
 # main()
-generate_lsf_exc()
+generate_lsf_exc("../json_files/p1.json")
