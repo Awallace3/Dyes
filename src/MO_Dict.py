@@ -1,4 +1,6 @@
 import os
+from MO_func_find import *
+
 
 def amountofbasisfunctions(file):
     filename = open(file,'r')
@@ -120,7 +122,7 @@ def lastO(file,basis):
                 end_homo = last_num+basis+1 
                 start_lumo = last_num+1
                 end_lumo =  last_num+basis+1 
-                print(line)
+                #print(line)
                 for i in line:
                     i
            else:
@@ -187,7 +189,7 @@ def homo_dict(file,start_num,end_num,occ):
                # atom['vir_coef'].append(float(i[vir])**2)
                 tot_homo[atom['type']]=atom['occ_coef']
                # tot_lumo[atom['type']]=atom['vir_coef']
-    print(tot_homo['1'])
+    #print(tot_homo['1'])
 
     return tot_homo
 
@@ -229,7 +231,7 @@ def lumo_dict(file,start_num,end_num,vir):
             else:
                 atom['vir_coef'].append(float(i[vir])**2)
                 tot_lumo[atom['type']]=atom['vir_coef']
-    print(tot_lumo['1'])
+    #print(tot_lumo['1'])
 
     return tot_lumo
 
@@ -243,7 +245,7 @@ def lumo_dict(file,start_num,end_num,vir):
 
 
 def summer(dict_homo,dict_lumo,num):
-    print(num)
+    #print(num)
     final_homo = {}
     final_lumo = {}
 
@@ -291,18 +293,18 @@ def total_contrib(dict_homo,dict_lumo,num):
         #print(atom_num)
         tot_homo += dict_homo[atom_num]['total']
         tot_lumo += dict_lumo[atom_num]['total']
-    print(tot_homo)
-    print(tot_lumo)
+    #print(tot_homo)
+    #print(tot_lumo)
     
     return tot_homo,tot_lumo
 
-def part_tot_contrib(dict_homo,dict_lumo,num,tot_homo,tot_lumo):
+def part_tot_contrib(dict_homo,dict_lumo,num,tot_homo,tot_lumo,atom_num_list):
     par_homo = 0
     par_lumo = 0
     #atom_num_list=[33,34,35,36,37,44] 
-    for atom_num in range(33,37):
-    #for atom_num in atom_num_list:
-        print(atom_num)
+    #for atom_num in range(33,37):
+    for atom_num in atom_num_list:
+        #print(atom_num)
         
         par_homo += dict_homo[str(atom_num)]['total']
         par_lumo += dict_lumo[str(atom_num)]['total']
@@ -348,35 +350,85 @@ def Smiles_Reader(SMILES):
 def main():
 #    filename = '../MO_start/6ed_28b_4ea/mo/6ed_28b_4ea.out'
 #    filename = '../MO_start/3ed_7b_2ea/mo/3ed_7b_2ea.out'
-    #filename = '../MO_start/11ed_28b_8ea/mo/11ed_28b_8ea.out'
+  #  filename = '../MO_start/11ed_28b_8ea/mo/11ed_28b_8ea.out'
   #  filename = '../MO_start/3ed_26b_4ea/mo/3ed_26b_4ea.out'
   #  filename = '../MO_start/11ed_8b_8ea/mo/test/mani.out'
-  #  filename = '../MO_start/11ed_8b_8ea/mo/11ed_8b_8ea.out'
+   # filename = '../MO_start/11ed_8b_8ea/mo/11ed_8b_8ea.out' # has two carboxy
     #Smiles = '../MO_start/11ed_8b_8ea/mo/test.smi'
     #input_file = '../MO_start/3ed_7b_2ea/mo/3ed_7b_2ea.com'
-   # filename = '../MO_start/1ed_20b_4ea/mo/1ed_20b_4ea.out'
-    filename = '../MO_start/10ed_29b_10ea/mo/10ed_29b_10ea.out'
+  #  filename = '../MO_start/1ed_20b_4ea/mo/1ed_20b_4ea.out'
+   # filename = '../MO_start/10ed_29b_10ea/mo/10ed_29b_10ea.out'
+   # filename = '../MO_start/3ed_15b_3ea/mo/3ed_15b_3ea.out'
+  #  filename = '../MO_start/11ed_28b_8ea/mo/11ed_28b_8ea.out'
+  #  filename = '../MO_start/11ed_30b_8ea/mo/11ed_30b_8ea.out'
+    jobs = ['11ed_28b_8ea','6ed_28b_4ea','11ed_30b_8ea','3ed_26b_4ea']
+    for x in jobs:
+        filename = '../MO_start/' + str(x) + '/mo/'+ str(x)+'.out'
+   
 
-    num = amountofbasisfunctions(filename)
-    atom_let = atom_num_let_dic(filename)
-    #print(atom_let)
-    #Smiles_Reader(Smiles)
+        num = amountofbasisfunctions(filename)
+        atom_let = atom_num_let_dic(filename)
+        #print(atom_let)
+        #Smiles_Reader(Smiles)
 
 
 
-    #homo,lumo = lastO(filename,num)
-    start_num_h,end_num_h,start_num_l,end_num_l,occ,vir  = lastO(filename,num) 
+        #homo,lumo = lastO(filename,num)
+        start_num_h,end_num_h,start_num_l,end_num_l,occ,vir  = lastO(filename,num) 
+        
+        homo = homo_dict(filename,start_num_h,end_num_h,occ)
+        lumo = lumo_dict(filename,start_num_l,end_num_l,vir)
+        
+        
+        #print(homo.keys())
+        atom = xyzcoords(filename)
+        O = atom_type_O(atom)
+        N = atom_type_N(atom)
+
+
+        S = atom_type_S(atom)
+        H = atom_type_H(atom)
+        Si= atom_type_Si(atom)
+        C = atom_type_C(atom)
+        Od = Bond_lengths_O_C(O,C,atom)
+
+        ch = Bond_lengths_H_C(H,C,atom)
+        Os = Bond_lengths_H_O(H,O,atom)
+        Co = Bond_lengths_O_C(O,C,atom) 
+        No = Bond_lengths_O_N(O,N,atom) 
+        
+
+
+        tot = Bond_length(atom)
+        ang = Bond_angles(atom,tot)
+        carboxy = Bond_angle_H_O_C(O,C,atom,tot,ang) 
+        #print(carboxy)
+        amide = Bond_angle_H_O_N(O,C,N,atom,tot,ang)
+        
+
+        atom_num_list = bondistancecheck(amide,tot)
+        atom_num_list = bondistancecheck(carboxy,tot)
+    # print(atom_num_list)
+        atom_num_list = atomnearchecker(atom_num_list,
+                                        H,
+                                        O,
+                                        tot,
+                                        atom,
+                                        Carboxy = True,
+                                        Amide = False)
+        for i in atom_num_list.keys():
+            print(str(atom['atom_let'][str(i)])+' ' +str(atom['xcoord'][str(i)])+' '+str(atom['ycoord'][str(i)])+' '+ str(atom['zcoord'][str(i)]))
+        # print(i)
+        
+
+            
+        final_homo,final_lumo = summer(homo,lumo,atom_let)
+        tot_homo,tot_lumo = total_contrib(final_homo,final_lumo,atom_let)
+        part_tot_contrib(final_homo,final_lumo,atom_let,tot_homo,tot_lumo,atom_num_list)
     
-    homo = homo_dict(filename,start_num_h,end_num_h,occ)
-    lumo = lumo_dict(filename,start_num_l,end_num_l,vir)
     
     
-    #print(homo.keys())
     
-    
-    final_homo,final_lumo = summer(homo,lumo,atom_let)
-    tot_homo,tot_lumo = total_contrib(final_homo,final_lumo,atom_let)
-    part_tot_contrib(final_homo,final_lumo,atom_let,tot_homo,tot_lumo)
     
     
 
@@ -384,5 +436,9 @@ def main():
 
   #  for line in lastO(filename,num):
   #      line 
-    return
-main()
+    
+
+#main()
+if __name__ == '__main__':
+    main()
+ 
