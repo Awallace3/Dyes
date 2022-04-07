@@ -7,9 +7,9 @@ from matplotlib.lines import Line2D
 
 def HOMO_LUMO_dict(file):
     '''
-    HOMO is       index 0
-    LUMO is       index 1
-    Wavelength is index 2
+    HOMO is       index 0 or the first two columns of the csv value
+    LUMO is       index 1 or the third and fourth columns of the csv 
+    Wavelength is index 2 or the last two columns of the csv
     '''
     filename = open(file,'r')
     data = filename.readlines()
@@ -43,7 +43,8 @@ def HOMO_LUMO_dict(file):
         #print(line)
        #     print(line)
     
-  #  print(name_dict)
+    #print(name_dict)
+    
 
     return name_dict
 def optimal_dyes(numbs):
@@ -78,6 +79,7 @@ def scatter_plot(file):
         #print(line)
     
     df = {'Name':name,'LUMO':lumo,'HOMO':homo,'Wavelength':wave}
+    
     ss = np.array([50])
 
     x = name
@@ -106,7 +108,9 @@ def scatter_plot(file):
         p2 = a[v]
         rect = matplotlib.patches.Rectangle([ v, p2 ], .5, 0.03, color='red')
         plt.gca().add_patch(rect)
-        plt.text(v+0.3, p2-0.20, "%s \n %s" % (wave[v],name[v]), va="center", ha="center")
+        ### uncomment below to make labels ###
+        plt.text(v+0.3, p2-0.20, "%s \n %s" % (wave[v],name[v]), va="center", ha="center") 
+        #######################################
         #plt.annotate(v, p2, )
 
     b = lumo
@@ -128,7 +132,8 @@ def scatter_plot(file):
     plt.tick_params(
     axis='x',          # changes apply to the x-axis
     which='both',      # both major and minor ticks are affected
-    bottom=True,      # ticks along the bottom edge are off
+    bottom=True,  # ticks along the bottom edge are on 
+   # bottom=False,  # ticks alone the bottom are off 
     top=False,         # ticks along the top edge are off
     labelbottom=False) # labels along the bottom edge are off
     plt.ylabel("Energy (eV)")
@@ -171,16 +176,20 @@ def scatter_plot(file):
 
 def main():
     file = '../data_analysis/800_1000.csv'
-    #file = '../data_analysis/600_800.csv'
+   # file = '../data_analysis/600_800.csv'
    # file = '../data_analysis/400_600.csv' 
     
     numbs = HOMO_LUMO_dict(file)
-    '''
+    a = 0
+    
+    
     for name in numbs.keys():
         #print(i)
-        if numbs[name][1]>=-3.4 and numbs[name][1]<=-3.2  and numbs[name][0]<=-4.6 and numbs[name][0]>=-5.2:
+        if numbs[name][0]>=-3.8 and numbs[name][0]<=-3.5:
             print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0]))
-    '''
+            a+=1
+    print(a)
+    
     '''            
     600 to 800 nm MO choices
     test_num = [
@@ -248,6 +257,8 @@ def main():
         '3ed_12b_4ea',
     ]
     '''
+    '''
+    
     
     #800 to 1000 
     test_num = [
@@ -258,8 +269,11 @@ def main():
 '11ed_29b_7ea'
 
     ]
+    '''
     
     '''
+    
+    
     test_num = [
 '6ed_31b_5ea',
 '7ed_16b_11ea',
@@ -268,12 +282,16 @@ def main():
 '7ed_16b_3ea'
     ]
     '''
+    '''
+    
 
   
     filename = open('test.csv','w+')
     for i in test_num:
+  #  for i in numbs.keys():
+        #print(i)
         
-        a = str(i) +','+str(round(numbs[i][1],2))+','+str(round(numbs[i][0],2))+','+str(round(numbs[i][2],2)) 
+        a = str(i) +','+str(round(numbs[i][0],2))+','+str(round(numbs[i][1],2))+','+str(round(numbs[i][2],2)) 
         print(a)
         filename.write(str(a)+'\n')
     filename.close()
@@ -281,6 +299,7 @@ def main():
 
 
     scatter_plot('test.csv')
+    '''
    # optimal_dyes(numbs)
 
 
