@@ -1,1 +1,0 @@
-monitor_jobs =  ['TH304', 'C258', 'BTD-1', 'NKX-2883', 'WS-8', 'HKK-BTZ4']
