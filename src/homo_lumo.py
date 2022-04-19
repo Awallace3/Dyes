@@ -65,9 +65,12 @@ def coefficients_3D_line(xs, y_exp, coefficients):
     return xyzs
 
 
-def coefficients_3D_equation(
-    xs, y_exp, coefficients, deg, x_range=False, plot_x_range=[-7, -5.5]
-):
+def coefficients_3D_equation(xs,
+                             y_exp,
+                             coefficients,
+                             deg,
+                             x_range=False,
+                             plot_x_range=[-7, -5.5]):
     if len(coefficients) != deg + 1:
         print("coefficients must be the same length as deg+1")
         return 0
@@ -79,7 +82,7 @@ def coefficients_3D_equation(
         for x in xs:
             y = 0
             for d in range(deg + 1):
-                y += coefficients[d] * x ** (deg - d)
+                y += coefficients[d] * x**(deg - d)
             ys.append(y)
         ys = np.array(ys)
         xys = np.c_[xs, ys]
@@ -88,7 +91,7 @@ def coefficients_3D_equation(
         for i in range(len(xys[:, 0])):
             y = 0
             for d in range(deg + 1):
-                y += coefficients[d] * xys[i, 0] ** (deg - d)
+                y += coefficients[d] * xys[i, 0]**(deg - d)
 
             xys[i, 1] = y
         xys = xys[xys[:, 1].argsort()]
@@ -142,8 +145,7 @@ def correlation_function_nhe(
         if train:
 
             X_train, X_test, y_train, y_test = train_test_split(
-                meths, exp_homo, test_size=0.30, random_state=42
-            )
+                meths, exp_homo, test_size=0.30, random_state=42)
             out = np.linalg.lstsq(X_train, y_train)
 
             first, *_, last = out
@@ -189,7 +191,6 @@ def correlation_function_nhe(
                 "Total    RMSE     =",
                 mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False),
             )
-
             """
         fig = plt.figure()
         ax = fig.add_subplot(projection='3d')
@@ -232,19 +233,22 @@ def correlation_function_nhe(
 
         if train:
             X_train, X_test, y_train, y_test = train_test_split(
-                meths, exp_homo, test_size=0.30, random_state=42
-            )
+                meths, exp_homo, test_size=0.30, random_state=42)
             co = np.polyfit(X_train, y_train, deg)
             print(co)
-            xys = coefficients_3D_equation(
-                X_train, y_train, co, deg, x_range=True
-            )
+            xys = coefficients_3D_equation(X_train,
+                                           y_train,
+                                           co,
+                                           deg,
+                                           x_range=True)
         else:
             co = np.polyfit(meths, exp_homo, deg)
             print(co)
-            xys = coefficients_3D_equation(
-                meths, exp_homo, co, deg, x_range=True
-            )
+            xys = coefficients_3D_equation(meths,
+                                           exp_homo,
+                                           co,
+                                           deg,
+                                           x_range=True)
 
         fig = plt.figure()
         ax = fig.add_subplot()
@@ -304,8 +308,7 @@ def correlation_function(
         if train:
 
             X_train, X_test, y_train, y_test = train_test_split(
-                meths, exp_homo, test_size=0.30, random_state=42
-            )
+                meths, exp_homo, test_size=0.30, random_state=42)
             out = np.linalg.lstsq(X_train, y_train)
 
             first, *_, last = out
@@ -351,7 +354,6 @@ def correlation_function(
                 "Total    RMSE     =",
                 mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False),
             )
-
             """
         fig = plt.figure()
         ax = fig.add_subplot(projection='3d')
@@ -391,19 +393,22 @@ def correlation_function(
 
         if train:
             X_train, X_test, y_train, y_test = train_test_split(
-                meths, exp_homo, test_size=0.30, random_state=42
-            )
+                meths, exp_homo, test_size=0.30, random_state=42)
             co = np.polyfit(X_train, y_train, deg)
             print(co)
-            xys = coefficients_3D_equation(
-                X_train, y_train, co, deg, x_range=True
-            )
+            xys = coefficients_3D_equation(X_train,
+                                           y_train,
+                                           co,
+                                           deg,
+                                           x_range=True)
         else:
             co = np.polyfit(meths, exp_homo, deg)
             print(co)
-            xys = coefficients_3D_equation(
-                meths, exp_homo, co, deg, x_range=True
-            )
+            xys = coefficients_3D_equation(meths,
+                                           exp_homo,
+                                           co,
+                                           deg,
+                                           x_range=True)
 
         fig = plt.figure()
         ax = fig.add_subplot()
@@ -431,9 +436,7 @@ def correlation_homos_lumos_vertExcitations(
     banned_lst=[],
 ):
     df_molecules = json_pandas_molecule_BM(path_results_json, exc_json=True)
-    df = df_molecules_BM_to_df_method_basisset(
-        df_molecules, methods_basissets
-    )
+    df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
     convert_lst = methods_basissets.copy()
     convert_lst.append("Exp")
     df = convert_df_nm_to_eV(df, convert_lst)
@@ -558,29 +561,27 @@ def correlation_homos_lumos_vertExcitations(
 
 
 def correlation_homos_lumos_vertExcitations_SepDF(
-    df,
-    h=[
-        "HOMO CAM-B3LYP/6-311G(d,p)",
-        "LUMO CAM-B3LYP/6-311G(d,p)",
-        "HOMO bhandhlyp/6-311G(d,p)",
-        "LUMO bhandhlyp/6-311G(d,p)",
-        "HOMO PBE1PBE/6-311G(d,p)",
-        "LUMO PBE1PBE/6-311G(d,p)",
-    #    "HOMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
-    #    "LUMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
-    #    "HOMO bhandhlyp/6-311G(d,p)_dichloromethane",
-    #    "LUMO bhandhlyp/6-311G(d,p)_dichloromethane",
-    #    "HOMO PBE1PBE/6-311G(d,p)_dichloromethane",
-    #    "LUMO PBE1PBE/6-311G(d,p)_dichloromethane",
-
-
-    ],
-    exp=["HOMO Ox", "LUMO Ox"],
-    nhe_to_ev=4.5,
-    plot_name=True,
-    add_exc_to_homo=False,
-    #units="nhe"  # 'ev'
-    units='ev' # 'ev'
+        df,
+        h=[
+            "HOMO CAM-B3LYP/6-311G(d,p)",
+            "LUMO CAM-B3LYP/6-311G(d,p)",
+            "HOMO bhandhlyp/6-311G(d,p)",
+            "LUMO bhandhlyp/6-311G(d,p)",
+            "HOMO PBE1PBE/6-311G(d,p)",
+            "LUMO PBE1PBE/6-311G(d,p)",
+            #    "HOMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
+            #    "LUMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
+            #    "HOMO bhandhlyp/6-311G(d,p)_dichloromethane",
+            #    "LUMO bhandhlyp/6-311G(d,p)_dichloromethane",
+            #    "HOMO PBE1PBE/6-311G(d,p)_dichloromethane",
+            #    "LUMO PBE1PBE/6-311G(d,p)_dichloromethane",
+        ],
+        exp=["HOMO Ox", "LUMO Ox"],
+        nhe_to_ev=4.5,
+        plot_name=True,
+        add_exc_to_homo=False,
+        #units="nhe"  # 'ev'
+        units='ev'  # 'ev'
 ):
 
     if units == "ev":
@@ -606,7 +607,7 @@ def correlation_homos_lumos_vertExcitations_SepDF(
     exp_homo = df["HOMO"].to_numpy()
     exp_lumo = df["LUMO"].to_numpy()
 
-    ### START HERE
+    # START HERE
 
     # print(df["CAM-B3LYP/6-311G(d,p)"] )
 
@@ -706,27 +707,26 @@ def correlation_homos_lumos_vertExcitations_SepDF(
         meths[:, 1],
         xyzs3[:, 2],
         exp_homo,
-#        meths2[:, 0],
-#        meths2[:, 1],
-#        xyzs4[:, 2],
-#        exp_lumo,
+        #        meths2[:, 0],
+        #        meths2[:, 1],
+        #        xyzs4[:, 2],
+        #        exp_lumo,
         df[h[2]],
-    #    df[h[3]],
-
+        #    df[h[3]],
     ]
     headers = [
-            "dye",
-            'homo cam',
-            'homo pbe0',
-            'homo lsf',
-            'homo exp',
-    #        'lumo cam',
-    #        'lumo pbe0',
-    #        'lumo lsf',
-    #        'lumo exp',
-            'homo bhandhlyp',
-    #        'lumo bhandhlyp',
-            ]
+        "dye",
+        'homo cam',
+        'homo pbe0',
+        'homo lsf',
+        'homo exp',
+        #        'lumo cam',
+        #        'lumo pbe0',
+        #        'lumo lsf',
+        #        'lumo exp',
+        'homo bhandhlyp',
+        #        'lumo bhandhlyp',
+    ]
     dat = [i.tolist() for i in dat]
     print(dat)
     # df = pd.DataFrame(dat, columns=headers)
@@ -735,7 +735,7 @@ def correlation_homos_lumos_vertExcitations_SepDF(
         print(i)
         df[i] = dat[n]
     print(df)
-    df.to_csv("../data_analysis/homo_lumo_output_dichloro.csv",index=False)
+    df.to_csv("../data_analysis/homo_lumo_output_dichloro.csv", index=False)
 
     # comb_dat = np.concatenate(
     #     (
@@ -760,9 +760,7 @@ def theory_df(
     banned_lst=[],
 ):
     df_molecules = json_pandas_molecule_BM(path_results_json, exc_json=True)
-    df = df_molecules_BM_to_df_method_basisset(
-        df_molecules, methods_basissets
-    )
+    df = df_molecules_BM_to_df_method_basisset(df_molecules, methods_basissets)
     convert_lst = methods_basissets.copy()
     convert_lst.append("Exp")
     df = convert_df_nm_to_eV(df, convert_lst)
@@ -805,8 +803,8 @@ def combine_exp_theory_orbs(
     banned_lst,
     exp_orbs_path="delcamp.csv",
     theory_orbs_path="delcamp_theoretical.csv",
-  #  theory_orbs_path="dichlor_fin.csv"
-  #  theory_orbs_path='../Benchmark/benchmarks_exc.json',
+    #  theory_orbs_path="dichlor_fin.csv"
+    #  theory_orbs_path='../Benchmark/benchmarks_exc.json',
 ):
 
     # t_df = theory_df(theory_orbs_path)
@@ -819,9 +817,11 @@ def combine_exp_theory_orbs(
     return df
 
 
-def s_plot_LSF_Exp(
-    theoretical=[], exp=[], names=[], units="NHE", output_name="scatter.png"
-):
+def s_plot_LSF_Exp(theoretical=[],
+                   exp=[],
+                   names=[],
+                   units="NHE",
+                   output_name="scatter.png"):
     for i in range(len(theoretical)):
         fig = plt.figure(dpi=400)
         ax1 = fig.add_subplot()
@@ -829,9 +829,10 @@ def s_plot_LSF_Exp(
         if len(names) > 0:
             x_plot = names
             fig = plt.gcf()
-            fig.autofmt_xdate(
-                bottom=0.2, rotation=90, ha="center", which="major"
-            )
+            fig.autofmt_xdate(bottom=0.2,
+                              rotation=90,
+                              ha="center",
+                              which="major")
         else:
             x_plot = [i for i in range(len(theoretical))]
 
@@ -852,38 +853,34 @@ def coefficients_3D_line_theory(xs, coefficients):
     return xyzs
 
 
-
 def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
-    df,
-    h=[
-        "HOMO CAM-B3LYP/6-311G(d,p)",
-        "LUMO CAM-B3LYP/6-311G(d,p)",
-        "HOMO bhandhlyp/6-311G(d,p)",
-        "LUMO bhandhlyp/6-311G(d,p)",
-        "HOMO PBE1PBE/6-311G(d,p)",
-        "LUMO PBE1PBE/6-311G(d,p)",
-    #    "HOMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
-    #    "LUMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
-    #    "HOMO bhandhlyp/6-311G(d,p)_dichloromethane",
-    #    "LUMO bhandhlyp/6-311G(d,p)_dichloromethane",
-    #    "HOMO PBE1PBE/6-311G(d,p)_dichloromethane",
-    #    "LUMO PBE1PBE/6-311G(d,p)_dichloromethane",
-
-
-    ],
-    #exp=["HOMO Ox", "LUMO Ox"],
-    nhe_to_ev=4.5,
-   # coefhomo = [-0.36764963, -0.38964081], #NHE
-    coefhomo = [ 1.11663268, -0.29145692], # eV
-   # coefflumo =  [-0.95798195,  0.93317353], #NHE
-   coefflumo = [-0.01829343,  1.22914786], #eV
-
-    plot_name=True,
-    add_exc_to_homo=False,
-    units="ev"  # 'ev'
+        df,
+        h=[
+            "HOMO CAM-B3LYP/6-311G(d,p)",
+            "LUMO CAM-B3LYP/6-311G(d,p)",
+            "HOMO bhandhlyp/6-311G(d,p)",
+            "LUMO bhandhlyp/6-311G(d,p)",
+            "HOMO PBE1PBE/6-311G(d,p)",
+            "LUMO PBE1PBE/6-311G(d,p)",
+            #    "HOMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
+            #    "LUMO CAM-B3LYP/6-311G(d,p)_dichloromethane",
+            #    "HOMO bhandhlyp/6-311G(d,p)_dichloromethane",
+            #    "LUMO bhandhlyp/6-311G(d,p)_dichloromethane",
+            #    "HOMO PBE1PBE/6-311G(d,p)_dichloromethane",
+            #    "LUMO PBE1PBE/6-311G(d,p)_dichloromethane",
+        ],
+        #exp=["HOMO Ox", "LUMO Ox"],
+        nhe_to_ev=4.5,
+        # coefhomo = [-0.36764963, -0.38964081], #NHE
+        coefhomo=[1.11663268, -0.29145692],  # eV
+        # coefflumo =  [-0.95798195,  0.93317353], #NHE
+    coefflumo=[-0.01829343, 1.22914786],  #eV
+        plot_name=True,
+        add_exc_to_homo=False,
+        units="ev"  # 'ev'
     #units='ev' # 'ev'
 ):
-    
+
     if units == "ev":
         'MUTE'
         #df["HOMO"] = -1 * abs(df[exp[0]] + nhe_to_ev)
@@ -893,25 +890,25 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
         #df["LUMO"] = df[exp[1]]
         for l in h:
             df[l] = df[l] + nhe_to_ev
-    
+
     # df = df.sort_values(['HOMO'], ascending=True)
 #    df = df.sort_values(["Exp"], ascending=True)
 #    print(df)
 
 #    df["dif"] = df[h[0]] - df[h[4]]
 
- #   df["z_score"] = stats.zscore(df["dif"])
-    # 3 standard deviations away seems fine because most are less than 1
- #   df = df.loc[df["z_score"].abs() <= 3]
- #   df = df.reset_index().drop(columns=["index"])
- #   df["count"] = df.index
+#   df["z_score"] = stats.zscore(df["dif"])
+# 3 standard deviations away seems fine because most are less than 1
+#   df = df.loc[df["z_score"].abs() <= 3]
+#   df = df.reset_index().drop(columns=["index"])
+#   df["count"] = df.index
 
-    #exp_homo = df["HOMO"].to_numpy()
-    #exp_lumo = df["LUMO"].to_numpy()
+#exp_homo = df["HOMO"].to_numpy()
+#exp_lumo = df["LUMO"].to_numpy()
 
-    ### START HERE
+### START HERE
 
-    # print(df["CAM-B3LYP/6-311G(d,p)"] )
+# print(df["CAM-B3LYP/6-311G(d,p)"] )
 
     if add_exc_to_homo:
         df[h[1]] = df[h[0]] + df["CAM-B3LYP/6-311G(d,p)"]
@@ -920,12 +917,12 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
     meths = df[[h[0], h[4]]].to_numpy()
     meths2 = df[[h[1], h[5]]].to_numpy()
 
-   # out = np.linalg.lstsq(meths, exp_homo, rcond=None)
-    out = coefhomo[0], coefhomo[1] 
+    # out = np.linalg.lstsq(meths, exp_homo, rcond=None)
+    out = coefhomo[0], coefhomo[1]
     xyzs3 = coefficients_3D_line_theory(meths, out)
     print("\n\t HOMO\n")
-  #  print(xyzs3)
-   # print(meths[:, 1])
+    #  print(xyzs3)
+    # print(meths[:, 1])
     '''
     print("\ncoefficients =", first, "\n")
     print("Total    Residuel =", get_residual(out, meths, exp_homo))
@@ -936,25 +933,23 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
     )
     '''
 
-    out2 = coefflumo[0],coefflumo[1]
-#    first2, *_, last = out2
+    out2 = coefflumo[0], coefflumo[1]
+    #    first2, *_, last = out2
     xyzs4 = coefficients_3D_line_theory(meths2, out2)
     print("\n\t LUMO\n")
-   # print(xyzs4)
-   # print(xyzs4[:,1])
-   # print(meths)
-#    print(meths[:, 1])
+    # print(xyzs4)
+    # print(xyzs4[:,1])
+    # print(meths)
+    #    print(meths[:, 1])
 
-#    print("\ncoefficients =", first2, "\n")
-#    print("Total    Residuel =", get_residual(out2, meths2, exp_lumo))
-#    print("Total    RSE      =", RSE(exp_lumo, xyzs4[:, 2]))
-#    print(
-#        "Total    RMSE     =",
-#        mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False),
-#    )
+    #    print("\ncoefficients =", first2, "\n")
+    #    print("Total    Residuel =", get_residual(out2, meths2, exp_lumo))
+    #    print("Total    RSE      =", RSE(exp_lumo, xyzs4[:, 2]))
+    #    print(
+    #        "Total    RMSE     =",
+    #        mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False),
+    #    )
 
-
-    
     fig = plt.figure(dpi=400)
     ax1 = fig.add_subplot()
 
@@ -964,7 +959,7 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
         fig.autofmt_xdate(bottom=0.2, rotation=90, ha="center", which="major")
     else:
         x_plot = df["count"]
-   # ax1.plot(x_plot, exp_homo, "k", label="Exp. HOMO")
+# ax1.plot(x_plot, exp_homo, "k", label="Exp. HOMO")
     ax1.plot(meths[:, 0], label="CAM-B3LYP HOMO")
     ax1.plot(meths[:, 1], label="PBE0 HOMO")
     ax1.plot(xyzs3[:, 1], label="LSF HOMO")
@@ -986,7 +981,8 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
     else:
         x_plot = df["count"]
 
-  #  ax2.plot(x_plot, exp_lumo, "k", label="Exp. LUMO")
+
+#  ax2.plot(x_plot, exp_lumo, "k", label="Exp. LUMO")
 
     if add_exc_to_homo:
         ax2.plot(meths2[:, 0], label="CAM-B3LYP HOMO + 1st Exc.")
@@ -1005,7 +1001,6 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
 
     lsf_homo = xyzs3[:, 1]
     lsf_lumo = xyzs4[:, 1]
-    
 
     # x_plot Dyes
     #  meths[:, 0] CAM-B3LYP HOMO
@@ -1017,31 +1012,30 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
 
     dat = [
         x_plot,
-    #    meths[:, 0],
-    #    meths[:, 1],
-    #    xyzs3[:, 1],
-    #    exp_homo,
+        #    meths[:, 0],
+        #    meths[:, 1],
+        #    xyzs3[:, 1],
+        #    exp_homo,
         meths2[:, 0],
         meths2[:, 1],
         xyzs4[:, 1],
-    #    exp_lumo,
-    #    df[h[2]],
+        #    exp_lumo,
+        #    df[h[2]],
         df[h[3]],
-
     ]
     headers = [
-            "dye",
-    #        'homo cam',
-    #        'homo pbe0',
-    #        'homo lsf',
-    #        'homo exp',
-            'lumo cam',
-            'lumo pbe0',
-            'lumo lsf',
-    #        'lumo exp',
-    #        'homo bhandhlyp',
-            'lumo bhandhlyp',
-            ]
+        "dye",
+        #        'homo cam',
+        #        'homo pbe0',
+        #        'homo lsf',
+        #        'homo exp',
+        'lumo cam',
+        'lumo pbe0',
+        'lumo lsf',
+        #        'lumo exp',
+        #        'homo bhandhlyp',
+        'lumo bhandhlyp',
+    ]
     dat = [i.tolist() for i in dat]
     print(dat)
     # df = pd.DataFrame(dat, columns=headers)
@@ -1050,7 +1044,7 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
         print(i)
         df[i] = dat[n]
     print(df)
-    df.to_csv("../data_analysis/lumo_output_theory_ABS.csv",index=False)
+    df.to_csv("../data_analysis/lumo_output_theory_ABS.csv", index=False)
 
     # x_plot Dyes
     #  meths[:, 0] CAM-B3LYP HOMO
@@ -1106,23 +1100,17 @@ def correlation_homos_lumos_vertExcitations_SepDF_theoretical(
     # df = pd.DataFrame(dat)
     # print(df)
     # np.savetxt("../data_analysis/homo_lumo_output.csv", comb_dat, delimiter=',')
-    
 
     return lsf_homo, lsf_lumo
 
-    
-
-
-
-
 
 def theoretical_dyes_orbs(
-    
- #   exp_orbs_path="delcamp.csv",
+
+    #   exp_orbs_path="delcamp.csv",
     theory_orbs_path="../data_analysis/Absorption_test.csv",
-  #  theory_orbs_path='../Benchmark/benchmarks_exc.json',
+    #  theory_orbs_path='../Benchmark/benchmarks_exc.json',
 ):
-#    e_df = pd.read_csv(exp_orbs_path).dropna()
+    #    e_df = pd.read_csv(exp_orbs_path).dropna()
 
     t_df = pd.read_csv(theory_orbs_path).dropna()
     df = t_df
@@ -1130,11 +1118,28 @@ def theoretical_dyes_orbs(
     print(df)
     return df
 
-
     return
 
 
+def avg_np(arr):
+    v = 0
+    for i in arr:
+        v += i
+    return v / len(arr)
 
+
+def signed_averages(exp, lumo):
+    # lower = more neg
+    dif = lumo - exp
+    pos = dif[dif > 0]
+    neg = dif[dif < 0]
+    pos_avg = avg_np(pos)
+    neg_avg = avg_np(neg)
+    print("positive average: %.4f" % pos_avg)
+    print("len pos:", len(pos))
+    print("negative average: %.4f" % neg_avg)
+    print("len neg:", len(neg))
+    return
 
 
 def main():
@@ -1223,7 +1228,7 @@ def main():
     #        df,
     #        banned_lst=prev_bms,
     #        )
-    
+
     df = combine_exp_theory_orbs(prev_bms)
     # df.to_csv('tmp.csv')
     (
@@ -1232,15 +1237,12 @@ def main():
         lsf_homo,
         lsf_lumo,
     ) = correlation_homos_lumos_vertExcitations_SepDF(df)
-    
-    
-    
-    '''    
-    df = theoretical_dyes_orbs()
-    correlation_homos_lumos_vertExcitations_SepDF_theoretical(df) 
-    '''
-    
 
+    signed_averages(exp_lumo, lsf_lumo)
+    '''
+    df = theoretical_dyes_orbs()
+    correlation_homos_lumos_vertExcitations_SepDF_theoretical(df)
+    '''
     '''
     s_plot_LSF_Exp(
         theoretical=[lsf_homo, lsf_lumo],
