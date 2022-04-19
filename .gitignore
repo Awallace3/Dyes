@@ -44,3 +44,7 @@ backbones_test/
 MO_start/
 Taylor_clutter_csv/
 test/
+MO_start_600/
+MO_start_800/
+MO_start_B/
+src/*.csv

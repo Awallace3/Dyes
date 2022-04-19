@@ -144,7 +144,7 @@ def Bond_lengths_H_O(atomH,atomO,atom):
             dis = tot**.5
            # print(dis)
             if dis >= .96 and dis <= .98:
-                print(o,c)
+                #print(o,c)
                 bondlength[str(o)+' '+str(c)]=dis
                 double.append((o,c))
       #          print(dis) 
@@ -199,6 +199,38 @@ def Bond_lengths_O_N(atomO,atomC,atom):
                 #double = dis
     #print(len(double))
     return bondlength
+
+
+def Bond_lengths_C_C(atomO,atomC,atom):
+    '''
+    looks for hydrogen carbon double bond
+
+    '''
+    #print(atomO)
+    #print(atomC)
+    bondlength= {}
+    double = []
+    for o in atomO:
+        for c in atomC:
+            tot = (atom['xcoord'][o]-atom['xcoord'][c])**2+(atom['ycoord'][o]-atom['ycoord'][c])**2+(atom['zcoord'][o]-atom['zcoord'][c])**2
+            dis = tot**.5
+            #print(dis)
+            if dis >= 1.2 and dis <= 1.6:
+                bondlength[str(o)+' ' +str(c)]=dis
+                double.append((o,c))
+                #print(dis) 
+                #print((o,c))
+                #double = dis
+    #print(len(double))
+    return bondlength
+
+
+
+
+
+
+
+
 
 def Bond_length(atom):
     Bond_length = {
@@ -347,16 +379,10 @@ def bondistancecheck(fin,dis):
        # print(a,b,c)
     return final
 
-def atomnearchecker(atom_num_list,H,O,tot,atom,Carboxy=True,Amide=False):
+def atomnearchecker(atom_num_list,H,O,N,Si,C,tot,atom,ang,Carboxy=False,Amide=False,cyanoacrylic=False,SI=False):
     atom_num_dict = {}
-    #print(atom_num_list)
+    print(atom_num_list)
     if Amide == True:
-        for x in atom['atom_num']:
-            for y in atom_num_list:
-                dis = tot[x+' '+y]
-                if dis !=0 and dis <4.11:
-                    atom_num_dict[x]=x
-    if Carboxy == True:
         for h in H:
             for o in O:
                 dis2 = tot[o+' '+h]
@@ -364,8 +390,69 @@ def atomnearchecker(atom_num_list,H,O,tot,atom,Carboxy=True,Amide=False):
                     for x in atom['atom_num']:
                         #print(x,o)
                         dis = tot[h+' '+x]
-                        if dis < 4.11:
+                        if dis < 3.4:
                             atom_num_dict[x]=x
+
+    if Carboxy == True:
+        
+        for h in H:
+            for o in O:
+                dis2 = tot[o+' '+h]
+                if dis2 < 1.1:
+                    for x in atom['atom_num']:
+                        #print(x,o)
+                        dis = tot[h+' '+x]
+                        if dis < 3.2:
+                            atom_num_dict[x]=x
+        '''
+        
+        if len(atom_num_dict.keys())!= 5:
+
+            print('help')
+        '''
+
+    if cyanoacrylic == True:
+        for h in H:
+            for o in O:
+                for n in N:
+                    for c in C:
+                        dis2 = tot[o+' '+h]
+                        if dis2 < 1.1:
+                            for x in atom['atom_num']:
+                                #print(x,o)
+                                dis = tot[h+' '+x]
+                                dis2 = tot[n+' '+x]
+                                if dis2 < 1.3:
+                                    l = tot[n+' '+c]
+                                    #print(l)
+                                    if l < 1.3:
+                                        atom_num_dict[x]=x
+                                if dis < 4.11:
+                                    atom_num_dict[x]=x
+
+                                
+                        
+                                '''
+
+                                if dis < 1.5 or dis2 < 1.3 or dis3<4.11 and dis4<5.0:
+                                    atom_num_dict[x]=x
+                                '''
+    if SI ==True:
+        for si in Si:
+            for o in O:
+                dis2 = tot[o+' '+si]
+
+                if dis2 < 2.1:
+                    for x in atom['atom_num']:
+                        #print(x,o)
+                        dis = tot[si+' '+x]
+                        #print(dis4)
+                        if dis < 2.7:
+                            atom_num_dict[x]=x
+
+
+
+
                   #      dis_2 = tot['42',' ','1']
                         #if dis <4.11:
                         #    atom_num_dict[x]=x
@@ -377,7 +464,7 @@ def atomnearchecker(atom_num_list,H,O,tot,atom,Carboxy=True,Amide=False):
 
               #  print(x,y)
               #  print(dis)
-    print(atom_num_dict)
+    #print(atom_num_dict)
 
 
 
