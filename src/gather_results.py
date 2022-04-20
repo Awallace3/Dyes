@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# from homo_lumo import *
+#from homo_lumo import *
 # Genetic algorithm in the future?
 """
 json_pandas_molecules dataframe
