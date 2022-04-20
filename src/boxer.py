@@ -142,10 +142,10 @@ def box2(x):
 
                 lsfhomo = camhomo*1.11663268 + pbehomo* -0.29145692# eV
                 lsflumo = camlumo*-0.01785889 +pbelumo* 1.22883249 # eV )
-                if lsf >=400 and lsf < 600 :
+            #    if lsf >=400 and lsf < 600 :
                     #'name,camexc,pbeexc,lsfexc,lsfhomo,lsflumo
-                    name.append(mol['name'])
-                    red[mol['name']]=(cam,pbe,lsf,lsfhomo,lsflumo)
+                name.append(mol['name'])
+                red[mol['name']]=(cam,pbe,lsf,lsfhomo,lsflumo)
             except ZeroDivisionError:
                 pass
 
@@ -187,8 +187,8 @@ def ranker(homo,lumo,wavelength,name):
 
 def main():
     os.chdir('../')
-    filename = 'json_files/results_exc.json'
-    #filename = 'Benchmark/benchmarks_exc.json'
+    #filename = 'json_files/results_exc.json'
+    filename = 'Benchmark/benchmarks_exc.json'
     print('800-1000')
     print(' ')
     print(' ')
@@ -257,8 +257,24 @@ def main():
 
     '''
     """
-    df = ranker(homo,lumo,wavelength,names)
-    print(df)
+   # df = ranker(homo,lumo,wavelength,names)
+    name = ['AP11','AP14','AP16','AP17','AP25','AP3','C218','JD21','JW1','ND1','ND2','ND3','NL11','NL12','NL13','NL2','NL4','NL5','NL7','NL6','ZL003','XY1','R6']
+    df = {
+        'Name':[],
+        'HOMO':[],
+        'LUMO':[],
+        'Wave':[]
+    }
+    print(homo.keys())
+
+    for i in name:
+        df['Name'].append(i)
+        df['HOMO'].append(homo[i])
+        df['LUMO'].append(lumo[i])
+        df['Wave'].append(wavelength[i])
+
+    
+    df = pd.DataFrame(df)
     df.to_csv("Top400.csv",index=False)
 
    

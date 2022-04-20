@@ -83,6 +83,7 @@ def scatter_plot(file):
     x = name
     s = 10
     a = homo
+    b = lumo
     plt.scatter(x, a, c='r', s=0, marker='s', label="HOMO")
     plt.rc('font', size=7)
 
@@ -101,11 +102,13 @@ def scatter_plot(file):
         p2 = a[v]
         rect = matplotlib.patches.Rectangle([v, p2], .5, 0.03, color='red')
         plt.gca().add_patch(rect)
+        
         plt.text(v + 0.3,
                  p2 - 0.20,
-                 "%s \n %s" % (wave[v], name[v]),
+                 "%s \n " % (homo[v]),
                  va="center",
                  ha="center")
+        
         #plt.annotate(v, p2, )
 
     b = lumo
@@ -140,9 +143,9 @@ def scatter_plot(file):
         p2 = b[v]
         rect = matplotlib.patches.Rectangle([v, p2], 0.5, 0.03, color='blue')
         plt.gca().add_patch(rect)
-        '''
-        plt.text(v+0.3, p2-0.15, "%s \n %s" % (name[v], wave[v]), va="center", ha="center")
-        '''
+        
+        plt.text(v+0.3, p2-0.20, "%s \n %s" % (name[v], wave[v]), va="center", ha="center")
+        
         #plt.annotate(v, p2, )
     plt.savefig('demo-file.pdf')
 
@@ -169,13 +172,18 @@ def main():
     
     numbs = HOMO_LUMO_dict(file)
     a = 0
+    optimal_list = []
+#    print(numbs)
     
     
     for name in numbs.keys():
-        #print(i)
-        if numbs[name][0]>=-3.8 and numbs[name][0]<=-3.5:
-            print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0]))
-    '''
+        #print(numbs[name][2])
+        if numbs[name][0]>=-3.9 and numbs[name][0]<=-3.5 and numbs[name][2]>620.0:
+            optimal_list.append(name)
+         #   print(name)
+#            print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0])+','+str(numbs[name][2]))
+    print(optimal_list)
+    
     '''
     600 to 800 nm MO choices
     test_num = [
@@ -259,6 +267,7 @@ def main():
         '11ed_29b_7ea'
     ]
     '''
+    '''
     
     
     test_num = [
@@ -271,15 +280,19 @@ def main():
     '''
     '''
     
-
+    
     filename = open('test.csv', 'w+')
-    for i in test_num:
+ #   for i in test_num:
+    for i in optimal_list:
 
         a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
             round(numbs[i][0], 2)) + ',' + str(round(numbs[i][2], 2))
         print(a)
         filename.write(str(a) + '\n')
     filename.close()
+    '''
+    
+    
 
     scatter_plot('test.csv')
     # optimal_dyes(numbs)
