@@ -131,7 +131,7 @@ def correlation_function_nhe(
     df["dif"] = df[h[0]] - df[h[4]]
     df["z_score"] = stats.zscore(df["dif"])
     # 3 standard deviations away seems fine because most are less than 1
-    df = df.loc[df["z_score"].abs() <= 3]
+    # df = df.loc[df["z_score"].abs() <= 3]
     df = df.reset_index().drop(columns=["index"])
     df["count"] = df.index
 
@@ -296,7 +296,6 @@ def correlation_function(
     df = df.loc[df["z_score"].abs() <= 3]
     df = df.reset_index().drop(columns=["index"])
     df["count"] = df.index
-    print(df)
 
     exp_homo = df["HOMO"].to_numpy()
     exp_lumo = df["LUMO"].to_numpy()
@@ -395,7 +394,6 @@ def correlation_function(
             X_train, X_test, y_train, y_test = train_test_split(
                 meths, exp_homo, test_size=0.30, random_state=42)
             co = np.polyfit(X_train, y_train, deg)
-            print(co)
             xys = coefficients_3D_equation(X_train,
                                            y_train,
                                            co,
@@ -403,7 +401,6 @@ def correlation_function(
                                            x_range=True)
         else:
             co = np.polyfit(meths, exp_homo, deg)
-            print(co)
             xys = coefficients_3D_equation(meths,
                                            exp_homo,
                                            co,
@@ -470,7 +467,6 @@ def correlation_homos_lumos_vertExcitations(
         df2 = df2[~df2["Name"].isin(banned_lst)]
         df2 = df2.reset_index().drop(columns=["index"])
 
-    print(df2)
     # df = df_molecules_to_df_method_basisset(df, methods_basissets)
     if units.lower() == "ev":
         df2 = df_conv_energy(df2)
@@ -507,7 +503,6 @@ def correlation_homos_lumos_vertExcitations(
 
     df[h[1]] = df[h[0]] + df["CAM-B3LYP/6-311G(d,p)"]
     df[h[5]] = df[h[4]] + df["PBE1PBE/6-311G(d,p)"]
-    # print(df["CAM-B3LYP/6-311G(d,p)"])
 
     meths = df[[h[0], h[4]]].to_numpy()
     meths2 = df[[h[1], h[5]]].to_numpy()
@@ -594,13 +589,13 @@ def correlation_homos_lumos_vertExcitations_SepDF(
             df[l] = df[l] + nhe_to_ev
     # df = df.sort_values(['HOMO'], ascending=True)
     df = df.sort_values(["Exp"], ascending=True)
-    print(df)
 
     df["dif"] = df[h[0]] - df[h[4]]
 
     df["z_score"] = stats.zscore(df["dif"])
     # 3 standard deviations away seems fine because most are less than 1
-    df = df.loc[df["z_score"].abs() <= 3]
+    print('zscore\n', df[["Name", "z_score", "dif"]])
+    # df = df.loc[df["z_score"].abs() <= 4]
     df = df.reset_index().drop(columns=["index"])
     df["count"] = df.index
 
@@ -728,13 +723,10 @@ def correlation_homos_lumos_vertExcitations_SepDF(
         #        'lumo bhandhlyp',
     ]
     dat = [i.tolist() for i in dat]
-    print(dat)
     # df = pd.DataFrame(dat, columns=headers)
     df = pd.DataFrame([], columns=headers)
     for n, i in enumerate(headers):
-        print(i)
         df[i] = dat[n]
-    print(df)
     df.to_csv("../data_analysis/homo_lumo_output_dichloro.csv", index=False)
 
     # comb_dat = np.concatenate(
