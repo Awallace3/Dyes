@@ -5,6 +5,7 @@ import subprocess
 import time
 import sys
 from dataset_names import ds
+import json
 
 sys.path.insert(1,
                 "./src")  # this adds src to python path at runtime for modules
@@ -92,6 +93,8 @@ def generateSMILESinputs(
         line, name, formalName = smilesRingCleanUp(first, second, third)
         print(name, line)
         smiles[name] = line
+    with open("./json_files/smiles.json", "w") as fp:
+        json.dump(smiles, fp)
     return smiles
 
 
