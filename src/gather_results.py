@@ -445,44 +445,51 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
         "Name": [],
     }
     for i in method_basis_set:
+        
         df[i] = []
     df = pd.DataFrame(df)
     # print(df)
     for i1, r1 in df_molecules.iterrows():
-        # print(r1['name'])
-        # print(df.Name)
-        # print(r1['name'] in df.Name)
-        """
-        method_basis_set_lst = ['-' for i in method_basis_set]
-        method_basis_set_lst.insert(0, r1['name'])
-        df.loc[len(df)] = method_basis_set_lst
-        Names = pd.Series(df['Name'])
-        print(df)
-        print(r1['name'])
-        print(df['Name'])
-        print()
+        #print(i1)
+        if 'TPA' in r1['name']:
+            pass
+        else:
+     #   print(r1['name'])
+    # print(df.Name)
+    # print(r1['name'] in df.Name)
+            """
+            method_basis_set_lst = ['-' for i in method_basis_set]
+            method_basis_set_lst.insert(0, r1['name'])
+            df.loc[len(df)] = method_basis_set_lst
+            Names = pd.Series(df['Name'])
+            print(df)
+            print(r1['name'])
+            print(df['Name'])
+            print()
 
-        break
-        """
-        Names = [str(i) for i in df["Name"].values]
-        if str(r1["name"]) not in Names:
-            method_basis_set_lst = [i for i in method_basis_set]
+            break
+            """
+            Names = [str(i) for i in df["Name"].values]
+            if str(r1["name"]) not in Names:
+            #print(r1["name"])
+                method_basis_set_lst = [i for i in method_basis_set]
 
-            for n, j in enumerate(method_basis_set_lst):
+                for n, j in enumerate(method_basis_set_lst):
                 # print(j, r1['method_basis_set'])
-                if str(j) == str(r1["method_basis_set"]):
-                    method_basis_set_lst[n] = r1["nm"]
+                    if str(j) == str(r1["method_basis_set"]):
+                        method_basis_set_lst[n] = r1["nm"]
 
-            method_basis_set_lst.insert(0, r1["name"])
+                method_basis_set_lst.insert(0, r1["name"])
             # if r1['name'] == "1ed_16b_1ea":
             #    print(method_basis_set_lst)
-            df.loc[len(df)] = method_basis_set_lst
-        else:
+                df.loc[len(df)] = method_basis_set_lst
+            else:
             # df.ix[df['id'] == 12, ['uid','gid']] = ['IN','IN-1']
-            for j in method_basis_set:
-                if str(j) == r1["method_basis_set"]:
-                    if r1["exc"] == 1:
-                        df.loc[df["Name"] == r1["name"], [j]] = [r1["nm"]]
+                for j in method_basis_set:
+                    if str(j) == r1["method_basis_set"]:
+                        if r1["exc"] == 1:
+                            #print(r1["name"])
+                            df.loc[df["Name"] == r1["name"], [j]] = [r1["nm"]]
     # nm = df.sort_values([method_basis_set[0]], ascending=(False))
 
     return df
@@ -1777,21 +1784,21 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
-    """
+    
     theoretical_dyes_basis_set_out(
         # "./json_files/results_exc.json",
         "./json_files/results_ds5.json",
         output_csv="data_analysis/Absorption_test",
      #   output_latex="data_analysis/Absorption_nm",
-     #   output_graph="data_analysis/Absorption_nm",
+        output_graph="data_analysis/Absorption_eV_T",
         units="eV",
         plot_js=plot_js,
         methods_basissets=methods_basissets,
         results_exc=True,
-        homo_lumo=True,
+        homo_lumo=False,
         LSF_csv=True,
     )
-    """
+    
 
 
 
@@ -1806,7 +1813,7 @@ def main():
     # Benchmark data
     #benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
 
-
+    """
     benchmarks_dyes_basis_set_out(
         'Benchmark/benchmarks_exc.json',
         methods_basissets=[
@@ -1843,6 +1850,7 @@ def main():
 #         output_graph='data_analysis_nuthin',
 #         exc_json=True, homo_lumo=False
 #     )
+
 #
 #
 # =======
@@ -1863,6 +1871,7 @@ def main():
         output_graph='vac',
         exc_json=True,
         homo_lumo=False)
+    """
 # >>>>>>> 258d915aa06a51f8e01768b0bb867224ebd75baa
     """
 

@@ -2,8 +2,8 @@ import os
 import pandas as pd
 from MO_func_find import *
 from homo_lumo_boxer_csv import HOMO_LUMO_dict
-#from Part_atom_finder import *
-#from MO_Dict import xyzcoords
+from Part_atom_finder import *
+from MO_Dict import xyzcoords
 
 
 
@@ -405,7 +405,7 @@ def main():
 
         
   #  jobs = ['6ed_29b_2ea']
-    jobs = ['NL7']
+  #  jobs = ['NL6']
   #  jobs = ['5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea', '7ed_31b_7ea', '6ed_16b_10ea', '6ed_31b_7ea', '9ed_1b_9ea', '9ed_1b_5ea', '9ed_1b_11ea', '7ed_32b_7ea', '6ed_16b_3ea', '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '6ed_16b_6ea', '7ed_16b_2ea', '9ed_26b_8ea', '1ed_26b_8ea', '10ed_31b_7ea', '7ed_16b_9ea', '3ed_20b_4ea', '6ed_31b_2ea', '5ed_20b_4ea', '10ed_20b_4ea', '10ed_32b_7ea', '6ed_32b_2ea', '11ed_1b_9ea', '5ed_16b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '11ed_26b_8ea', '6ed_1b_4ea', '9ed_20b_1ea', '3ed_16b_2ea', '2ed_16b_2ea', '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea', '7ed_1b_4ea', '11ed_1b_11ea', '5ed_31b_7ea', '7ed_34b_7ea', '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea', '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea', '6ed_31b_9ea']
   #  jobs = ['5ed_16b_7ea']
 
@@ -465,7 +465,7 @@ def main():
                                         ang,
                                         Carboxy = True,
                                         Amide = False,
-                                        cyanoacrylic=False,
+                                        cyanoacrylic=True,
                                         SI=False)
        # print(atom_num_list)
         
@@ -533,37 +533,32 @@ def main():
      #   atom_num_list = [46, 47, 48, 49, 50, 51, 52, 53, 54, 88, 89, 90] #acceptor
      #   atom_num_list =[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 70, 71, 72, 73, 92, 93]
      #   atom_num_list = [23,24,25,26,27,28,29,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,55]
-
-        for x in atom_num_list:
-        #    for x in atom_num_list:
-        #for i in range(1,50):
-#            for i in atom['atom_num']:
-#                dis = tot[str(i)+' '+str(x)]
-        #        print(dis)
-        #        if dis >= 4:
-        #                print((dis,i,x))
-        #    for i in atom['atom_num']:
-          #  for i in atom_num_list:
-             #   dis = tot[str(i)+' '+str(x)]
- #               if dis < 1.5:
-            kkk[int(i)]=i
-
-                #    print((dis,i,x)) 
-        #  for  x in atom['atom_num']:
-          #  for x in atom['atom_num']:
-                #print(i,x)
-           #     dis = tot[str(i)+' '+str(x)]
-               # print(dis)
-           #     if dis < 4.11:
-         #   print(leng)
-                  #  kkk[int(x)]=x
-        #    print(i)
-            print(str(atom['atom_let'][str(i)])+' ' +str(atom['xcoord'][str(i)])+' '+str(atom['ycoord'][str(i)])+' '+ str(atom['zcoord'][str(i)]))
+        atom_num_list = [42, 55, 58, 65, 87, 88, 89, 90, 91]
+        atom_num_list = [7, 13, 14, 15, 16, 17, 26, 31, 33, 86]
+        atom_num_list = [68]
+        atom_num_list =[ 18, 23, 28, 68, 69, 70, 86]
+        atom_num_list = [3,4,5, 6, 9, 10,  68, 69, 70]
+        atom_num_list = [71]
         
+
+        for i in atom_num_list:
+            for x in atom['atom_num']:
+    #for i in range(1,50):
+ #           for i in atom['atom_num']:
+                dis = tot[str(i)+' '+str(x)]
+                
+        #        print(dis)
+                if dis <= 5:
+                    kkk[int(x)]=x
+
+
             
         atom_num_list = kkk
         aa = sorted(list(kkk.keys()))
         print(aa)
+        for x in kkk.keys():
+            print(str(atom['atom_let'][str(x)])+' ' +str(atom['xcoord'][str(x)])+' '+str(atom['ycoord'][str(x)])+' '+ str(atom['zcoord'][str(x)]))
+
         # print(i)
         
         
