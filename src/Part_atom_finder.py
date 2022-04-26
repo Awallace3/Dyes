@@ -300,14 +300,14 @@ def homo_lumo_percents(filename,aa,jobname,
 
 def main():
     
-    data = json_pandas_molecule('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/json_files/results_ds5.json',results_exc=True)
+    data = json_pandas_molecule('../json_files/results_ds5.json',results_exc=True)
     #print(df['name'])
   #  print(df['SMILES']['1ed_1b_1ea'])
     df = {'Name':data['name'],'SMILES':data['SMILES']}
   #  df2 = {'Name':data['name'],"Exc":data['exc'],"method":data[]]}
     df = pd.DataFrame(df)
-    df.to_csv('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/Taylor_clutter_csv/SMILES_DICT.csv',index=False)
-    SMILES_csv = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/Taylor_clutter_csv/SMILES_DICT.csv' 
+    df.to_csv('../data_analysis/SMILES_DICT.csv',index=False)
+    SMILES_csv = '../data_analysis/SMILES_DICT.csv' 
     smile = SMILES_FINDER(SMILES_csv)
    # print(smile)
     
@@ -326,7 +326,7 @@ def main():
     jobs = ['10ed_29b_7ea', '6ed_28b_7ea', '6ed_29b_10ea', '5ed_29b_7ea', '6ed_16b_5ea', '6ed_29b_9ea', '6ed_29b_6ea', '6ed_29b_2ea', '6ed_29b_11ea', '7ed_28b_7ea', '6ed_29b_5ea', '10ed_28b_7ea', '9ed_29b_7ea', '7ed_29b_9ea', '7ed_29b_10ea', '7ed_29b_2ea', '1ed_29b_7ea', '7ed_29b_6ea', '5ed_28b_7ea', '11ed_29b_7ea', '7ed_29b_5ea', '6ed_28b_2ea', '10ed_29b_9ea', '7ed_29b_11ea', '10ed_29b_10ea', '6ed_28b_5ea', '2ed_28b_7ea', '10ed_29b_5ea', '10ed_29b_6ea', '6ed_28b_10ea', '6ed_28b_6ea', '10ed_29b_11ea', '5ed_29b_2ea', '5ed_29b_10ea', '9ed_28b_7ea', '6ed_28b_9ea', '5ed_29b_11ea', '7ed_29b_3ea', '5ed_29b_9ea', '6ed_29b_1ea', '5ed_29b_6ea', '7ed_28b_2ea', '6ed_29b_3ea', '6ed_28b_11ea', '1ed_28b_7ea', '7ed_28b_5ea', '9ed_29b_9ea', '5ed_29b_5ea', '10ed_28b_9ea', '7ed_28b_6ea', '9ed_29b_2ea', '10ed_29b_2ea', '7ed_28b_9ea', '7ed_28b_10ea', '5ed_29b_3ea', '9ed_29b_10ea', '11ed_28b_7ea', '10ed_28b_6ea', '10ed_28b_5ea', '1ed_29b_9ea', '9ed_16b_9ea', '9ed_29b_6ea', '9ed_29b_5ea', '10ed_28b_10ea', '1ed_29b_10ea', '1ed_29b_2ea', '9ed_29b_11ea']
     
    
-
+    print(smile)
     final = {}
     for x in jobs:
         try:

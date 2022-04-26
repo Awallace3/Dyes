@@ -427,7 +427,7 @@ def atomnearchecker(atom_num_list,H,O,N,Si,C,tot,atom,ang,Carboxy=False,Amide=Fa
                                     #print(l)
                                     if l < 1.3:
                                         atom_num_dict[x]=x
-                                if dis < 4.11:
+                                if dis < 3.11:
                                     atom_num_dict[x]=x
 
                                 
