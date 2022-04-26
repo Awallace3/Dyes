@@ -83,6 +83,18 @@ def smilesRingCleanUp(f, s, t):
     return line, name, formalName
 
 
+def generateSMILESinputs(
+    smiles_tuple_list,
+):
+    smiles = {}
+    for num, i in enumerate(smiles_tuple_list):
+        first, second, third = i
+        line, name, formalName = smilesRingCleanUp(first, second, third)
+        print(name, line)
+        smiles[name] = line
+    return smiles
+
+
 def generateMolecules(
     smiles_tuple_list,
     method_opt,
@@ -442,7 +454,7 @@ def jobResubmit_v2(
                             cluster,
                             j,
                             results_json,
-                            xyzSmiles=False,
+                            xyzSmiles=create_smiles,
                             solvent=add_methods["solvent"][pos],
                         )
                         # print(pos, os.getcwd())
@@ -645,8 +657,8 @@ def main():
         "backbones",
         "eAcceptors",
     ]
-    cleanResultsExcEmpty(results_json="json_files/results_ds5.json",
-                         results_json_out='json_files/p1.json')
+    # cleanResultsExcEmpty(results_json="json_files/results_ds5.json",
+    #                      results_json_out='json_files/p1.json')
     resubmit_delay_min = 0.001  # 60 * 12
     resubmit_max_attempts = 1
 
@@ -667,9 +679,10 @@ def main():
     cluster = "map"
     # cluster = "seq"
 
-    # localStructuresDict = collectLocalStructures(three_types, banned)
-    # smiles_tuple_list = permutationDict(localStructuresDict)
-    # print("smiles_tuple_list", smiles_tuple_list)
+    localStructuresDict = collectLocalStructures(three_types, banned)
+    smiles_tuple_list = permutationDict(localStructuresDict)
+    smiles_dict = generateSMILESinputs(smiles_tuple_list)
+    print('smiles_dict:\n', smiles_dict)
 
     # monitor_jobs = generateMolecules(
     #     smiles_tuple_list,
@@ -746,6 +759,7 @@ def main():
     """
     # dyes_gather = ["10ed_11b_8ea", "9ed_33b_4ea", "11ed_9b_11ea"]
     """
+
     complete = jobResubmit_v2(dyes_gather, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -766,6 +780,7 @@ def main():
     #                        basis_set_mexc,
     #                        results_json='json_files/benchmarks_exc.json',
     #                        exc_json=True)
+    """
     gather_excitation_data('results_cp/ds4_1',
                            p1,
                            add_methods,
@@ -773,6 +788,7 @@ def main():
                            basis_set_mexc,
                            results_json='json_files/p1.json',
                            exc_json=True)
+    """
     """
     method_mexc = 'CAM-B3LYP'
     basis_set_mexc = '6-311G(d,p)'
