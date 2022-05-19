@@ -44,7 +44,6 @@ class Excitation_exc(Excitation):
         self.LUMO = LUMO
 
     def giveOldData(self, data):
-        # print("DATA:", data)
         self.exc = data["exc"]
         self.method_basis_set = data["method_basis_set"]
         self.nm = data["nm"]
@@ -222,8 +221,7 @@ class Molecule_exc:
             self.parts = data["parts"]
             self.localName = data["localName"]
         else:
-            print(data)
-            print("uh oh")
+            pass
 
     def setData(self, fileName):
         with open(fileName, "r") as json_file:
@@ -482,12 +480,7 @@ class MoleculeList_exc:
                 mol.giveData(self.molecules[i])
 
                 if mol.name == molecule.name:
-                    # print('before toDict:', molecule.name)
                     self.molecules[i] = molecule.toDict()
-                    # print("updated position", self.molecules[i])
-                    # print(mol.toDict())
-                    # print('updating...')
-                    # print(len(self.molecules))
                     found = True
                     break
 
@@ -497,8 +490,6 @@ class MoleculeList_exc:
                     mol.giveData(self.molecules[i])
                 if mol.name == molecule.name:
                     self.molecules[i] = molecule
-                    # print('updating...')
-                    # print(len(self.molecules))
                     found = True
                     break
 
@@ -513,9 +504,6 @@ class MoleculeList_exc:
         """
         for n, i in enumerate(self.molecules):
             mol = Molecule()
-            #print(type(i))
-            #print(len(self.molecules))
-            #print(i.getName())
             mol.giveData(i)
             if mol.name == molecule.name:
                 print('updating existing Molecule information in results.json')
@@ -527,7 +515,6 @@ class MoleculeList_exc:
         """
 
     def sendToFile(self, fileName):
-        # print("The excited state information is being written")
         with open(fileName, "w") as fp:
             fp.write(self.toJSON())
 

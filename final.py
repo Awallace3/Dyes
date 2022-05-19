@@ -84,9 +84,7 @@ def smilesRingCleanUp(f, s, t):
     return line, name, formalName
 
 
-def generateSMILESinputs(
-    smiles_tuple_list,
-):
+def generateSMILESinputs(smiles_tuple_list, ):
     smiles = {}
     for num, i in enumerate(smiles_tuple_list):
         first, second, third = i
@@ -555,7 +553,7 @@ def gather_excitation_data(path_results,
 
     # print(mol_lst)
     failed = []
-    for i in monitor_jobs:
+    for n, i in enumerate(monitor_jobs):
         os.chdir(i)
         if not os.path.exists("mexc/mexc.out"):
             print(i, "does not have mexc/mexc.out")
@@ -586,7 +584,7 @@ def gather_excitation_data(path_results,
         if excitations == []:
             if i not in failed:
                 failed.append(i)
-                print(i, "\n")
+                print("%s Failed...\n" % i)
             os.chdir("..")
             continue
         mol.setExictations(excitations)
@@ -597,7 +595,7 @@ def gather_excitation_data(path_results,
             method = add_methods["methods"][j]
             basis_set = add_methods["basis_set"][j]
             lPath = "%s/%s.out" % (method.lower(), baseName)
-            print(lPath)
+            # print(lPath)
             if os.path.exists(lPath):
 
                 mol.appendExcitations(
@@ -608,10 +606,12 @@ def gather_excitation_data(path_results,
                             states=states))
             else:
                 if i not in failed:
-                    print((i, "AAAAAAAAAA"))
                     failed.append(i)
+                    print("%s Failed at %s\n" % (i, method))
+            # print(type(mol), mol.getName())
         mol_lst.updateMolecule(mol, exc_json=exc_json)
         os.chdir("..")
+        print("\t%.2f" % (n / len(monitor_jobs)))
 
     # mol_lst.sendToFile("%s%s" % (pops, results_json))
     os.chdir(def_dir)
@@ -682,10 +682,10 @@ def main():
     cluster = "map"
     # cluster = "seq"
 
-    localStructuresDict = collectLocalStructures(three_types, banned)
-    smiles_tuple_list = permutationDict(localStructuresDict)
-    smiles_dict = generateSMILESinputs(smiles_tuple_list)
-    print('smiles_dict:\n', smiles_dict)
+    # localStructuresDict = collectLocalStructures(three_types, banned)
+    # smiles_tuple_list = permutationDict(localStructuresDict)
+    # smiles_dict = generateSMILESinputs(smiles_tuple_list)
+    # print('smiles_dict:\n', smiles_dict)
 
     # monitor_jobs = generateMolecules(
     #     smiles_tuple_list,
@@ -772,9 +772,9 @@ def main():
                            identify_zeros=True, create_smiles=True
     )
     """
-    with open('Benchmark/results/tmp', 'r') as fp:
-        dyes_gather = fp.read().splitlines()
-    p1 = ds.p1()
+    # with open('Benchmark/results/tmp', 'r') as fp:
+    #     dyes_gather = fp.read().splitlines()
+    # p1 = ds.p1()
 
     # gather_excitation_data('Benchmark/results',
     #                        dyes_gather,
@@ -783,15 +783,13 @@ def main():
     #                        basis_set_mexc,
     #                        results_json='json_files/benchmarks_exc.json',
     #                        exc_json=True)
-    """
-    gather_excitation_data('results_cp/ds4_1',
-                           p1,
+    gather_excitation_data('results_cp/ds5',
+                           ds.ds5(),
                            add_methods,
                            method_mexc,
                            basis_set_mexc,
-                           results_json='json_files/p1.json',
+                           results_json='json_files/results_ds5.json',
                            exc_json=True)
-    """
     """
     method_mexc = 'CAM-B3LYP'
     basis_set_mexc = '6-311G(d,p)'

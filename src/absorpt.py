@@ -58,11 +58,10 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, state
                 if excitedStatenum > states:
                     break
             if "SavETr:" in i:
-                print(i)
                 print('breaking')
                 break
             data.append(i)
-            print(i)
+            # print(i)
 
     data = data[2:]
     data2 = []
