@@ -48,3 +48,5 @@ MO_start_600/
 MO_start_800/
 MO_start_B/
 src/*.csv
+src/delcamp.csv
+src/delcamp_theoretical.csv

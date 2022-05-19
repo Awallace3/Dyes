@@ -589,22 +589,27 @@ def correlation_homos_lumos_vertExcitations_SepDF(
             df[l] = df[l] + nhe_to_ev
     # df = df.sort_values(['HOMO'], ascending=True)
     df = df.sort_values(["Exp"], ascending=True)
+    print(df)
+    
 
     df["dif"] = df[h[0]] - df[h[4]]
 
     df["z_score"] = stats.zscore(df["dif"])
     # 3 standard deviations away seems fine because most are less than 1
-    print('zscore\n', df[["Name", "z_score", "dif"]])
-    # df = df.loc[df["z_score"].abs() <= 4]
+   # df = df.loc[df["z_score"].abs() <= 3]
     df = df.reset_index().drop(columns=["index"])
     df["count"] = df.index
+    
+    
 
     exp_homo = df["HOMO"].to_numpy()
     exp_lumo = df["LUMO"].to_numpy()
+    
 
     # START HERE
 
     # print(df["CAM-B3LYP/6-311G(d,p)"] )
+    print(df["Name"])
 
     if add_exc_to_homo:
         df[h[1]] = df[h[0]] + df["CAM-B3LYP/6-311G(d,p)"]
@@ -612,6 +617,7 @@ def correlation_homos_lumos_vertExcitations_SepDF(
 
     meths = df[[h[0], h[4]]].to_numpy()
     meths2 = df[[h[1], h[5]]].to_numpy()
+    print(meths2)
 
     out = np.linalg.lstsq(meths, exp_homo, rcond=None)
     first, *_, last = out
@@ -636,6 +642,7 @@ def correlation_homos_lumos_vertExcitations_SepDF(
         "Total    RMSE     =",
         mean_squared_error(exp_lumo, xyzs4[:, 2], squared=False),
     )
+    print(df["Name"])
 
     fig = plt.figure(dpi=400)
     ax1 = fig.add_subplot()
@@ -698,28 +705,28 @@ def correlation_homos_lumos_vertExcitations_SepDF(
 
     dat = [
         x_plot,
-        meths[:, 0],
-        meths[:, 1],
-        xyzs3[:, 2],
-        exp_homo,
-        #        meths2[:, 0],
-        #        meths2[:, 1],
-        #        xyzs4[:, 2],
-        #        exp_lumo,
-        df[h[2]],
+       # meths[:, 0],
+       # meths[:, 1],
+       # xyzs3[:, 2],
+       # exp_homo,
+        meths2[:, 0],
+        meths2[:, 1],
+        xyzs4[:, 2],
+        exp_lumo,
+        #df[h[2]],
         #    df[h[3]],
     ]
     headers = [
         "dye",
-        'homo cam',
-        'homo pbe0',
-        'homo lsf',
-        'homo exp',
-        #        'lumo cam',
-        #        'lumo pbe0',
-        #        'lumo lsf',
-        #        'lumo exp',
-        'homo bhandhlyp',
+       # 'homo cam',
+       # 'homo pbe0',
+       # 'homo lsf',
+       # 'homo exp',
+                'lumo cam',
+                'lumo pbe0',
+                'lumo lsf',
+                'lumo exp',
+        #'homo bhandhlyp',
         #        'lumo bhandhlyp',
     ]
     dat = [i.tolist() for i in dat]
@@ -727,7 +734,8 @@ def correlation_homos_lumos_vertExcitations_SepDF(
     df = pd.DataFrame([], columns=headers)
     for n, i in enumerate(headers):
         df[i] = dat[n]
-    df.to_csv("../data_analysis/homo_lumo_output_dichloro.csv", index=False)
+    print(df)
+    df.to_csv("../data_analysis/homo_lumo_output.csv", index=False)
 
     # comb_dat = np.concatenate(
     #     (
@@ -756,6 +764,7 @@ def theory_df(
     convert_lst = methods_basissets.copy()
     convert_lst.append("Exp")
     df = convert_df_nm_to_eV(df, convert_lst)
+    
     unlucky = {
         "AP25": [2.329644, 2.295717, 1.920780, 1.880036],
         "D1": [2.337250, 2.285609, 1.742975, 2.176884],
@@ -1206,9 +1215,10 @@ def main():
         "TTAR-B8",
         "R4",
         "TPA-T-TTAR-T-A",
+        
     ]
 
-    df = pd.read_csv("exp_homo_lumo.csv").dropna()
+    #/df = pd.read_csv("exp_homo_lumo.csv").dropna()
     # correlation_function(df, type='LSF', deg=9, train=False)
     # correlation_function_nhe(df, type='LSF', deg=9, train=False)
 
