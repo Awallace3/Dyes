@@ -50,3 +50,7 @@ MO_start_B/
 src/*.csv
 src/delcamp.csv
 src/delcamp_theoretical.csv
+src/*.pdf
+delcamp.csv
+delcamp_theoretical.csv
+smiles/

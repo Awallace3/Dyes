@@ -202,9 +202,9 @@ def main():
     homo = {}
     lumo = {}
     names = []
-#    wavelength_range = '800-1000'
+    wavelength_range = '800-1000'
 #    wavelength_range = '600-800'
-    wavelength_range = '400-600'
+#    wavelength_range = '400-600'
     if wavelength_range == '800-1000':
         for name in box0(filename).keys():
             if 'TPA' in name:
@@ -245,14 +245,14 @@ def main():
         optimal_list = []
         for name in numbs.keys():
             optimal_list.append(name)
-            filename = open('data_analysis/test.csv', 'w+')
+            filename = open('data_analysis/g_800_1000.csv', 'w+')
         for i in optimal_list:
             print(i)
             a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
             round(numbs[i][0], 2)) + ',' + str(round(numbs[i][2], 2))
             filename.write(str(a) + '\n')
         filename.close()
-        scatter_plot('data_analysis/test.csv')
+        scatter_plot('data_analysis/g_800_1000.csv')
 
 
 
@@ -266,14 +266,14 @@ def main():
         optimal_list = []
         for name in numbs.keys():
             optimal_list.append(name)
-            filename = open('data_analysis/test.csv', 'w+')
+            filename = open('data_analysis/g_600_800.csv', 'w+')
         for i in optimal_list:
             print(i)
             a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
             round(numbs[i][0], 2)) + ',' + str(round(numbs[i][2], 2))
             filename.write(str(a) + '\n')
         filename.close()
-        scatter_plot('data_analysis/test.csv')
+        scatter_plot('data_analysis/g_600_800.csv')
 
 
 
@@ -285,7 +285,7 @@ def main():
         optimal_list = []
         for name in numbs.keys():
             optimal_list.append(name)
-            filename = open('data_analysis/test.csv', 'w+')
+            filename = open('data_analysis/g_400_600.csv', 'w+')
         for i in optimal_list:
             print(i)
             a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
@@ -293,7 +293,7 @@ def main():
             filename.write(str(a) + '\n')
         print(optimal_list)
         filename.close()
-        scatter_plot('data_analysis/test.csv')
+        scatter_plot('data_analysis/g_400_600.csv')
 
     
 
