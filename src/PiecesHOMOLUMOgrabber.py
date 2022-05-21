@@ -1,6 +1,9 @@
+from cProfile import label
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 
 def grepper(name,meth):
     cmd = 'grep -A1 ' + "'Alpha  occ. eigenvalues' " + str(name)+'/'+str(meth) +  '/mex.out' + '>' + str(name)+  '/'+str(meth)  + '/orbs.out'
@@ -83,6 +86,91 @@ def pandass(HOMO,LUMO):
 
     return
 
+def graphcreatorhomo(homo):
+  name = homo['Name']
+  camhom = homo['CAM-B3LYP']
+  bhand = homo['BHandHYLP']
+  pbepbe = homo['PBE1PBE']
+  ss = np.array([50])
+  tot=[]
+  name1=[] 
+  for i in name:
+    name1.append(i)
+  camhom1 = []
+  for i in camhom:
+    camhom1.append(i)
+    tot.append(i)
+
+  bhand1 = []
+  for i in bhand:
+    bhand1.append(i)
+    tot.append(i)
+  pbepbe1=[]
+  for i in pbepbe:
+    pbepbe1.append(i)
+    tot.append(i)
+  plt.yticks(np.arange(round(min(tot)-1,0),round(max(tot)+1,0),0.5))
+  figure(figsize=(15, 5), dpi=100)
+
+ # plt.yticks(np.arange(round(min(tot)-1,0),round(max(tot)+1,0),0.5))
+  
+  plt.rcParams.update({'font.size': 10})
+  
+  plt.plot(name,camhom,color="blue"),
+  plt.plot(name1,bhand1,color="orange"),
+  plt.plot(name1,pbepbe1,color="yellow"),
+  
+  
+  labels = ['CAM-B3LYP/6-311G(d,p)','BHandHLYP/6-311G(d,p)','PBE0/6-311G(d,p)']
+  plt.legend(labels)
+  plt.xlabel("Name of Substructure")
+  plt.ylabel("HOMO Energy (eV)")
+  plt.savefig('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/src/piece_homo.pdf')
+  return
+def graphcreatorhlumo(homo):
+  name = homo['Name']
+  camhom = homo['CAM-B3LYP']
+  bhand = homo['BHandHYLP']
+  pbepbe = homo['PBE1PBE']
+  ss = np.array([50])
+  tot = []
+  name1=[] 
+  for i in name:
+    name1.append(i)
+  camhom1 = []
+  for i in camhom:
+    camhom1.append(i)
+    tot.append(i)
+
+  bhand1 = []
+  for i in bhand:
+    bhand1.append(i)
+    tot.append(i)
+  pbepbe1=[]
+  for i in pbepbe:
+    pbepbe1.append(i)
+    tot.append(i)
+  figure(figsize=(15, 5), dpi=100)
+  #min(tot),max(tot)
+  plt.yticks(np.arange(round(min(tot)-1,0),round(max(tot)+1,0),0.5))
+  
+
+  #plt.ylim([-8,8,.5])
+  
+  plt.rcParams.update({'font.size': 10})
+  plt.xlabel("Name of Substructure")
+  plt.ylabel("LUMO Energy (eV)")
+  plt.plot(name,camhom,color="blue")
+  plt.plot(name1,bhand1,color="orange")
+  plt.plot(name1,pbepbe1,color="yellow")
+  labels = ['CAM-B3LYP/6-311G(d,p)','BHandHLYP/6-311G(d,p)','PBE0/6-311G(d,p)']
+  #plt.legend(labels)
+  plt.legend(labels,loc='best')
+  plt.savefig('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/src/piece_lumo.pdf')
+  return
+
+
+
 def Main():
   #  path_to_files = '../DFTpieces/eAcceptor/'
   #  path_to_files = '../DFTpieces/eDonor/'
@@ -93,9 +181,9 @@ def Main():
     # name =  ['DQ5', 'S-DAHTDTT', 'NKX-2883', 'S3', 'HKK-BTZ4', 'TPA-T-TTAR-A', 'NL7', 'NL8', 'AP3', 'NL11', 'C271',  'IQ4', 'WS-55', 'SGT-130', 'FNE52', 'IQ21', 'SGT-136', 'D-DAHTDTT', 'R6', 'TPA-TTAR-A', 'T-DAHTDTT', 'TH304', 'NL4', 'C258', 'TTAR-9', 'SGT-121', 'TTAR-15', 'NL2', 'SGT-129', 'FNE32', 'BTD-1', 'Y123', 'C272', 'FNE34', 'IQ6', 'TP1', 'TTAR-B8', 'R4', 'TPA-T-TTAR-T-A','ZL003','WS-6','NL4','NL6','JW1','AP25']
     methods = ['CAM-B3LYP', 'PBE1PBE','bhandhlyp']
   #  name = ['10ea','11ea','1ea','2ea','3ea','4ea','5ea','6ea','7ea','8ea','9ea']   
-  #  name = ['10ed','11ed','12ed','1ed','2ed','3ed','5ed','6ed','7ed','9ed']
+  #  name = ['10ed','11ed','1ed','2ed','3ed','5ed','6ed','7ed','9ed']
     ## Full backbone list ##
-    name = ['4b', '1b', '32b', '3b', '24b', '27b', '22b', '2b', '14b', '17b', '12b', '9b', '31b', '34b', '8b', '26b', '21b', '29b', '7b', '16b', '11b', '19b', '35b', '30b', '33b', '6b', '25b', '20b', '23b', '5b', '15b', '10b', '18b', '13b']
+    name = ['4b', '1b', '32b', '3b', '24b', '22b', '2b', '14b', '17b', '12b', '9b', '31b', '34b', '8b', '26b', '21b', '29b', '7b', '16b', '11b', '19b', '35b', '30b', '33b', '6b', '25b', '20b', '23b', '5b', '15b', '10b', '13b']
 
 #    name = ['4b', '1b', '32b', '3b', '24b',  '22b', '2b', '14b', '17b', '12b', '9b', '31b', '34b', '8b',  '21b', '29b', '7b', '16b', '11b', '19b', '35b', '30b', '33b', '6b', '25b', '20b', '23b', '5b', '15b', '10b', '18b', '13b']
    # method = ['mexc','mexc_dichloromethane',]
@@ -121,7 +209,7 @@ def Main():
           if meth == 'bhandhlyp':
             bhandhomo.update(HOMO(bench,meth))
             bhandlumo.update(LUMO(bench,meth)) 
-
+    '''
     print(camhomo.keys())
     print(camhomo)
     print(camlumo)
@@ -129,14 +217,25 @@ def Main():
     print(bhandlumo)
     print(pbepbehomo)
     print(pbepbelumo)
+    '''
     df = {'Name':camhomo.keys(),'CAM-B3LYP':camhomo.values(),'BHandHYLP':bhandhomo.values(),'PBE1PBE':pbepbehomo.values()}
     df_2 = {'Name':camlumo.keys(),'CAM-B3LYP':camlumo.values(),'BHandHYLP':bhandlumo.values(),'PBE1PBE':pbepbelumo.values()} 
     df = pd.DataFrame(data=df)
     df_2 = pd.DataFrame(data=df_2)
     df.to_csv('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/data_analysis/PiecesHOMO_B.csv',index=False)
     df_2.to_csv('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/data_analysis/PiecesLUMO_B.csv',index=False)
-    print(df) 
-    print(df_2)
+    homo = df
+    lumo = df_2
+    homo = homo.sort_values(by=['CAM-B3LYP'])
+    lumo = lumo.sort_values(by=['CAM-B3LYP'],ascending=False)
+    test = 'HOMO'
+    if test == 'HOMO':
+      print(homo)
+      graphcreatorhomo(homo)
+    if test == 'LUMO':
+      print(lumo)
+      graphcreatorhlumo(lumo)
+
 
 
 

@@ -5,6 +5,7 @@ from MO_Dict import xyzcoords
 from gather_results import json_pandas_molecule
 from MO_Dict import *
 from homo_lumo_boxer_csv import *
+import json
 #from gather_results import json_pandas_molecule
 
 def SMILES_FINDER(SMILES_csv):
@@ -215,7 +216,7 @@ def homo_lumo_percents(filename,aa,jobname,
 
             mol['anchor']['HOMO']=tot[1]
             mol['anchor']['LUMO']=tot[2]
-        if '1ea' in jobname or '4ea' in jobname or '8ea' in jobname:
+        if '1ea' in jobname or '4ea' in jobname or '8ea' in jobname and '12ea' in jobname and '13ea' in jobname:
             O = atom_type_O(atom)
             N = atom_type_N(atom)
             S = atom_type_S(atom)
@@ -298,14 +299,31 @@ def homo_lumo_percents(filename,aa,jobname,
 
     return mol
 
+def smiles_reader(file):
+    a = open(file)
+    data = json.load(a)
+    df ={
+        'Name':[],
+        'SMILES':[]
+    }
+
+    for i in data:
+        df['Name'].append(i)
+        df['SMILES'].append(data[i])
+    
+    return df
+
 def main():
     
-    data = json_pandas_molecule('../json_files/results_ds5.json',results_exc=True)
+  #  data = json_pandas_molecule('../json_files/results_ds5.json',results_exc=True)
+    df = smiles_reader('../json_files/smiles.json')
+   # print(data)
     #print(df['name'])
   #  print(df['SMILES']['1ed_1b_1ea'])
-    df = {'Name':data['name'],'SMILES':data['SMILES']}
+  #  df = {'Name':data['name'],'SMILES':data['SMILES']}
   #  df2 = {'Name':data['name'],"Exc":data['exc'],"method":data[]]}
     df = pd.DataFrame(df)
+    print(df)
     df.to_csv('../data_analysis/SMILES_DICT.csv',index=False)
     SMILES_csv = '../data_analysis/SMILES_DICT.csv' 
     smile = SMILES_FINDER(SMILES_csv)
@@ -324,13 +342,18 @@ def main():
     jobs = ['10ed_29b_7ea', '6ed_28b_7ea', '6ed_29b_10ea', '5ed_29b_7ea', '6ed_16b_5ea', '6ed_29b_9ea', '6ed_29b_6ea', '6ed_29b_2ea', '6ed_29b_11ea', '7ed_28b_7ea', '6ed_29b_5ea', '10ed_28b_7ea', '9ed_29b_7ea', '7ed_29b_9ea', '7ed_29b_10ea', '7ed_29b_2ea', '1ed_29b_7ea', '7ed_29b_6ea', '5ed_28b_7ea', '11ed_29b_7ea', '7ed_29b_5ea', '6ed_28b_2ea', '10ed_29b_9ea', '7ed_29b_11ea', '10ed_29b_10ea']
     jobs = ['5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea', '7ed_31b_7ea', '6ed_16b_10ea', '6ed_31b_7ea', '9ed_1b_9ea', '9ed_1b_5ea', '9ed_1b_11ea', '7ed_32b_7ea', '6ed_16b_3ea', '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '6ed_16b_6ea', '7ed_16b_2ea', '9ed_26b_8ea', '1ed_26b_8ea', '10ed_31b_7ea', '7ed_16b_9ea', '3ed_20b_4ea', '6ed_31b_2ea', '5ed_20b_4ea', '10ed_20b_4ea', '10ed_32b_7ea', '6ed_32b_2ea', '11ed_1b_9ea', '5ed_16b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '11ed_26b_8ea', '6ed_1b_4ea', '9ed_20b_1ea', '3ed_16b_2ea', '2ed_16b_2ea', '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea', '7ed_1b_4ea', '11ed_1b_11ea', '5ed_31b_7ea', '7ed_34b_7ea', '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea', '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea', '6ed_31b_9ea', '7ed_16b_3ea', '7ed_31b_6ea', '9ed_31b_7ea', '7ed_31b_5ea', '7ed_32b_2ea', '6ed_32b_6ea', '6ed_31b_10ea', '5ed_33b_7ea', '3ed_16b_10ea', '10ed_16b_5ea', '2ed_33b_7ea', '6ed_31b_3ea', '11ed_1b_3ea', '5ed_16b_10ea', '10ed_16b_6ea', '7ed_31b_10ea', '1ed_32b_7ea', '6ed_35b_7ea', '7ed_32b_6ea', '7ed_33b_2ea', '3ed_16b_9ea']
     jobs = ['10ed_29b_7ea', '6ed_28b_7ea', '6ed_29b_10ea', '5ed_29b_7ea', '6ed_16b_5ea', '6ed_29b_9ea', '6ed_29b_6ea', '6ed_29b_2ea', '6ed_29b_11ea', '7ed_28b_7ea', '6ed_29b_5ea', '10ed_28b_7ea', '9ed_29b_7ea', '7ed_29b_9ea', '7ed_29b_10ea', '7ed_29b_2ea', '1ed_29b_7ea', '7ed_29b_6ea', '5ed_28b_7ea', '11ed_29b_7ea', '7ed_29b_5ea', '6ed_28b_2ea', '10ed_29b_9ea', '7ed_29b_11ea', '10ed_29b_10ea', '6ed_28b_5ea', '2ed_28b_7ea', '10ed_29b_5ea', '10ed_29b_6ea', '6ed_28b_10ea', '6ed_28b_6ea', '10ed_29b_11ea', '5ed_29b_2ea', '5ed_29b_10ea', '9ed_28b_7ea', '6ed_28b_9ea', '5ed_29b_11ea', '7ed_29b_3ea', '5ed_29b_9ea', '6ed_29b_1ea', '5ed_29b_6ea', '7ed_28b_2ea', '6ed_29b_3ea', '6ed_28b_11ea', '1ed_28b_7ea', '7ed_28b_5ea', '9ed_29b_9ea', '5ed_29b_5ea', '10ed_28b_9ea', '7ed_28b_6ea', '9ed_29b_2ea', '10ed_29b_2ea', '7ed_28b_9ea', '7ed_28b_10ea', '5ed_29b_3ea', '9ed_29b_10ea', '11ed_28b_7ea', '10ed_28b_6ea', '10ed_28b_5ea', '1ed_29b_9ea', '9ed_16b_9ea', '9ed_29b_6ea', '9ed_29b_5ea', '10ed_28b_10ea', '1ed_29b_10ea', '1ed_29b_2ea', '9ed_29b_11ea']
+    jobs = ['5ed_10b_4ea', '11ed_8b_9ea', '10ed_9b_4ea', '3ed_9b_4ea', '11ed_6b_1ea', '5ed_9b_4ea', '9ed_22b_11ea', '6ed_22b_4ea', '3ed_10b_4ea', '2ed_21b_4ea', '1ed_1b_5ea', '5ed_13b_1ea', '5ed_22b_1ea', '3ed_13b_1ea', '7ed_15b_3ea', '11ed_8b_3ea', '11ed_14b_1ea', '9ed_7b_8ea', '5ed_2b_8ea', '5ed_6b_4ea', '1ed_7b_1ea', '11ed_21b_1ea', '1ed_9b_1ea', '7ed_13b_4ea', '2ed_20b_1ea', '2ed_10b_4ea', '5ed_7b_4ea', '2ed_2b_8ea', '5ed_21b_4ea', '6ed_8b_1ea', '6ed_3b_8ea', '5ed_2b_1ea', '7ed_8b_8ea', '9ed_9b_1ea', '2ed_7b_4ea', '3ed_6b_4ea', '9ed_10b_4ea', '3ed_7b_4ea', '5ed_14b_4ea', '2ed_13b_1ea', '2ed_9b_1ea', '1ed_17b_4ea', '9ed_17b_4ea', '6ed_2b_4ea', '1ed_1b_11ea', '6ed_3b_1ea', '1ed_8b_3ea', '11ed_22b_5ea', '11ed_22b_10ea', '6ed_15b_1ea', '2ed_6b_4ea', '1ed_9b_8ea', '3ed_4b_3ea', '9ed_6b_4ea', '11ed_22b_9ea', '2ed_4b_3ea', '5ed_20b_1ea', '2ed_2b_1ea', '10ed_3b_1ea', '5ed_24b_8ea', '9ed_14b_8ea', '3ed_4b_1ea', '1ed_10b_4ea', '3ed_2b_1ea', '10ed_20b_8ea', '5ed_2b_4ea', '7ed_3b_1ea', '1ed_7b_4ea', '10ed_13b_4ea', '1ed_13b_1ea', '10ed_24b_1ea', '5ed_32b_7ea', '9ed_13b_8ea', '1ed_1b_3ea', '10ed_24b_8ea', '1ed_6b_4ea', '11ed_22b_3ea', '7ed_2b_4ea', '9ed_21b_8ea', '7ed_15b_1ea', '5ed_24b_1ea', '1ed_22b_1ea', '6ed_8b_4ea', '1ed_2b_1ea', '7ed_3b_8ea', '7ed_22b_8ea', '9ed_22b_1ea', '5ed_4b_3ea', '6ed_24b_1ea', '9ed_14b_4ea', '9ed_21b_4ea', '11ed_9b_1ea', '2ed_4b_1ea', '2ed_22b_4ea', '1ed_15b_2ea', '10ed_25b_1ea', '5ed_25b_1ea', '7ed_8b_1ea', '6ed_25b_1ea', '6ed_24b_8ea', '11ed_22b_11ea', '10ed_8b_1ea', '10ed_3b_8ea', '10ed_2b_4ea', '5ed_3b_1ea', '11ed_13b_1ea', '3ed_3b_1ea', '2ed_15b_3ea', '5ed_4b_1ea', '10ed_22b_4ea', '2ed_9b_4ea', '9ed_2b_8ea', '7ed_22b_4ea', '11ed_6b_4ea', '2ed_3b_1ea', '1ed_24b_1ea', '3ed_13b_4ea', '1ed_3b_1ea', '9ed_25b_1ea', '1ed_2b_8ea', '2ed_22b_8ea', '2ed_8b_8ea', '2ed_25b_1ea', '2ed_24b_1ea', '5ed_3b_8ea', '1ed_14b_4ea', '11ed_17b_4ea', '3ed_1b_1ea', '3ed_15b_3ea', '11ed_3b_1ea', '2ed_13b_4ea', '1ed_21b_4ea', '11ed_7b_8ea', '11ed_24b_1ea', '3ed_22b_4ea', '1ed_25b_1ea', '11ed_25b_1ea', '1ed_20b_1ea', '5ed_8b_1ea', '1ed_9b_4ea', '7ed_25b_1ea', '7ed_24b_1ea', '5ed_20b_8ea', '10ed_8b_8ea', '9ed_9b_8ea', '10ed_22b_8ea', '10ed_25b_8ea', '5ed_25b_8ea', '3ed_24b_1ea', '3ed_25b_1ea', '6ed_25b_8ea', '2ed_2b_4ea', '3ed_3b_8ea', '5ed_22b_4ea', '1ed_24b_8ea', '7ed_1b_8ea', '9ed_13b_4ea', '7ed_3b_4ea', '11ed_13b_8ea', '1ed_13b_4ea', '2ed_24b_8ea', '3ed_2b_4ea', '2ed_3b_8ea', '3ed_8b_8ea', '1ed_21b_8ea', '11ed_21b_4ea', '9ed_2b_4ea', '9ed_3b_8ea', '3ed_22b_8ea', '11ed_24b_8ea', '10ed_24b_4ea', '7ed_24b_8ea', '11ed_14b_4ea', '3ed_15b_1ea', '2ed_15b_1ea', '11ed_22b_1ea', '5ed_22b_8ea', '10ed_8b_4ea', '7ed_8b_4ea', '5ed_24b_4ea', '7ed_25b_8ea', '1ed_4b_1ea', '11ed_7b_4ea', '2ed_8b_1ea', '11ed_2b_8ea', '2ed_25b_8ea', '6ed_25b_4ea', '2ed_1b_1ea', '1ed_4b_3ea', '1ed_3b_8ea', '11ed_25b_8ea', '5ed_15b_3ea', '9ed_3b_4ea', '6ed_24b_4ea', '3ed_3b_4ea', '10ed_25b_4ea', '1ed_25b_8ea', '3ed_8b_1ea', '5ed_1b_1ea', '9ed_24b_4ea', '3ed_24b_8ea']
     
    
-    print(smile)
+   # print(smile)
+    jobs = ['16ed_2b_13ea']
+    jobs = ['10ed_29b_12ea']
     final = {}
+
     for x in jobs:
+        filename = '../MO_start/' + str(x) + '/mo/'+ str(x)+'.out'
+
         try:
-            filename = '../MO_start_800/' + str(x) + '/mo/'+ str(x)+'.out'
             atom = xyzcoords(filename)
             aa = numericalize(jobs,smile)
             jobname = x
@@ -343,6 +366,7 @@ def main():
             anchor = True)
             final[x]=mol
         except FileNotFoundError:
+            print('File Not Found:%s '%filename)
             pass
     df = {
         'Name':[],
@@ -388,9 +412,11 @@ def main():
         df['LUMO Acceptor'].append(final[name]['acceptor']['LUMO'])
         df['HOMO Anchor'].append(final[name]['anchor']['HOMO'])
         df['LUMO Anchor'].append(final[name]['anchor']['LUMO'])
+        
         df['HOMO'].append(round(float(numbs[name][1]),2))
         df['LUMO'].append(round(float(numbs[name][0]),2))
         df['Wave'].append(round(float(numbs[name][2]),2))
+        
 
 
       #  print(final[name]['donor']['HOMO'])
