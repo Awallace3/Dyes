@@ -150,11 +150,11 @@ def scatter_plot(file):
     #    plt.text(v+0.3, p2-0.20, "%s \n %s" % (name[v], wave[v]), va="center", ha="center")s
         
         #plt.annotate(v, p2, )
-    plt.savefig('../data_analysis/' + str(file).replace('.csv','.pdf'))
+    plt.savefig(str(file).replace('.csv','.pdf'))
 
     df = {'Name': name, 'LUMO': lumo, 'HOMO': homo, 'Wavelength': wave}
     df = pd.DataFrame(df)
-    df.to_csv('benchscatter.csv',index=False)
+    df.to_csv('scatter.csv',index=False)
     # plt = df.scatter(x='Name',y='LUMO')
 
     # plt.scatter(x='Name',y='LUMO',c='blue')
@@ -185,14 +185,15 @@ def main():
     
     
     for name in numbs.keys():
-        optimal_list.append(name)
-        '''
+        print(name)
+        #optimal_list.append(name)
+        
         #print(numbs[name][2])
-        if numbs[name][0]>=-3.75 and numbs[name][0]<=-3.5 and numbs[name][2]>400.0:
+        if numbs[name][0]>=-3.75 and numbs[name][0]<=-3.5:
             optimal_list.append(name)
          #   print(name)
             print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0])+','+str(numbs[name][2]))
-        '''
+        
     print(optimal_list)
     print(len(optimal_list))
     
