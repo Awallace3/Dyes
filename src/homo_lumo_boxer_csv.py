@@ -92,9 +92,9 @@ def scatter_plot(file):
         #plt.plot([0], [0], 'b-.', label=r'TiO_2'),
         #plt.plot([0], [0], 'r--', label=r'Iodine'),
         Line2D([0], [0], color='b', ls='-.', label=r'$Ti_O$'),
-        plt.scatter([0], [0], color='r', marker='s', label='HOMO'),
+        plt.scatter([0], [0], color='b', marker='s', label='HOMO'),
         Line2D([0], [0], c='r', ls="--", label='I'),
-        plt.scatter([0], [0], c='b', marker="s", lw=2, label='LUMO'),
+        plt.scatter([0], [0], c='r', marker="s", lw=2, label='LUMO'),
     ]
     labels = [r'TiO$_2$', 'LUMO', 'I', "HOMO"]
 
