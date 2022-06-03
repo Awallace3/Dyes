@@ -55,6 +55,7 @@ db_access/results_ds5.json
 db_access/tes2.json
 json_files/t.json
 json_files/test2.json
+json_files
 src/*.pdf
 delcamp.csv
 delcamp_theoretical.csv
