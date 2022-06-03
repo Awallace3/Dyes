@@ -750,7 +750,7 @@ def plot_methods(
                 list(df[col]),
                 label=headers_colors[ind][0],
                 color=headers_colors[ind][1],
-                linewidth=0.2,
+                linewidth=1.4,
             )
         except:
             print(
@@ -1438,7 +1438,7 @@ def benchmarks_dyes_basis_set_out(
             df,
             weighted_avg=plot_js["weighted_avg"],
             headers_colors=plot_js["headers_colors"],
-            weights=plot_js["weights"],
+    #        weights=plot_js["weights"],
             outname=output_graph,
             exp=True,
             sort_by="Exp",
@@ -1785,9 +1785,11 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
     
+    
     theoretical_dyes_basis_set_out(
         # "./json_files/results_exc.json",
         "./json_files/results_ds5.json",
+        #"./json_files/test2.json",
         output_csv="data_analysis/Absorption_test",
      #   output_latex="data_analysis/Absorption_nm",
         output_graph="data_analysis/Absorption_eV_T",
@@ -1798,6 +1800,7 @@ def main():
         homo_lumo=False,
         LSF_csv=True,
     )
+    
     
 
 
@@ -1817,62 +1820,45 @@ def main():
     benchmarks_dyes_basis_set_out(
         'Benchmark/benchmarks_exc.json',
         methods_basissets=[
-        "CAM-B3LYP/6-311G(d,p)",
-        "bhandhlyp/6-311G(d,p)",
-        "PBE1PBE/6-311G(d,p)",
+    #    "CAM-B3LYP/6-311G(d,p)",
+    #    "bhandhlyp/6-311G(d,p)",
+    #    "PBE1PBE/6-311G(d,p)",
     #    "CAM-B3LYP/6-311G(d,p)_dichloromethane",
     #    "bhandhlyp/6-311G(d,p)_dichloromethane",
     #    "PBE1PBE/6-311G(d,p)_dichloromethane",
     #    "CAM-B3LYP/6-311G(d,p)_tetrahydrofuran",
     #    "bhandhlyp/6-311G(d,p)_tetrahydrofuran",
     #    "PBE1PBE/6-311G(d,p)_tetrahydrofuran",
-    #    "CAM-B3LYP/6-311G(d,p)_nndimethylformamide",
-    #    "bhandhlyp/6-311G(d,p)_nndimethylformamide",
-    #    "PBE1PBE/6-311G(d,p)_nndimethylformamide",
+        "CAM-B3LYP/6-311G(d,p)_nndimethylformamide",
+        "bhandhlyp/6-311G(d,p)_nndimethylformamide",
+        "PBE1PBE/6-311G(d,p)_nndimethylformamide",
         ],
 
         plot_js={
-# <<<<<<< HEAD
-#         "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
-#     #    "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
-#     #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
-#     #  "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
-#         "headers_colors": [
-#             ["CAM-B3LYP/6-311G(d,p)", "blue"],
-#             ["BHandHLYP/6-311G(d,p)", "red"],
-#             ["PBE0/6-311G(d,p)", "orange"],
-#             ["LSF", "green"],  # ['Weighted Average', 'green']
-#         ],
+
+    #     "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
+#         "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
+    #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
+       "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
+         "headers_colors": [
+             ["CAM-B3LYP/6-311G(d,p)", "blue"],
+             ["BHandHLYP/6-311G(d,p)", "red"],
+             ["PBE0/6-311G(d,p)", "orange"],
+             ["LSF", "green"],  # ['Weighted Average', 'green']
+            ],
 #         "weights": [0.71, 0.29],
-#     },
-#         output_csv='data_analysis/nuthin',
-#         output_latex='data_analysis/nuthin',
-#         output_graph='data_analysis_nuthin',
-#         exc_json=True, homo_lumo=False
-#     )
+     },
+         output_csv='data_analysis/nuthin_dimeth',
+         output_latex='data_analysis/nuthin_dimeth',
+         output_graph='data_analysis/nuthin_dimeth',
+         exc_json=True, homo_lumo=False
+     )
+     """
 
 #
 #
-# =======
-            "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],
-            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_dichloromethane", "PBE1PBE/6-311G(d,p)_dichloromethane"],
-            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_tetrahydrofuran", "PBE1PBE/6-311G(d,p)_tetrahydrofuran"],
-            #   "weighted_avg": ["CAM-B3LYP/6-311G(d,p)_nndimethylformamide", "PBE1PBE/6-311G(d,p)_nndimethylformamide"],
-            "headers_colors": [
-                ["CAM-B3LYP/6-311G(d,p)", "blue"],
-                ["BHandHLYP/6-311G(d,p)", "red"],
-                ["PBE0/6-311G(d,p)", "orange"],
-                ["LSF", "green"],  # ['Weighted Average', 'green']
-            ],
-            "weights": [0.71, 0.29],
-        },
-        output_csv='vac',
-        output_latex='vac',
-        output_graph='vac',
-        exc_json=True,
-        homo_lumo=False)
-    """
-# >>>>>>> 258d915aa06a51f8e01768b0bb867224ebd75baa
+
+
     """
 
     benchmarks_dyes_basis_set_out('Benchmark/benchmarks_exc.json',

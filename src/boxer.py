@@ -111,8 +111,8 @@ def main():
     lumo = {}
     red = {}
     names = []
-    wavelength_range = '800-1000'
-#    wavelength_range = '600-800'
+#    wavelength_range = '800-1000'
+    wavelength_range = '600-800'
 #    wavelength_range = '400-600'
     
     if wavelength_range == '800-1000':

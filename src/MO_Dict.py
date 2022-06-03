@@ -9,6 +9,7 @@ from MO_Dict import xyzcoords
 
 
 
+
 def amountofbasisfunctions(file):
     filename = open(file, 'r')
     data = filename.readlines()
@@ -295,25 +296,6 @@ def total_contrib(dict_homo, dict_lumo, num):
 def part_tot_contrib(dict_homo,dict_lumo,num,tot_homo,tot_lumo,atom_num_list,name):
     par_homo = 0
     par_lumo = 0
-    #atom_num_list=[1,2,3,4,5,6,20,21,22,30,31,32] 
-  #  atom_num_list = [1, 2, 3, 4, 5, 6, 20, 21, 22, 32, 33, 34]
-    '''
-    atom_num_list = [7,8,9,10,11,12,13,14,15,16,17,18,19]
-    atom_num_list = [1,2,3,4,5,6,20,21,22,50,51,52]
-    atom_num_list = [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
-    atom_num_list = [1,2,3,4,5,6,20,21,22,49,48,50,51,52]
-    '''
-    #atom_num_list = [7,8,9,10,11,12,13,14,15,16,17,18,19]
-
-   # for atom_num in range(21,31):
-    '''
-    atom_num_list = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]
-    atom_num_list = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78]
-    atom_num_list = ['1', '2', '3', '4', '5', '6', '48', '49', '50', '51', '52', '53', '54', '80', '81', '82', '83', '84', '85', '86', '87']
-    '''
-    #atom_num_list = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
-    #satom_num_list = [1,2,3,4,5,6]
-   # atom_num_list= ['13', '14', '15', '16', '17', '18', '19', '48'] #anchor
     
     for atom_num in atom_num_list:
         #print(atom_num)
@@ -330,19 +312,6 @@ def part_tot_contrib(dict_homo,dict_lumo,num,tot_homo,tot_lumo,atom_num_list,nam
 
     print('The percentage of HOMO ' + str(per_homo))
     print('The percentage of LUMO ' + str(per_lumo))
-    '''
-    df = {"Name":name,
-          "HOMO":str(round(per_homo,2))+' %',
-          "LUMO":str(round(per_lumo,2))+' %'}
-    print(df)
-    '''
-    '''
-    
-    filename = open('HOMO_LUMO_Per.tex','a')
-    filename.write(name+'\n')
-    filename.write('HOMO '+' '+'LUMO\n')
-    filename.write(str(round(per_homo,2))+' '+str(round(per_lumo,2))+'\n')
-    '''
     
 
     #print(tot_lumo)
@@ -352,74 +321,20 @@ def part_tot_contrib(dict_homo,dict_lumo,num,tot_homo,tot_lumo,atom_num_list,nam
 
 
 def main():
-#    filename = '../MO_start/6ed_28b_4ea/mo/6ed_28b_4ea.out'
-#    filename = '../MO_start/3ed_7b_2ea/mo/3ed_7b_2ea.out'
-  #  filename = '../MO_start/11ed_28b_8ea/mo/11ed_28b_8ea.out'
-  #  filename = '../MO_start/3ed_26b_4ea/mo/3ed_26b_4ea.out'
-  #  filename = '../MO_start/11ed_8b_8ea/mo/test/mani.out'
-   # filename = '../MO_start/11ed_8b_8ea/mo/11ed_8b_8ea.out' # has two carboxy
-    #Smiles = '../MO_start/11ed_8b_8ea/mo/test.smi'
-    #input_file = '../MO_start/3ed_7b_2ea/mo/3ed_7b_2ea.com'
-  #  filename = '../MO_start/1ed_20b_4ea/mo/1ed_20b_4ea.out'
-   # filename = '../MO_start/10ed_29b_10ea/mo/10ed_29b_10ea.out'
-   # filename = '../MO_start/3ed_15b_3ea/mo/3ed_15b_3ea.out'
-  #  filename = '../MO_start/11ed_28b_8ea/mo/11ed_28b_8ea.out'
-  #  filename = '../MO_start/11ed_30b_8ea/mo/11ed_30b_8ea.out'
-   # jobs = ['11ed_28b_8ea','6ed_28b_4ea','11ed_30b_8ea','3ed_26b_4ea']
-  #  jobs = ['2ed_32b_11ea','1ed_16b_2ea']
-   # jobs = ['1ed_16b_2ea','1ed_33b_3ea','3ed_1b_5ea']
-   # jobs = ['6ed_16b_5ea','6ed_29b_6ea','6ed_29b_2ea','6ed_29b_11ea']
-    """
-    jobs = ['7ed_29b_10ea','6ed_29b_10ea','10ed_29b_10ea','5ed_29b_10ea','6ed_28b_10ea']
-    jobs = ['6ed_29b_5ea','7ed_29b_2ea','7ed_29b_6ea','7ed_29b_5ea','6ed_28b_2ea','7ed_29b_11ea','6ed_28b_5ea']
-    jobs =['5ed_29b_11ea','10ed_29b_5ea','10ed_29b_6ea','6ed_28b_6ea','10ed_29b_11ea']
-    jobs = ['6ed_29b_1ea','6ed_16b_5ea','10ed_29b_5ea','6ed_28b_5ea','6ed_29b_5ea']
-    jobs = ['6ed_16b_10ea','6ed_16b_3ea','6ed_16b_11ea','6ed_16b_6ea','6ed_31b_2ea']
-    jobs = ['6ed_16b_3ea','6ed_31b_2ea']
-    '''
-    filename = open('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/data_analysis/ori_800_1000.csv')
-    data = filename.readlines()
-    '''
-    '''
-    jobs = []
-    for line in data:
-        line = line.split(',')
-        if '1ea' in line[0]:
-            jobs.append(line[0])
-    '''
-    names =['6ed_16b_4ea', '2ed_28b_6ea', '1ed_29b_3ea', '6ed_16b_5ea', '2ed_28b_10ea', '1ed_29b_6ea', '1ed_29b_11ea', '10ed_28b_2ea', '5ed_28b_6ea', '1ed_28b_7ea', '7ed_28b_3ea', '10ed_29b_3ea', '1ed_29b_2ea', '10ed_28b_11ea', '2ed_28b_9ea', '6ed_29b_8ea', '7ed_28b_11ea', '1ed_29b_10ea', '10ed_28b_6ea', '7ed_28b_6ea', '11ed_29b_6ea', '5ed_28b_9ea', '2ed_28b_5ea', '1ed_29b_5ea', '6ed_28b_3ea', '11ed_29b_11ea', '5ed_28b_2ea', '5ed_28b_10ea', '2ed_28b_7ea', '10ed_28b_10ea', '11ed_29b_2ea', '11ed_29b_10ea', '7ed_28b_10ea', '9ed_16b_5ea', '7ed_28b_2ea', '11ed_29b_5ea', '10ed_29b_2ea', '9ed_16b_9ea', '7ed_29b_1ea', '10ed_29b_1ea', '5ed_29b_11ea', '5ed_29b_3ea', '7ed_29b_3ea', '10ed_28b_9ea', '1ed_29b_9ea', '11ed_28b_7ea', '9ed_28b_6ea', '6ed_29b_3ea', '10ed_28b_5ea', '5ed_29b_6ea', '9ed_29b_3ea', '9ed_28b_2ea', '6ed_28b_11ea', '7ed_28b_9ea', '10ed_29b_6ea', '6ed_28b_1ea', '6ed_29b_4ea', '7ed_29b_11ea', '1ed_29b_7ea', '7ed_29b_6ea', '11ed_29b_9ea', '9ed_29b_6ea', '10ed_29b_11ea', '5ed_29b_10ea', '5ed_28b_7ea', '5ed_29b_2ea', '7ed_28b_5ea', '5ed_29b_5ea', '9ed_29b_11ea', '6ed_28b_6ea', '7ed_29b_2ea', '10ed_28b_7ea', '6ed_28b_10ea', '9ed_29b_10ea', '10ed_29b_10ea', '7ed_28b_7ea', '7ed_29b_10ea', '6ed_29b_1ea', '6ed_28b_9ea', '9ed_29b_2ea', '9ed_29b_5ea', '5ed_29b_9ea', '10ed_29b_9ea', '10ed_29b_5ea', '9ed_28b_5ea', '6ed_28b_2ea', '7ed_29b_5ea', '11ed_29b_7ea', '9ed_28b_7ea', '6ed_29b_9ea', '6ed_29b_6ea', '9ed_29b_9ea']
-
-
-    names = ['10ed_34b_9ea', '7ed_32b_6ea', '2ed_32b_10ea', '3ed_16b_2ea', '10ed_32b_2ea', '2ed_32b_5ea', '5ed_32b_6ea', '2ed_16b_6ea', '7ed_32b_1ea', '11ed_32b_6ea', '10ed_32b_3ea', '1ed_20b_4ea', '10ed_1b_1ea', '6ed_16b_11ea', '7ed_1b_1ea', '7ed_1b_4ea', '6ed_1b_1ea', '7ed_16b_3ea', '1ed_32b_6ea', '6ed_31b_2ea', '2ed_32b_9ea', '3ed_16b_10ea', '7ed_16b_2ea', '1ed_33b_6ea', '2ed_32b_11ea', '1ed_31b_2ea', '2ed_16b_7ea', '7ed_16b_1ea', '2ed_16b_3ea', '1ed_16b_11ea', '6ed_16b_6ea', '1ed_32b_5ea', '6ed_16b_10ea', '3ed_16b_6ea', '10ed_20b_4ea', '2ed_32b_6ea', '10ed_35b_9ea', '2ed_16b_9ea', '5ed_32b_9ea', '5ed_32b_11ea', '2ed_32b_7ea', '1ed_32b_2ea', '1ed_32b_10ea', '10ed_34b_6ea', '2ed_16b_10ea', '1ed_31b_5ea', '1ed_33b_2ea', '10ed_32b_7ea', '3ed_1b_4ea', '1ed_1b_4ea', '5ed_1b_4ea', '10ed_32b_10ea', '2ed_16b_5ea', '6ed_1b_4ea', '3ed_1b_5ea', '1ed_31b_9ea', '3ed_16b_3ea', '10ed_32b_9ea', '1ed_33b_10ea', '1ed_32b_7ea', '5ed_32b_3ea', '3ed_16b_9ea', '1ed_33b_3ea', '10ed_16b_3ea', '2ed_16b_2ea', '10ed_32b_6ea', '7ed_32b_3ea', '3ed_16b_11ea', '10ed_32b_11ea', '2ed_32b_2ea', '1ed_32b_9ea', '2ed_16b_11ea', '7ed_16b_10ea', '1ed_16b_2ea', '2ed_32b_3ea', '3ed_20b_4ea', '10ed_1b_4ea', '1ed_16b_10ea', '2ed_1b_4ea', '1ed_35b_2ea', '7ed_32b_10ea', '10ed_32b_5ea', '10ed_34b_3ea', '6ed_16b_8ea', '1ed_33b_5ea', '10ed_35b_3ea', '10ed_34b_11ea', '1ed_31b_10ea', '6ed_16b_3ea', '7ed_32b_11ea', '10ed_35b_6ea', '2ed_1b_5ea', '6ed_20b_1ea', '2ed_20b_4ea', '1ed_16b_6ea', '10ed_32b_1ea', '1ed_31b_6ea', '10ed_31b_1ea', '1ed_33b_9ea', '1ed_34b_7ea']
-    names = ['']
-
-    
-
-    jobs = []
-    for name in names:
-        if '2ea' in name or '3ea' in name or '5ea' in name or '9ea' in name or '6ea' in name or '8ea' in name:
-            jobs.append(name)
-    
-  #  jobs = ['6ed_16b_3ea','6ed_31b_2ea','6ed_16b_11ea','6ed_16b_6ea','6ed_31b_2ea','6ed_16b_10ea']
-   """
-
-        
-  #  jobs = ['6ed_29b_2ea']
-  #  jobs = ['NL6']
-  #  jobs = ['5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea', '7ed_31b_7ea', '6ed_16b_10ea', '6ed_31b_7ea', '9ed_1b_9ea', '9ed_1b_5ea', '9ed_1b_11ea', '7ed_32b_7ea', '6ed_16b_3ea', '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '6ed_16b_6ea', '7ed_16b_2ea', '9ed_26b_8ea', '1ed_26b_8ea', '10ed_31b_7ea', '7ed_16b_9ea', '3ed_20b_4ea', '6ed_31b_2ea', '5ed_20b_4ea', '10ed_20b_4ea', '10ed_32b_7ea', '6ed_32b_2ea', '11ed_1b_9ea', '5ed_16b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '11ed_26b_8ea', '6ed_1b_4ea', '9ed_20b_1ea', '3ed_16b_2ea', '2ed_16b_2ea', '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea', '7ed_1b_4ea', '11ed_1b_11ea', '5ed_31b_7ea', '7ed_34b_7ea', '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea', '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea', '6ed_31b_9ea']
-  #  jobs = ['5ed_16b_7ea']
     jobs = ['6ed_16b_10ea']
     jobs = ['16ed_35b_8ea']
+    jobs = ['13ed_18b_12ea', '6ed_41b_12ea','7ed_1b_13ea','7ed_3b_13ea','9ed_18b_12ea']
+    jobs = ['7ed_1b_13ea']
+    json_file = '../json_files/test2.json'
 
-    for x in jobs:
-        filename = '../MO_start_new/' + str(x) + '/mo/'+ str(x)+'.out'
 
-   
+
+    for name in jobs:
+
+        filename = '../MO_start/' + str(name) + '/mo/'+ str(name)+'.out'
 
         num = amountofbasisfunctions(filename)
         atom_let = atom_num_let_dic(filename)
-
-
 
         #homo,lumo = lastO(filename,num)
         start_num_h,end_num_h,start_num_l,end_num_l,occ,vir  = lastO(filename,num) 
@@ -474,75 +389,7 @@ def main():
           
 
         kkk = {}
-        '''
-        atom_num_list=[1,2,3,4,5,6,20,21,22,50,51,52]
-        atom_num_list = [7,8,9,10,11,12,13,14,15,16,17,18,19]
-        atom_num_list = [1,2,3,4,5,6,20,21,22,49,48,50,51,52]
-        '''
-      #  atom_num_list = [7,8,9,10,11,12,13,14,15,16,17,18,19]
-        '''
-        for x in atom_num_list:
-            for y in atom_num_list:
-                dis = tot[str(x)+' '+str(y)]
-                if dis >= 4.79:
-                    print((dis,(x,y)))
-        '''
        
-       # for i in atom_num_list.keys():
-      #  for i in atom_num_list: 22:50
-
-      #  atom_num_list =  [7,8,9,10,11,12,13,14,15,16,17,18,19]
-    #    atom_num_list = ['57','70', '71', '72', '73', '75', '76', '77', '78', '79', '74']
-    #    aaa = ['1', '2', '3', '4', '5', '6', '48', '49', '50', '51', '52', '53', '54','80','81','82','83','84','85','86','87']
-       # atom_num_list = [1,2,3,4,5,6,7,8,13,14,15,16,17,18,19]
-       # atom_num_list = [9,10,11,12,20,21,22,23,24,25,26,35,36,37,38]
-      #  atom_num_list = [26,27,28,29,30,31,32,33,34]
-       # atom_num_list = [9, 10, 11, 12, 20, 21, 22, 23, 24, 25, 26,34,35,36,37,38]
-      #  atom_num_list =  [39,40,41,42,43,44,45,46,47,48,49,57,58,59]
-      #  atom_num_list = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]
-      #  atom_num_list =[50,51,52,53,54,55,56,30,31,32,33]
-      #  atom_num_list = [ '38', '50', '51','60','61', '22', '35', '36', '37']
-      #  atom_num_list = ['150']
-      #  atom_num_list = ['23', '55', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '88', '89', '97', '114', '115', '116', '117', '118', '122', '127', '133', '150', '151']
-        #atom_num_list = ['15','16','17','18','19','20','21', '22', '23', '24', '25', '26', '27', '84']
-        #atom_num_list = [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28] # ND acceptor
-       # atom_num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 29, 30, 31, 32, 51]
-        #atom_num_list = [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70]
-      #  atom_num_list = [7,8,9,10,11, 12, 13, 14, 15, 16, 17,18,19, 58]
-        #atom_num_list = [3, 4, 5, 6, 20, 21, 45, 46, 47]
-       # atom_num_list = [22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44]
-        #atom_num_list = [47,48,49,50,51, 52, 53, 54, 55, 56, 57,58,59,100]
-    #    atom_num_list = [60,61,62,63,46,45,43,42,41,40]
-    #    atom_num_list = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44]
-    #    atom_num_list = [1, 2, 3, 4, 5, 45, 46,  60, 61,62]
-       # atom_num_list = [27,28,29,30,31, 32, 33, 34, 35, 36, 37,38,39,68]# acceptor
-       # atom_num_list = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
-       # atom_num_list = [1,2,3,4,5,25,26,40,41,42,43]
-       # atom_num_list = [6,7,8,9,10, 11, 12, 13, 14, 15, 16,17,53] # acceptor
-       # atom_num_list = [1,2,3,4,5,18,19,43,44,45,46] # Backbone
-       # atom_num_list = [20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42] # Donor
-     #   atom_num_list = [1, 2, 3, 4, 5, 45, 46,  60, 61,62]
-     #   atom_num_list = [46,47,48,49,50, 51, 52, 53, 54, 55, 56,57, 94] # acceptor
-     #   atom_num_list = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,59,60]
-     #   atom_num_list = [22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,58]
-       # atom_num_list = [60,61,62,63,64, 65, 66, 67, 68, 69, 70,71, 124]
-        '''
-        atom_num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,  72, 74, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113]
-        atom_num_list = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 119, 120]
-        atom_num_list = [1, 2, 3, 4,5, 58, 59,72, 73, 74, 75]
-        '''
-       # atom_num_list = [71]
-     #   atom_num_list = [46, 47, 48, 49, 50, 51, 52, 53, 54, 88, 89, 90] #acceptor
-     #   atom_num_list =[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 70, 71, 72, 73, 92, 93]
-     #   atom_num_list = [23,24,25,26,27,28,29,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,55]
-      #  atom_num_list = [42, 55, 58, 65, 87, 88, 89, 90, 91]
-      #  atom_num_list = [7, 13, 14, 15, 16, 17, 26, 31, 33, 86]
-      #  atom_num_list = [68]
-      #  atom_num_list =[ 18, 23, 28, 68, 69, 70, 86]
-      #  atom_num_list = [3,4,5, 6, 9, 10,  68, 69, 70]
-      #  atom_num_list = [71]
-        
-
         for i in atom_num_list:
             for x in atom['atom_num']:
     #for i in range(1,50):
@@ -570,38 +417,53 @@ def main():
         final_homo,final_lumo = summer(homo,lumo,atom_let)
         tot_homo,tot_lumo = total_contrib(final_homo,final_lumo,atom_let)
         tot = part_tot_contrib(final_homo,final_lumo,atom_let,tot_homo,tot_lumo,atom_num_list,x)
-        total[tot[0]]=[tot[0],tot[1],tot[2]]
+        total[name]=[tot[0],tot[1],tot[2]]
+        print(total)
        # total['HOMO']=tot[1]
        # total['LUMO']=tot[2]
   #  file = '../data_analysis/600_800.csv'
-   # file = '../data_analysis/800_1000.csv'
     
-   # numbs = HOMO_LUMO_dict(file)
+#    file = '../data_analysis/800_1000.csv'
+    
+#    numbs = HOMO_LUMO_dict(file)
+    
+            
+
+    
+            
+    
+   
         
 
-  #  print(total)
+          
 
     name1 = []
     homo = []
     lumo = []
-    
     wave = []
-
     for name in total.keys():
+        with open(json_file,"r") as read_file:
+            data = json.load(read_file)
+            for mol in data["molecules"]:
+                if mol['name']== name:
+                    for exc in mol["lsf"]:
+                        if exc['exc']==1:
+                            homo.append(exc['HOMO'])
+                            lumo.append(exc['LUMO'])
+                            wave.append(exc['nm'])
         name1.append(name)
-        homo.append(total[name][1])
-        lumo.append(total[name][2] )
-     #   wave.append(round(numbs[name][2],2))
+
+
     df= {"Name":name1,
         "HOMO":homo,
         "LUMO":lumo,
-     #   "Wave":wave
+        "Wave":wave
         }
     df = pd.DataFrame(df)
 
     df.to_csv('lll.csv',index=False)
     
-    #print(df)
+    print(df)
 
 
     '''    
