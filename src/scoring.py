@@ -7,6 +7,7 @@ def normalize(ls, max_y):
     ma = max(ls)
     for n, i in enumerate(ls):
         ls[n] = i / ma * max_y
+    print(max_y / ma)
     return ls
 
 
@@ -17,7 +18,6 @@ def generate_gaussian(m,
                       cut_off=-3.6):
     xs = range(int(x_range[0] * 100), int(x_range[1] * 100), -1)
     xs = [i / 100 for i in xs]
-    print(xs)
     ys_1 = []
     ys_2 = []
     zeros = []
@@ -50,21 +50,25 @@ def generate_gaussian(m,
     return data
 
 
-def sore_dye_LUMO(LUMO_energy):
+def score_dye_LUMO(LUMO_energy):
     x = LUMO_energy
     m = -3.6
     if x < -3.75:
         y = 0
     elif x < m:
         s = 0.1
-        y = math.exp(-(x - m)**2 / (2 * s**2)) / (s * math.sqrt(2 * math.pi))
+        y = math.exp(
+            -(x - m)**2 /
+            (2 * s**2)) / (s * math.sqrt(2 * math.pi)) * 25.191928011443522
     elif x >= m:
         s = 0.25
-        y = math.exp(-(x - m)**2 / (2 * s**2)) / (s * math.sqrt(2 * math.pi))
+        y = math.exp(
+            -(x - m)**2 /
+            (2 * s**2)) / (s * math.sqrt(2 * math.pi)) * 62.66570686577501
     return y
 
 
-def main():
+def test_graph():
     data = generate_gaussian(-3.6,
                              ss=[0.1, 0.25],
                              cut_off=-3.75,
@@ -74,6 +78,13 @@ def main():
     plt.ylabel("Score")
     plt.savefig("../data_analysis/scoring.png")
     plt.show()
+
+
+def main():
+    # test_graph()
+    LUMO_energy = -3.5
+    v = score_dye_LUMO(LUMO_energy)
+    print('score:', v)
 
     return
 
