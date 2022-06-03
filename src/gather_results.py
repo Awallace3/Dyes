@@ -93,6 +93,7 @@ def json_pandas_molecule(path_results, results_exc=False):
     return df
 
 
+
 def json_pandas_molecule_BM(path_results, exc_json=False):
     dat = pd.read_json(path_results)
     # print(path_results)
@@ -1250,6 +1251,7 @@ def df_differences_exp(df, methods):
 def theoretical_dyes_basis_set_out(
     path_results_json,
     methods_basissets=[
+
         "CAM-B3LYP/6-311G(d,p)",
         "bhandhlyp/6-311G(d,p)",
         "PBE1PBE/6-311G(d,p)",
@@ -1364,6 +1366,7 @@ def benchmarks_dyes_basis_set_out(
     df = df.dropna()
     df.to_csv("ll.csv")
     df = convert_df_nm_to_eV(df, convert_lst)
+
     """
 
 
@@ -1820,6 +1823,7 @@ def main():
             #    "bhandhlyp/6-311G(d,p)_nndimethylformamide",
             #    "PBE1PBE/6-311G(d,p)_nndimethylformamide",
         ],
+
         plot_js={
             # <<<<<<< HEAD
             #         "weighted_avg": ["CAM-B3LYP/6-311G(d,p)", "PBE1PBE/6-311G(d,p)"],

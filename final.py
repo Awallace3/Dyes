@@ -84,7 +84,9 @@ def smilesRingCleanUp(f, s, t):
     return line, name, formalName
 
 
-def generateSMILESinputs(smiles_tuple_list, ):
+def generateSMILESinputs(
+    smiles_tuple_list,
+):
     smiles = {}
     for num, i in enumerate(smiles_tuple_list):
         first, second, third = i
