@@ -654,7 +654,8 @@ def cleanResultsExcEmpty(results_json, results_json_out="clean.json"):
 
 def main():
     three_types = ["eDonors", "backbones", "eAcceptors"]
-    banned = ["42b", "26b", "27b"]
+    #banned = ["42b", "26b", "27b"]
+    banned = []
     three_types = [
         "eDonors",
         "backbones",

@@ -749,7 +749,7 @@ def plot_methods(
                 list(df[col]),
                 label=headers_colors[ind][0],
                 color=headers_colors[ind][1],
-                linewidth=0.2,
+                linewidth=1.4,
             )
         except:
             print(
@@ -1433,7 +1433,7 @@ def benchmarks_dyes_basis_set_out(
             df,
             weighted_avg=plot_js["weighted_avg"],
             headers_colors=plot_js["headers_colors"],
-            weights=plot_js["weights"],
+    #        weights=plot_js["weights"],
             outname=output_graph,
             exp=True,
             sort_by="Exp",

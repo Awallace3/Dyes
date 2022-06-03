@@ -90,9 +90,9 @@ def scatter_plot(file):
         #plt.plot([0], [0], 'b-.', label=r'TiO_2'),
         #plt.plot([0], [0], 'r--', label=r'Iodine'),
         Line2D([0], [0], color='b', ls='-.', label=r'$Ti_O$'),
-        plt.scatter([0], [0], color='r', marker='s', label='HOMO'),
+        plt.scatter([0], [0], color='b', marker='s', label='HOMO'),
         Line2D([0], [0], c='r', ls="--", label='I'),
-        plt.scatter([0], [0], c='b', marker="s", lw=2, label='LUMO'),
+        plt.scatter([0], [0], c='r', marker="s", lw=2, label='LUMO'),
     ]
     labels = [r'TiO$_2$', 'LUMO', 'I', "HOMO"]
 
@@ -152,6 +152,7 @@ def scatter_plot(file):
 
     df = {'Name': name, 'LUMO': lumo, 'HOMO': homo, 'Wavelength': wave}
     df = pd.DataFrame(df)
+    df.to_csv('scatter.csv',index=False)
     # plt = df.scatter(x='Name',y='LUMO')
 
     # plt.scatter(x='Name',y='LUMO',c='blue')
@@ -177,6 +178,9 @@ def main():
     #    print(numbs)
 
     for name in numbs.keys():
+        print(name)
+        #optimal_list.append(name)
+        
         #print(numbs[name][2])
         if numbs[name][0] >= -3.75 and numbs[name][0] <= -3.5 and numbs[name][
                 2] > 400.0:

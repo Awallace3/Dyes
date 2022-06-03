@@ -5,6 +5,7 @@ from MO_Dict import xyzcoords
 from gather_results import json_pandas_molecule
 from MO_Dict import *
 from homo_lumo_boxer_csv import *
+import json
 #from gather_results import json_pandas_molecule
 
 
@@ -478,6 +479,8 @@ def main():
     print(smile)
     final = {}
     for x in jobs:
+        filename = '../MO_start/' + str(x) + '/mo/'+ str(x)+'.out'
+
         try:
             filename = '../MO_start_800/' + str(x) + '/mo/' + str(x) + '.out'
             atom = xyzcoords(filename)
@@ -492,6 +495,7 @@ def main():
                                      anchor=True)
             final[x] = mol
         except FileNotFoundError:
+            print('File Not Found:%s '%filename)
             pass
     df = {
         'Name': [],
@@ -533,9 +537,20 @@ def main():
         df['LUMO Acceptor'].append(final[name]['acceptor']['LUMO'])
         df['HOMO Anchor'].append(final[name]['anchor']['HOMO'])
         df['LUMO Anchor'].append(final[name]['anchor']['LUMO'])
-        df['HOMO'].append(round(float(numbs[name][1]),2))
-        df['LUMO'].append(round(float(numbs[name][0]),2))
-        df['Wave'].append(round(float(numbs[name][2]),2))
+        with open(json_file,"r") as read_file:
+            data = json.load(read_file)
+            for mol in data["molecules"]:
+                if mol['name']== name:
+                    for exc in mol["lsf"]:
+                        if exc['exc']==1:
+                            df['HOMO'].append(exc['HOMO'])
+                            df['LUMO'].append(exc['LUMO'])
+                            df['Wave'].append(exc['nm'])
+        
+     #   df['HOMO'].append(round(float(numbs[name][1]),2))
+     #   df['LUMO'].append(round(float(numbs[name][0]),2))
+     #   df['Wave'].append(round(float(numbs[name][2]),2))
+        
 
     #  print(final[name]['donor']['HOMO'])
     # df['Donor']=final[name]['donor'][1]

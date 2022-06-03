@@ -9,7 +9,6 @@ def box0(x):
     name = []
     with open(x, "r") as read_file:
         data = json.load(read_file)
-        #print(data["molecules"][1])
         for mol in data["molecules"]:
             #print(mol['name'])
             cam, pbe = 0, 0
@@ -59,7 +58,6 @@ def box1(x):
     name = []
     with open(x, "r") as read_file:
         data = json.load(read_file)
-        #print(data["molecules"][1])
         for mol in data["molecules"]:
             #print(mol['name'])
             cam, pbe = 0, 0
@@ -109,7 +107,6 @@ def box2(x):
     name = []
     with open(x, "r") as read_file:
         data = json.load(read_file)
-        #print(data["molecules"][1])
         for mol in data["molecules"]:
             #print(mol['name'])
             cam, pbe = 0, 0
@@ -201,51 +198,79 @@ def main():
     wavelength = {}
     homo = {}
     lumo = {}
+    red = {}
     names = []
     #    wavelength_range = '800-1000'
     #    wavelength_range = '600-800'
     wavelength_range = '400-600'
     if wavelength_range == '800-1000':
-        for name in box0(filename).keys():
+        red = box0(filename)
+    #    print(names[0])
+    #print(red)
+        for name in red.keys():
             if 'TPA' in name:
-                pass
+                name 
             else:
                 print(name)
                 wavelength[name] = box0(filename)[name][2]
                 homo[name] = box0(filename)[name][3]
                 lumo[name] = box0(filename)[name][4]
                 names.append(name)
+                wavelength[name]=red[name][0]
+                lumo[name]=red[name][1]
+                homo[name]=red[name][2]
+    #    ranker(homo,lumo,wavelength,names)
     if wavelength_range == '600-800':
-        for name in box1(filename).keys():
+        red = box1(filename)
+    #    print(names[0])
+    #print(red)
+        for name in red.keys():
             if 'TPA' in name:
-                pass
+                name 
             else:
                 print(name)
                 wavelength[name] = box1(filename)[name][2]
                 homo[name] = box1(filename)[name][3]
                 lumo[name] = box1(filename)[name][4]
                 names.append(name)
+                wavelength[name]=red[name][0]
+                lumo[name]=red[name][1]
+                homo[name]=red[name][2]
+    #    ranker(homo,lumo,wavelength,names)
+    
+
     if wavelength_range == '400-600':
-        for name in box2(filename).keys():
+        red = box2(filename)
+    #    print(names[0])
+    #print(red)
+        for name in red.keys():
             if 'TPA' in name:
-                pass
+                name 
             else:
                 wavelength[name] = box2(filename)[name][2]
                 homo[name] = box2(filename)[name][3]
                 lumo[name] = box2(filename)[name][4]
                 names.append(name)
+                wavelength[name]=red[name][0]
+                lumo[name]=red[name][1]
+                homo[name]=red[name][2]
+      #  ranker(homo,lumo,wavelength,names)
+     
 
     if wavelength_range == '800-1000':
         df = ranker(homo, lumo, wavelength, names)
         df.to_csv('data_analysis/800_1000.csv', index=False)
         file = 'data_analysis/800_1000.csv'
         numbs = HOMO_LUMO_dict(file)
+        #print(numbs)
         optimal_list = []
         for name in numbs.keys():
-            optimal_list.append(name)
-            filename = open('data_analysis/test.csv', 'w+')
+            if numbs[name][0]>=-3.75:
+                optimal_list.append(name)
+        filename = open('data_analysis/g_800_1000.csv', 'w+')
         for i in optimal_list:
-            print(i)
+    
+            #print(i)
             a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
                 round(numbs[i][0], 2)) + ',' + str(round(numbs[i][2], 2))
             filename.write(str(a) + '\n')
@@ -257,12 +282,15 @@ def main():
         df.to_csv("data_analysis/600_800.csv", index=False)
         file = 'data_analysis/600_800.csv'
         numbs = HOMO_LUMO_dict(file)
+        #print(numbs)
         optimal_list = []
         for name in numbs.keys():
-            optimal_list.append(name)
-            filename = open('data_analysis/test.csv', 'w+')
+            if numbs[name][0]>=-3.75:
+                optimal_list.append(name)
+        filename = open('data_analysis/g_600_800.csv', 'w+')
         for i in optimal_list:
-            print(i)
+    
+            #print(i)
             a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
                 round(numbs[i][0], 2)) + ',' + str(round(numbs[i][2], 2))
             filename.write(str(a) + '\n')
@@ -277,7 +305,7 @@ def main():
         optimal_list = []
         for name in numbs.keys():
             optimal_list.append(name)
-            filename = open('data_analysis/test.csv', 'w+')
+            filename = open('data_analysis/g_400_600.csv', 'w+')
         for i in optimal_list:
             print(i)
             a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
