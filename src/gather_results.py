@@ -444,7 +444,7 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
         "Name": [],
     }
     for i in method_basis_set:
-        
+
         df[i] = []
     df = pd.DataFrame(df)
     # print(df)
@@ -453,9 +453,9 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
         if 'TPA' in r1['name']:
             pass
         else:
-     #   print(r1['name'])
-    # print(df.Name)
-    # print(r1['name'] in df.Name)
+            #   print(r1['name'])
+            # print(df.Name)
+            # print(r1['name'] in df.Name)
             """
             method_basis_set_lst = ['-' for i in method_basis_set]
             method_basis_set_lst.insert(0, r1['name'])
@@ -470,20 +470,20 @@ def df_molecules_to_df_method_basisset(df_molecules, method_basis_set=[]):
             """
             Names = [str(i) for i in df["Name"].values]
             if str(r1["name"]) not in Names:
-            #print(r1["name"])
+                #print(r1["name"])
                 method_basis_set_lst = [i for i in method_basis_set]
 
                 for n, j in enumerate(method_basis_set_lst):
-                # print(j, r1['method_basis_set'])
+                    # print(j, r1['method_basis_set'])
                     if str(j) == str(r1["method_basis_set"]):
                         method_basis_set_lst[n] = r1["nm"]
 
                 method_basis_set_lst.insert(0, r1["name"])
-            # if r1['name'] == "1ed_16b_1ea":
-            #    print(method_basis_set_lst)
+                # if r1['name'] == "1ed_16b_1ea":
+                #    print(method_basis_set_lst)
                 df.loc[len(df)] = method_basis_set_lst
             else:
-            # df.ix[df['id'] == 12, ['uid','gid']] = ['IN','IN-1']
+                # df.ix[df['id'] == 12, ['uid','gid']] = ['IN','IN-1']
                 for j in method_basis_set:
                     if str(j) == r1["method_basis_set"]:
                         if r1["exc"] == 1:
@@ -1782,7 +1782,7 @@ def main():
         # "./json_files/results_exc.json",
         "./json_files/results_ds5.json",
         output_csv="data_analysis/ds5",
-     #   output_latex="data_analysis/Absorption_nm",
+        #   output_latex="data_analysis/Absorption_nm",
         output_graph="data_analysis/ds5",
         units="eV",
         plot_js=plot_js,

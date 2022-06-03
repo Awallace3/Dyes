@@ -50,3 +50,8 @@ MO_start_B/
 src/*.csv
 src/delcamp.csv
 src/delcamp_theoretical.csv
+
+db_access/results_ds5.json
+db_access/tes2.json
+json_files/t.json
+json_files/test2.json

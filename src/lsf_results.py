@@ -65,7 +65,6 @@ def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json"):
                 pbe0_l = p_d["v_lumo"]
                 pbe0_o = c_d["v_osci"]
                 pbe0_nm = p_d['v_abs']
-                print(c_d, p_d)
                 homo = homo_lsf[0] * cam_h + homo_lsf[1] * pbe0_h
                 lumo = lumo_lsf[0] * cam_l + lumo_lsf[1] * pbe0_l
                 nm = nm_lsf[0] * conv_energy(cam_nm) + nm_lsf[1] * conv_energy(
@@ -103,7 +102,7 @@ def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json"):
 
 def main():
     moleculeList = molecule_json.MoleculeList_exc()
-    moleculeList.setData("../json_files/results_exc.json")
+    moleculeList.setData("../json_files/results_ds5.json")
     homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
     lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
     nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
@@ -167,9 +166,9 @@ def main():
                 nm_lsf
             ],
             "LUMO":
-            homo,
-            "HOMO":
             lumo,
+            "HOMO":
+            homo,
         }
         new_exc = molecule_json.Excitation_exc()
         new_exc.giveData(new_d)
@@ -180,4 +179,4 @@ def main():
 
 
 # main()
-generate_lsf_exc("../json_files/p1.json")
+generate_lsf_exc("../json_files/results_ds5.json")

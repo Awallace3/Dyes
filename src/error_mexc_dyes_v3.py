@@ -25,8 +25,7 @@ def gaussianpbsFiles(
             fp.write("#!/bin/sh\n")
             fp.write(
                 "#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l "
-                % outName.replace("-", "").replace(",", "_")
-            )
+                % outName.replace("-", "").replace(",", "_"))
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             # r410 node
             fp.write("#PBS -q r410\n")
@@ -34,8 +33,7 @@ def gaussianpbsFiles(
             fp.write("#PBS -W umask=022\n")
             # fp.write("#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(
-                "#PBS -l nodes=1:ppn=1\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n"
-            )
+                "#PBS -l nodes=1:ppn=1\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(
                 "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n"
             )
@@ -60,19 +58,15 @@ def gaussianpbsFiles(
             )
             fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
             fp.write(
-                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out".format(
-                    baseName, baseName
-                )
-                + "\n\nrm -r $scrdir\n"
-            )
+                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out"
+                .format(baseName, baseName) + "\n\nrm -r $scrdir\n")
 
     elif cluster == "seq":
         with open("%s/%s.pbs" % (dir_name, baseName), "w") as fp:
             fp.write("#!/bin/sh\n")
             fp.write(
                 "#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -W umask=022\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l "
-                % outName.replace("-", "").replace(",", "_")
-            )
+                % outName.replace("-", "").replace(",", "_"))
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write(
@@ -84,10 +78,8 @@ def gaussianpbsFiles(
             fp.write(
                 "printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n"
             )
-            fp.write(
-                "/usr/local/apps/bin/g09setup %s.com %s.out"
-                % (baseName, baseName)
-            )
+            fp.write("/usr/local/apps/bin/g09setup %s.com %s.out" %
+                     (baseName, baseName))
 
 
 def gaussianInputFiles(
@@ -121,15 +113,11 @@ def gaussianInputFiles(
     read[0] = "%mem={0}mb\n".format(mem_com_opt)
     read[1] = "%nprocs=4\n"
     if solvent == "":
-        read[2] = (
-            "#N %s/%s %s" % (method_opt, basis_set_opt, procedure) + "\n"
-        )
+        read[2] = ("#N %s/%s %s" % (method_opt, basis_set_opt, procedure) +
+                   "\n")
     else:
-        read[2] = (
-            "#N %s/%s %s %s"
-            % (method_opt, basis_set_opt, procedure, solvent_line)
-            + "\n"
-        )
+        read[2] = ("#N %s/%s %s %s" %
+                   (method_opt, basis_set_opt, procedure, solvent_line) + "\n")
     filename.close()
     filename = open("%s/%s.com" % (dir_name, baseName), "w")
     for i in read:
@@ -331,8 +319,8 @@ def find_geom(
                 break
     if stand == 5:
         stand = -1
-    del lines[standards[stand] - 1 + length :]
-    del lines[: standards[stand] - 1]
+    del lines[standards[stand] - 1 + length:]
+    del lines[:standards[stand] - 1]
 
     cleaned_lines = []
     for i in range(len(lines)):
@@ -363,7 +351,6 @@ def xyzToSmiles(length, xyz, geomDirName):
                 fp.write(i[:-2])
             else:
                 fp.write(i)
-
     """
     cmd = 'python3 ../../src/xyz2mol.py ./molecule.xyz'
 
@@ -394,9 +381,8 @@ def xyzToSmiles(length, xyz, geomDirName):
         mol.sendToFile("info.json")
 
 
-def make_input_files_no_constraints(
-    output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster
-):
+def make_input_files_no_constraints(output_num, method_opt, basis_set_opt,
+                                    mem_com_opt, mem_pbs_opt, cluster):
     """Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory"""
     data = ""
     with open("tmp.txt") as fp:
@@ -407,10 +393,8 @@ def make_input_files_no_constraints(
         with open("mex.com", "w") as fp:
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
-            fp.write(
-                "#N {0}".format(method_opt)
-                + "/{0} OPT\n".format(basis_set_opt)
-            )
+            fp.write("#N {0}".format(method_opt) +
+                     "/{0} OPT\n".format(basis_set_opt))
             fp.write("\n")
             fp.write(
                 "Name ModRedundant - Minimalist working constrained optimisation\n"
@@ -454,9 +438,7 @@ def make_input_files_no_constraints(
             fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
             fp.write(
                 "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mex.com mex.out"
-                + str(output_num)
-                + "\n\nrm -r $scrdir\n"
-            )
+                + str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == "seq":
         gaussianInputFiles(
             output_num,
@@ -570,6 +552,86 @@ def clean_energies(hf_1, hf_2, zero_point):
         return float(hf_1[0]) + zero_point
 
 
+def make_exc_mo_freq(method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                     cluster, geomDirName):
+
+    if method_mexc == 'CAM-B3LYP':
+        baseName = 'mexc'
+        dir_name = 'mexc'
+    else:
+        baseName = 'mexc'
+        dir_name = method_mexc.lower()
+    if os.path.exists(dir_name):
+        print('\n%s directory already exists\n' % (dir_name))
+        return
+    os.mkdir(dir_name)
+    procedure = 'TD(NStates=10)'
+    output_num = 0
+    outName = geomDirName
+    gaussianInputFiles(output_num,
+                       method_mexc,
+                       basis_set_mexc,
+                       mem_com_mexc,
+                       mem_pbs_mexc,
+                       cluster,
+                       baseName=baseName,
+                       procedure=procedure,
+                       data='',
+                       dir_name=dir_name,
+                       solvent='',
+                       outName=outName)
+    path = '%s' % dir_name
+    qsub(path)
+    """
+    gaussianInputFiles(output_num, method_opt,
+                    basis_set_opt, mem_com_opt,
+                    mem_pbs_opt, cluster,
+                    baseName='mexc', procedure='OPT',
+                    data='', dir_name='', solvent='',
+                    outName='mexc_o'
+                    ):
+    """
+    """
+    baseName = 'mexc'
+    os.mkdir(baseName)
+    procedure = 'TD(NStates=10)'
+    output_num = 0
+    gaussianInputFiles(output_num, method_mexc,
+                    basis_set_mexc, mem_com_mexc,
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+    """
+    """
+    baseName = 'mo'
+    os.mkdir(baseName)
+    procedure = 'SP GFINPUT POP=FULL'
+    output_num = 0
+    gaussianInputFiles(output_num, method_mexc,
+                    basis_set_mexc, mem_com_mexc,
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+    """
+    """
+    baseName = 'freq'
+    os.mkdir(baseName)
+    procedure = 'FREQ'
+    output_num = 0
+    gaussianInputFiles(output_num, method_mexc,
+                    basis_set_mexc, mem_com_mexc,
+                    mem_pbs_mexc, cluster,
+                    baseName, procedure
+                    )
+    path = '%s' % baseName
+    qsub(path)
+    """
+
+
 word_error = "Error"
 geom_start = "Standard orientation:"
 
@@ -673,9 +735,10 @@ def main(
                 imaginary=imaginary,
                 geomDirName=geomDirName,
             )
-            add_imaginary(
-                freq_clean, freq_lst_len, filename, geomDirName=geomDirName
-            )
+            add_imaginary(freq_clean,
+                          freq_lst_len,
+                          filename,
+                          geomDirName=geomDirName)
 
             make_input_files_no_constraints(
                 output_num,

@@ -6,11 +6,10 @@ import string
 from matplotlib.lines import Line2D
 
 
-
 def HOMO_LUMO_dict(file):
     '''
     HOMO is       index 0 or the first two columns of the csv value
-    LUMO is       index 1 or the third and fourth columns of the csv 
+    LUMO is       index 1 or the third and fourth columns of the csv
     Wavelength is index 2 or the last two columns of the csv
     '''
     filename = open(file, 'r')
@@ -43,10 +42,9 @@ def HOMO_LUMO_dict(file):
             #print(name_dict)
 
         #print(line)
-       #     print(line)
-    
+    #     print(line)
+
     #print(name_dict)
-    
 
     return name_dict
 
@@ -104,14 +102,14 @@ def scatter_plot(file):
         rect = matplotlib.patches.Rectangle([v, p2], .5, 0.03, color='blue')
         plt.gca().add_patch(rect)
         '''
-        
+
         plt.text(v + 0.3,
                  p2 - 0.20,
                  "%s \n " % (homo[v]),
                  va="center",
                  ha="center")
         '''
-        
+
         #plt.annotate(v, p2, )
 
     b = lumo
@@ -131,12 +129,12 @@ def scatter_plot(file):
     #plt.xticks(name)
     plt.scatter(x, b, c='b', s=0, marker='s', label="LUMO")
     plt.tick_params(
-    axis='x',          # changes apply to the x-axis
-    which='both',      # both major and minor ticks are affected
-    bottom=False,  # ticks along the bottom edge are on 
-   # bottom=False,  # ticks alone the bottom are off 
-    top=False,         # ticks along the top edge are off
-    labelbottom=False) # labels along the bottom edge are off
+        axis='x',  # changes apply to the x-axis
+        which='both',  # both major and minor ticks are affected
+        bottom=False,  # ticks along the bottom edge are on
+        # bottom=False,  # ticks alone the bottom are off
+        top=False,  # ticks along the top edge are off
+        labelbottom=False)  # labels along the bottom edge are off
     plt.ylabel("Energy (eV)")
     plt.xlabel("Theoretical Dyes")
 
@@ -146,10 +144,10 @@ def scatter_plot(file):
         p2 = b[v]
         rect = matplotlib.patches.Rectangle([v, p2], 0.5, 0.03, color='red')
         plt.gca().add_patch(rect)
-        
+
     #    plt.text(v+0.3, p2-0.20, "%s \n %s" % (name[v], wave[v]), va="center", ha="center")
-        
-        #plt.annotate(v, p2, )
+
+    #plt.annotate(v, p2, )
     plt.savefig('data_analysis/demo-file.pdf')
 
     df = {'Name': name, 'LUMO': lumo, 'HOMO': homo, 'Wavelength': wave}
@@ -169,47 +167,28 @@ def scatter_plot(file):
 
 
 def main():
-   # file = '../data_analysis/800_1000.csv'
+    # file = '../data_analysis/800_1000.csv'
     #file = '../data_analysis/600_800.csv'
-    file = '../data_analysis/400_600.csv' 
-    
+    file = '../data_analysis/400_600.csv'
+
     numbs = HOMO_LUMO_dict(file)
-   # a = 0
+    # a = 0
     optimal_list = []
-#    print(numbs)
-    
-    
-    
+    #    print(numbs)
+
     for name in numbs.keys():
         #print(numbs[name][2])
-        if numbs[name][0]>=-3.75 and numbs[name][0]<=-3.5 and numbs[name][2]>400.0:
+        if numbs[name][0] >= -3.75 and numbs[name][0] <= -3.5 and numbs[name][
+                2] > 400.0:
             optimal_list.append(name)
-         #   print(name)
-            print(str(name)+','+str(numbs[name][1])+','+str(numbs[name][0])+','+str(numbs[name][2]))
+            #   print(name)
+            print(
+                str(name) + ',' + str(numbs[name][1]) + ',' +
+                str(numbs[name][0]) + ',' + str(numbs[name][2]))
     print(optimal_list)
     print(len(optimal_list))
-    
-
-        
-   # filename = open('test.csv', 'w+')
- #   for i in test_num:
-# for i in optimal_list:
-
-#        a = str(i) + ',' + str(round(numbs[i][1], 2)) + ',' + str(
-#           round(numbs[i][0], 2)) + ',' + str(round(numbs[i][2], 2))
-# #      print(a)
-#      filename.write(str(a) + '\n')
-#  filename.close()
-    
-    
-    
-
-#    scatter_plot('test.csv')
-    # optimal_dyes(numbs)
-
     return
+
+
 if __name__ == '__main__':
     main()
-
-
-

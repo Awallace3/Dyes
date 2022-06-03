@@ -5,12 +5,13 @@ import subprocess
 import time
 
 from .ES_extraction import ES_extraction
-from .absorpt import absorpt
+# from .absorpt import absorpt
 
 from .molecule_json import Molecule
 from .molecule_json import Molecule_exc
 from .molecule_json import MoleculeList
 from .molecule_json import MoleculeList_exc
+from . import molecule_json
 # from .error_mexc_dyes_v2 import main as err_v2
 
 # requires obabel installed...

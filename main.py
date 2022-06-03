@@ -1,7 +1,6 @@
 import json
-import os
 import src
-
+from src.molecule_json import Molecule_exc_to_db
 
 # def user(x, y):
 #     filename = open(x + "/" + "user", "w+")
@@ -130,33 +129,38 @@ import src
 #         os.chdir("..")
 #     return
 
+# def main():
+#     filename = "input.json"
+#     with open(str(filename), "r") as read_file:
+#         config = json.load(read_file)
+#     # user(config["path"]["path_to_final"], config["user"]["user"])
+#
+#     # if config["generateMolecules"]["enable"]:
+#     #     os.chdir(config["path"]["path_to_final"])
+#         # add_methods_1 = add_methods(config)
+#         # combiner(add_methods_1, config)
+#
+#     # ans3 = config["geomopt"]["enable"]
+#     # ans3 = ans3.lower()
+#     # if opt_enabled and not exc_enabled:
+#     #     os.chdir(config["path"]["path_to_results"])
+#         # pbs(config)
+#         # opt(config)
+#         # if config["geomopt"]["submit"] == "no":
+#         #     qsuber(config)
+#
+#     opt_enabled = config["qmgr"]["options"]["opt"]
+#     exc_enabled = config["qmgr"]["options"]["opt"]
+#     if opt_enabled and exc_enabled:
+#         src.qmgr(config["qmgr"])
+#     return
 
-def main():
-    filename = "input.json"
-    with open(str(filename), "r") as read_file:
-        config = json.load(read_file)
-    # user(config["path"]["path_to_final"], config["user"]["user"])
 
-    # if config["generateMolecules"]["enable"]:
-    #     os.chdir(config["path"]["path_to_final"])
-        # add_methods_1 = add_methods(config)
-        # combiner(add_methods_1, config)
-
-    # ans3 = config["geomopt"]["enable"]
-    # ans3 = ans3.lower()
-    # if opt_enabled and not exc_enabled:
-    #     os.chdir(config["path"]["path_to_results"])
-        # pbs(config)
-        # opt(config)
-        # if config["geomopt"]["submit"] == "no":
-        #     qsuber(config)
-
-    opt_enabled = config["qmgr"]["options"]["opt"]
-    exc_enabled = config["qmgr"]["options"]["opt"]
-    if opt_enabled and exc_enabled:
-        src.qmgr(config["qmgr"])
-    return
+def json_to_db():
+    Molecule_exc_to_db('./json_files/test.json',
+                       "./json_files/test2.json")
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    json_to_db()

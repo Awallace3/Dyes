@@ -25,9 +25,10 @@ class Excitation:
         self.method_basis_set = method_basisSet
 
     def toJSON(self):
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
 
 class Excitation_exc(Excitation):
@@ -65,9 +66,10 @@ class Excitation_exc(Excitation):
         print(self.HOMO, self.LUMO)
 
     def toJSON(self):
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
     def toDict(self):
         return vars(self)
@@ -154,9 +156,10 @@ class Molecule:
         self.localName = data["localName"]
 
     def toJSON(self):
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
     def __str__(self):
         return self.toJSON()
@@ -235,9 +238,10 @@ class Molecule_exc:
         self.localName = data["localName"]
 
     def toJSON(self):
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
     def toDict(self):
         return vars(self)
@@ -376,10 +380,8 @@ class MoleculeList:
                 break
 
         if found == False:
-            print(
-                "Creating new Molecule in results.json for %s"
-                % molecule.getName()
-            )
+            print("Creating new Molecule in results.json for %s" %
+                  molecule.getName())
             # self.addMolecule(mol)
             # mol = Molecule()
             self.addMolecule(molecule)
@@ -404,9 +406,10 @@ class MoleculeList:
             fp.write(self.toJSON())
 
     def toJSON(self):
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
     def __str__(self):
         return self.toJSON()
@@ -493,11 +496,9 @@ class MoleculeList_exc:
                     found = True
                     break
 
-        if found == False:
-            print(
-                "Creating new Molecule in results.json for %s"
-                % molecule.getName()
-            )
+        if not found:
+            print("Creating new Molecule in results.json for %s" %
+                  molecule.getName())
             # self.addMolecule(mol)
             # mol = Molecule()
             self.addMolecule(molecule)
@@ -519,12 +520,52 @@ class MoleculeList_exc:
             fp.write(self.toJSON())
 
     def toJSON(self):
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
     def __str__(self):
         return self.toJSON()
 
     def getMoleculeList(self):
         return [Molecule_exc_dict_to_obj(i) for i in self.molecules]
+
+
+def exc_updated():
+    return {}
+
+
+def Molecule_exc_to_db(results_json, output="test.json"):
+    with open(results_json, 'r') as f:
+        data = json.load(f)
+    new = []
+    for i in data["molecules"]:
+        c = []
+        p = []
+        b = []
+        l = []
+        for j in i["excitations"]:
+            if "cam" in j["method_basis_set"].lower():
+                j.pop("method_basis_set")
+                c.append(j)
+            elif "pbe" in j["method_basis_set"].lower():
+                j.pop("method_basis_set")
+                p.append(j)
+            elif "bhand" in j["method_basis_set"].lower():
+                j.pop("method_basis_set")
+                b.append(j)
+            elif "lsf" in j["method_basis_set"].lower():
+                j.pop("method_basis_set")
+                l.append(j)
+            else:
+                print('excitation type not found')
+        i.pop("excitations")
+        i["CAM-B3LYP/6-311G(d,p)"] = c
+        i["PBE1PBE/6-311G(d,p)"] = p
+        i["bhandhlyp/6-311G(d,p)"] = b
+        i["lsf"] = l
+        new.append(i)
+    write = {"molecules": new}
+    with open(output, 'w') as f:
+        f.write(json.dumps(write, indent=4, separators=(',', ':')))
