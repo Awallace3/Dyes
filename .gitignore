@@ -62,3 +62,5 @@ delcamp_theoretical.csv
 smiles/
 json_files/test2.json
 queaforMO/
+ds5batchMO_800_1000/
+src/out.dat

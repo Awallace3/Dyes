@@ -159,7 +159,7 @@ def runjobs(name,number):
 
 
 def main():
-    filename = '../data_analysis/g_800_1000.csv'
+    filename = '../data_analysis/g_600_800.csv'
     path = '/ddn/home3/r2652/chem/Dyes/results_cp/ds_all5'
     path_2 =  '/ddn/home6/r2532/chem/Dyes_2/Dyes/MO_start_test'
     
@@ -167,6 +167,7 @@ def main():
     names = file_reader(filename)
     job_creater_file(names)
     jobs = file_manager('../queaforMO/quea')
+    '''
     os.chdir(path)
 
 
@@ -184,6 +185,7 @@ def main():
         pbsfilecreator('map',str(i),'',str(i) +'/' + 'mo',str(i))
         runjobs(path_2 + '/' + str(i) +'/' + 'mo',str(i))
         os.chdir(path)
+        '''
     
 
 

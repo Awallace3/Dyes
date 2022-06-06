@@ -302,187 +302,48 @@ def homo_lumo_percents(filename,
 
     return mol
 
+def file_reader(path):
+        jobs = []
+        os.chdir(path)
+        for i in os.listdir():
+            print(i)
+            jobs.append(i)
+        os.chdir('../src')
+
+        '''
+        with open(file,'r') as fp:
+                data = fp.readlines()
+                for line in data:
+                        jobs.append(line.replace('\n',''))
+        '''
+        return jobs
+
 
 def main():
 
-    data = json_pandas_molecule('../json_files/results_ds5.json',
-                                results_exc=True)
+  #  data = json_pandas_molecule('../json_files/test2.json',
+   #                             results_exc=True)
     #print(df['name'])
     #  print(df['SMILES']['1ed_1b_1ea'])
-    df = {'Name': data['name'], 'SMILES': data['SMILES']}
+ #   df = {'Name': data['name'], 'SMILES': data['SMILES']}
     #  df2 = {'Name':data['name'],"Exc":data['exc'],"method":data[]]}
-    df = pd.DataFrame(df)
-    df.to_csv('../data_analysis/SMILES_DICT.csv', index=False)
+ #   df = pd.DataFrame(df)
+ #   df.to_csv('../data_analysis/SMILES_DICT.csv', index=False)
     SMILES_csv = '../data_analysis/SMILES_DICT.csv'
     smile = SMILES_FINDER(SMILES_csv)
     # print(smile)
 
-    jobs = ['7ed_29b_10ea', '6ed_29b_2ea', '10ed_28b_7ea']
-    jobs = [
-        '6ed_16b_4ea', '2ed_28b_6ea', '1ed_29b_3ea', '6ed_16b_5ea',
-        '2ed_28b_10ea', '1ed_29b_6ea', '1ed_29b_11ea', '10ed_28b_2ea',
-        '5ed_28b_6ea', '1ed_28b_7ea', '7ed_28b_3ea', '10ed_29b_3ea',
-        '1ed_29b_2ea', '10ed_28b_11ea', '2ed_28b_9ea', '6ed_29b_8ea',
-        '7ed_28b_11ea', '1ed_29b_10ea', '10ed_28b_6ea', '7ed_28b_6ea',
-        '11ed_29b_6ea', '5ed_28b_9ea', '2ed_28b_5ea', '1ed_29b_5ea',
-        '6ed_28b_3ea', '11ed_29b_11ea', '5ed_28b_2ea', '5ed_28b_10ea',
-        '2ed_28b_7ea', '10ed_28b_10ea', '11ed_29b_2ea', '11ed_29b_10ea',
-        '7ed_28b_10ea', '9ed_16b_5ea', '7ed_28b_2ea', '11ed_29b_5ea',
-        '10ed_29b_2ea', '9ed_16b_9ea', '7ed_29b_1ea', '10ed_29b_1ea',
-        '5ed_29b_11ea', '5ed_29b_3ea', '7ed_29b_3ea', '10ed_28b_9ea',
-        '1ed_29b_9ea', '11ed_28b_7ea', '9ed_28b_6ea', '6ed_29b_3ea',
-        '10ed_28b_5ea', '5ed_29b_6ea', '9ed_29b_3ea', '9ed_28b_2ea',
-        '6ed_28b_11ea', '7ed_28b_9ea', '10ed_29b_6ea', '6ed_28b_1ea',
-        '6ed_29b_4ea', '7ed_29b_11ea', '1ed_29b_7ea', '7ed_29b_6ea',
-        '11ed_29b_9ea', '9ed_29b_6ea', '10ed_29b_11ea', '5ed_29b_10ea',
-        '5ed_28b_7ea', '5ed_29b_2ea', '7ed_28b_5ea', '5ed_29b_5ea',
-        '9ed_29b_11ea', '6ed_28b_6ea', '7ed_29b_2ea', '10ed_28b_7ea',
-        '6ed_28b_10ea', '9ed_29b_10ea', '10ed_29b_10ea', '7ed_28b_7ea',
-        '7ed_29b_10ea', '6ed_29b_1ea', '6ed_28b_9ea', '9ed_29b_2ea',
-        '9ed_29b_5ea', '5ed_29b_9ea', '10ed_29b_9ea', '10ed_29b_5ea',
-        '9ed_28b_5ea', '6ed_28b_2ea', '7ed_29b_5ea', '11ed_29b_7ea',
-        '9ed_28b_7ea', '6ed_29b_9ea', '6ed_29b_6ea', '9ed_29b_9ea'
-    ]
-    jobs = [
-        '10ed_29b_7ea', '6ed_28b_7ea', '6ed_29b_10ea', '5ed_29b_7ea',
-        '6ed_16b_5ea', '6ed_29b_9ea', '6ed_29b_6ea', '6ed_29b_2ea',
-        '6ed_29b_11ea', '7ed_28b_7ea', '6ed_29b_5ea', '10ed_28b_7ea',
-        '9ed_29b_7ea', '7ed_29b_9ea', '7ed_29b_10ea'
-    ]
-    jobs = [
-        '5ed_16b_7ea', '6ed_16b_9ea', '7ed_31b_7ea', '6ed_16b_10ea',
-        '6ed_31b_7ea', '6ed_16b_3ea', '2ed_16b_7ea', '6ed_16b_11ea',
-        '6ed_16b_6ea', '7ed_16b_2ea', '10ed_31b_7ea', '7ed_16b_9ea',
-        '6ed_31b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '3ed_16b_2ea',
-        '2ed_16b_2ea', '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea',
-        '7ed_34b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea',
-        '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea',
-        '6ed_31b_9ea'
-    ]
-    jobs = [
-        '6ed_16b_3ea',
-        '2ed_16b_7ea',
-        '6ed_16b_11ea',
-        '6ed_16b_6ea',
-        '7ed_16b_2ea',
-        '6ed_31b_2ea',
-        '3ed_16b_2ea',
-        '2ed_16b_2ea',
-    ]
-    jobs = [
-        '5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea',
-        '7ed_31b_7ea', '7ed_1b_1ea', '6ed_16b_10ea', '6ed_31b_7ea',
-        '9ed_1b_9ea', '9ed_1b_5ea', '11ed_1b_2ea', '9ed_1b_11ea',
-        '7ed_26b_8ea', '7ed_32b_7ea', '2ed_26b_8ea', '6ed_16b_3ea',
-        '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '3ed_26b_8ea',
-        '6ed_16b_6ea', '7ed_16b_2ea', '6ed_26b_8ea', '9ed_26b_8ea',
-        '1ed_26b_8ea', '10ed_31b_7ea', '7ed_16b_9ea', '3ed_20b_4ea',
-        '6ed_31b_2ea', '5ed_20b_4ea', '10ed_20b_4ea', '10ed_32b_7ea',
-        '6ed_32b_2ea', '11ed_1b_9ea', '5ed_16b_2ea', '7ed_16b_6ea',
-        '9ed_16b_7ea', '11ed_26b_8ea', '6ed_1b_4ea', '9ed_20b_1ea',
-        '3ed_16b_2ea', '2ed_16b_2ea', '1ed_16b_7ea', '9ed_9b_4ea',
-        '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea', '2ed_20b_4ea',
-        '7ed_1b_4ea', '10ed_1b_1ea', '11ed_1b_11ea', '5ed_31b_7ea',
-        '7ed_34b_7ea', '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea',
-        '10ed_16b_10ea', '1ed_20b_4ea', '6ed_31b_6ea', '6ed_31b_5ea',
-        '7ed_16b_11ea', '7ed_16b_10ea', '6ed_31b_9ea'
-    ]
-    jobs = [
-        '5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea',
-        '7ed_31b_7ea', '6ed_16b_10ea', '6ed_31b_7ea', '9ed_1b_9ea',
-        '9ed_1b_5ea', '9ed_1b_11ea', '7ed_32b_7ea', '6ed_16b_3ea',
-        '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '6ed_16b_6ea',
-        '7ed_16b_2ea', '9ed_26b_8ea', '1ed_26b_8ea', '10ed_31b_7ea',
-        '7ed_16b_9ea', '3ed_20b_4ea', '6ed_31b_2ea', '5ed_20b_4ea',
-        '10ed_20b_4ea', '10ed_32b_7ea', '6ed_32b_2ea', '11ed_1b_9ea',
-        '5ed_16b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '11ed_26b_8ea',
-        '6ed_1b_4ea', '9ed_20b_1ea', '3ed_16b_2ea', '2ed_16b_2ea',
-        '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea',
-        '7ed_1b_4ea', '11ed_1b_11ea', '5ed_31b_7ea', '7ed_34b_7ea',
-        '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea',
-        '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea',
-        '6ed_31b_9ea'
-    ]
-    jobs = ['5ed_16b_7ea']
-    #  jobs = ['7ed_29b_10ea']
-    jobs = [
-        '5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea',
-        '7ed_31b_7ea', '6ed_16b_10ea', '6ed_31b_7ea', '9ed_1b_9ea',
-        '9ed_1b_5ea', '9ed_1b_11ea', '7ed_32b_7ea', '6ed_16b_3ea',
-        '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '6ed_16b_6ea',
-        '7ed_16b_2ea', '9ed_26b_8ea', '1ed_26b_8ea', '10ed_31b_7ea',
-        '7ed_16b_9ea', '3ed_20b_4ea', '6ed_31b_2ea', '5ed_20b_4ea',
-        '10ed_20b_4ea', '10ed_32b_7ea', '6ed_32b_2ea', '11ed_1b_9ea',
-        '5ed_16b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '11ed_26b_8ea',
-        '6ed_1b_4ea', '9ed_20b_1ea', '3ed_16b_2ea', '2ed_16b_2ea',
-        '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea',
-        '7ed_1b_4ea', '11ed_1b_11ea', '5ed_31b_7ea', '7ed_34b_7ea',
-        '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea',
-        '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea',
-        '6ed_31b_9ea', '7ed_16b_3ea', '7ed_31b_6ea', '9ed_31b_7ea',
-        '7ed_31b_5ea', '7ed_32b_2ea', '6ed_32b_6ea', '6ed_31b_10ea',
-        '5ed_33b_7ea', '3ed_16b_10ea', '10ed_16b_5ea', '2ed_33b_7ea',
-        '6ed_31b_3ea', '11ed_1b_3ea', '5ed_16b_10ea', '10ed_16b_6ea',
-        '7ed_31b_10ea', '1ed_32b_7ea', '6ed_35b_7ea', '7ed_32b_6ea',
-        '7ed_33b_2ea', '3ed_16b_9ea'
-    ]
-    jobs = [
-        '10ed_29b_7ea', '6ed_28b_7ea', '6ed_29b_10ea', '5ed_29b_7ea',
-        '6ed_16b_5ea', '6ed_29b_9ea', '6ed_29b_6ea', '6ed_29b_2ea',
-        '6ed_29b_11ea', '7ed_28b_7ea', '6ed_29b_5ea', '10ed_28b_7ea',
-        '9ed_29b_7ea', '7ed_29b_9ea', '7ed_29b_10ea', '7ed_29b_2ea',
-        '1ed_29b_7ea', '7ed_29b_6ea', '5ed_28b_7ea', '11ed_29b_7ea',
-        '7ed_29b_5ea', '6ed_28b_2ea', '10ed_29b_9ea', '7ed_29b_11ea',
-        '10ed_29b_10ea'
-    ]
-    jobs = [
-        '5ed_16b_7ea', '6ed_16b_9ea', '10ed_26b_8ea', '9ed_1b_6ea',
-        '7ed_31b_7ea', '6ed_16b_10ea', '6ed_31b_7ea', '9ed_1b_9ea',
-        '9ed_1b_5ea', '9ed_1b_11ea', '7ed_32b_7ea', '6ed_16b_3ea',
-        '2ed_16b_7ea', '11ed_1b_10ea', '6ed_16b_11ea', '6ed_16b_6ea',
-        '7ed_16b_2ea', '9ed_26b_8ea', '1ed_26b_8ea', '10ed_31b_7ea',
-        '7ed_16b_9ea', '3ed_20b_4ea', '6ed_31b_2ea', '5ed_20b_4ea',
-        '10ed_20b_4ea', '10ed_32b_7ea', '6ed_32b_2ea', '11ed_1b_9ea',
-        '5ed_16b_2ea', '7ed_16b_6ea', '9ed_16b_7ea', '11ed_26b_8ea',
-        '6ed_1b_4ea', '9ed_20b_1ea', '3ed_16b_2ea', '2ed_16b_2ea',
-        '1ed_16b_7ea', '7ed_33b_7ea', '7ed_31b_2ea', '11ed_1b_5ea',
-        '7ed_1b_4ea', '11ed_1b_11ea', '5ed_31b_7ea', '7ed_34b_7ea',
-        '2ed_32b_7ea', '10ed_16b_9ea', '10ed_33b_7ea', '10ed_16b_10ea',
-        '6ed_31b_6ea', '6ed_31b_5ea', '7ed_16b_11ea', '7ed_16b_10ea',
-        '6ed_31b_9ea', '7ed_16b_3ea', '7ed_31b_6ea', '9ed_31b_7ea',
-        '7ed_31b_5ea', '7ed_32b_2ea', '6ed_32b_6ea', '6ed_31b_10ea',
-        '5ed_33b_7ea', '3ed_16b_10ea', '10ed_16b_5ea', '2ed_33b_7ea',
-        '6ed_31b_3ea', '11ed_1b_3ea', '5ed_16b_10ea', '10ed_16b_6ea',
-        '7ed_31b_10ea', '1ed_32b_7ea', '6ed_35b_7ea', '7ed_32b_6ea',
-        '7ed_33b_2ea', '3ed_16b_9ea'
-    ]
-    jobs = [
-        '10ed_29b_7ea', '6ed_28b_7ea', '6ed_29b_10ea', '5ed_29b_7ea',
-        '6ed_16b_5ea', '6ed_29b_9ea', '6ed_29b_6ea', '6ed_29b_2ea',
-        '6ed_29b_11ea', '7ed_28b_7ea', '6ed_29b_5ea', '10ed_28b_7ea',
-        '9ed_29b_7ea', '7ed_29b_9ea', '7ed_29b_10ea', '7ed_29b_2ea',
-        '1ed_29b_7ea', '7ed_29b_6ea', '5ed_28b_7ea', '11ed_29b_7ea',
-        '7ed_29b_5ea', '6ed_28b_2ea', '10ed_29b_9ea', '7ed_29b_11ea',
-        '10ed_29b_10ea', '6ed_28b_5ea', '2ed_28b_7ea', '10ed_29b_5ea',
-        '10ed_29b_6ea', '6ed_28b_10ea', '6ed_28b_6ea', '10ed_29b_11ea',
-        '5ed_29b_2ea', '5ed_29b_10ea', '9ed_28b_7ea', '6ed_28b_9ea',
-        '5ed_29b_11ea', '7ed_29b_3ea', '5ed_29b_9ea', '6ed_29b_1ea',
-        '5ed_29b_6ea', '7ed_28b_2ea', '6ed_29b_3ea', '6ed_28b_11ea',
-        '1ed_28b_7ea', '7ed_28b_5ea', '9ed_29b_9ea', '5ed_29b_5ea',
-        '10ed_28b_9ea', '7ed_28b_6ea', '9ed_29b_2ea', '10ed_29b_2ea',
-        '7ed_28b_9ea', '7ed_28b_10ea', '5ed_29b_3ea', '9ed_29b_10ea',
-        '11ed_28b_7ea', '10ed_28b_6ea', '10ed_28b_5ea', '1ed_29b_9ea',
-        '9ed_16b_9ea', '9ed_29b_6ea', '9ed_29b_5ea', '10ed_28b_10ea',
-        '1ed_29b_10ea', '1ed_29b_2ea', '9ed_29b_11ea'
-    ]
+    jobs = ['6ed_41b_12ea']
+    path_to_MO = '../ds5batchMO_800_1000/'  
+    jobs = file_reader(path_to_MO)
 
     print(smile)
     final = {}
     for x in jobs:
-        filename = '../MO_start/' + str(x) + '/mo/'+ str(x)+'.out'
+        #filename = '../MO_start/' + str(x) + '/mo/'+ str(x)+'.out'
 
         try:
-            filename = '../MO_start_800/' + str(x) + '/mo/' + str(x) + '.out'
+            filename = '../ds5batchMO_800_1000/' + str(x) + '/mo/' + str(x) + '.out'
             atom = xyzcoords(filename)
             aa = numericalize(jobs, smile)
             jobname = x
@@ -512,7 +373,17 @@ def main():
         'Wave': [],
     }
     # numbs = HOMO_LUMO_dict('../data_analysis/600_800.csv')
-    numbs = HOMO_LUMO_dict('../data_analysis/800_1000.csv')
+    #numbs = HOMO_LUMO_dict('../data_analysis/800_1000.csv')
+    with open('../json_files/test2.json',"r") as read_file:
+            data = json.load(read_file)
+            for name in final.keys():
+                for mol in data["molecules"]:
+                    if mol['name']== name:
+                        for exc in mol["lsf"]:
+                            if exc['exc']==1:
+                                df['HOMO'].append(exc['HOMO'])
+                                df['LUMO'].append(exc['LUMO'])
+                                df['Wave'].append(exc['nm'])
 
     for name in final.keys():
         '''
@@ -537,15 +408,8 @@ def main():
         df['LUMO Acceptor'].append(final[name]['acceptor']['LUMO'])
         df['HOMO Anchor'].append(final[name]['anchor']['HOMO'])
         df['LUMO Anchor'].append(final[name]['anchor']['LUMO'])
-        with open(json_file,"r") as read_file:
-            data = json.load(read_file)
-            for mol in data["molecules"]:
-                if mol['name']== name:
-                    for exc in mol["lsf"]:
-                        if exc['exc']==1:
-                            df['HOMO'].append(exc['HOMO'])
-                            df['LUMO'].append(exc['LUMO'])
-                            df['Wave'].append(exc['nm'])
+
+ 
         
      #   df['HOMO'].append(round(float(numbs[name][1]),2))
      #   df['LUMO'].append(round(float(numbs[name][0]),2))
@@ -559,7 +423,7 @@ def main():
 
     df = pd.DataFrame(df)
     print(df)
-    df.to_csv('fin.csv', index=False)
+    df.to_csv('../data_analysis/fin.csv', index=False)
     '''
     for key in final.keys():
         print(key)
