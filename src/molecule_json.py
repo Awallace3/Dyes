@@ -561,11 +561,17 @@ def Molecule_exc_to_db(results_json, output="test.json"):
             else:
                 print('excitation type not found')
         i.pop("excitations")
-        i["CAM-B3LYP/6-311G(d,p)"] = c
-        i["PBE1PBE/6-311G(d,p)"] = p
-        i["bhandhlyp/6-311G(d,p)"] = b
+        # i["CAM-B3LYP/6-311G(d,p)"] = c
+        # i["PBE1PBE/6-311G(d,p)"] = p
+        # i["bhandhlyp/6-311G(d,p)"] = b
+        i["CAM_B3LYP_6_311G_d_p"] = c
+        i["PBE1PBE_6_311G_d_p"] = p
+        i["bhandhlyp_6_311G_d_p"] = b
         i["lsf"] = l
         new.append(i)
     write = {"molecules": new}
     with open(output, 'w') as f:
         f.write(json.dumps(write, indent=4, separators=(',', ':')))
+    return new
+
+

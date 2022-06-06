@@ -1,7 +1,10 @@
 from molecule_json import *
 import json
 
-def molecule_list_json_to_exc(path_results_json='../results.json', path_out_json='../results_exc.json', exp=False):
+
+def molecule_list_json_to_exc(path_results_json='../results.json',
+                              path_out_json='../results_exc.json',
+                              exp=False):
     with open(path_results_json) as json_file:
         og_json = json.load(json_file)
     added = []
@@ -39,7 +42,10 @@ def molecule_list_json_to_exc(path_results_json='../results.json', path_out_json
 
 def main():
     # molecule_list_json_to_exc('../Benchmark/benchmarks.json', '../Benchmark/benchmarks_exc.json', exp=True)
-    molecule_list_json_to_exc('../results.json', '../results_exc.json', exp=False)
+    molecule_list_json_to_exc('../results.json',
+                              '../results_exc.json',
+                              exp=False)
+
 
 if __name__ == "__main__":
     main()

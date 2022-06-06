@@ -1,3 +1,16 @@
+import pickle
+
+
+def write_pickle(data, fname='mol.pickle'):
+    with open(fname, 'wb') as handle:
+        pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def read_pickle(fname='mol.pickle'):
+    with open(fname, 'rb') as handle:
+        return pickle.load(handle)
+
+
 def p1():
     return [
         '9ed_34b_8ea', '5ed_12b_6ea', '11ed_28b_10ea', '3ed_11b_3ea',
@@ -6531,7 +6544,23 @@ def ds5():
     ]
 
 
+def ds_all5_pickle():
+    with open('t.txt', 'r') as f:
+        d = f.readlines()
+    for n, i in enumerate(d):
+        d[n] = i.rstrip()
+    write_pickle(d, 'ds_all5.pickle')
+
+
+def ds_all5():
+    return read_pickle('dataset_names/ds_all5.pickle')
+
+
 def ds5_err():
     return [
         "7ed_40b_9ea",
     ]
+
+
+if __name__ == "__main__":
+    ds_all5_pickle()

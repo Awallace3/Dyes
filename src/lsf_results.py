@@ -1,4 +1,4 @@
-import molecule_json
+from . import molecule_json
 
 
 class lsfExcGather():
@@ -25,7 +25,7 @@ def conv_energy(val, rounding=3):
     return round(h * c / (float(val) * J_over_eV), rounding)
 
 
-def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json"):
+def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json", output_json="../json_files/test.json"):
     moleculeList = molecule_json.MoleculeList_exc()
     moleculeList.setData(results_json)
     homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
@@ -96,7 +96,7 @@ def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json"):
                 mol.appendExcitations([new_exc])
         d[n] = mol
     moleculeList.setMolecules(d)
-    moleculeList.sendToFile("../json_files/test.json")
+    moleculeList.sendToFile(output_json)
     return
 
 
@@ -179,4 +179,5 @@ def main():
 
 
 # main()
-generate_lsf_exc("../json_files/results_ds5.json")
+if __name__ == "__main__":
+    generate_lsf_exc("../json_files/results_ds5.json")

@@ -1,3 +1,11 @@
+# from SMILES_COMB import SMILES_COMB
+from src.molecule_json import Molecule_exc
+from src.molecule_json import MoleculeList_exc
+from src.absorpt import absorpt
+from src import ES_extraction
+from src import error_mexc_dyes_v2
+from src import error_mexc_dyes_v1
+from src import lsf_results
 import os
 import itertools
 import glob
@@ -5,19 +13,15 @@ import subprocess
 import time
 import sys
 from dataset_names import ds
+import dataset_names
 import json
+import pickle
+from src.molecule_json import Molecule_exc_to_db
 
 sys.path.insert(1,
                 "./src")  # this adds src to python path at runtime for modules
-import error_mexc_dyes_v1
-import error_mexc_dyes_v2
-import ES_extraction
-from absorpt import absorpt
 
 # from molecule_json import *
-from molecule_json import MoleculeList_exc
-from molecule_json import Molecule_exc
-from SMILES_COMB import SMILES_COMB
 
 # requires obabel installed...
 # brew install obabel
@@ -84,9 +88,7 @@ def smilesRingCleanUp(f, s, t):
     return line, name, formalName
 
 
-def generateSMILESinputs(
-    smiles_tuple_list,
-):
+def generateSMILESinputs(smiles_tuple_list, ):
     smiles = {}
     for num, i in enumerate(smiles_tuple_list):
         first, second, third = i
@@ -210,8 +212,7 @@ def add_excitation_data(
     method_mexc,
     basis_set_mexc,
 ):
-    occVal, virtVal = ES_extraction.ES_extraction("%s/%s.out" %
-                                                  (dir_name, baseName))
+    occVal, virtVal = ES_extraction("%s/%s.out" % (dir_name, baseName))
     if occVal == virtVal and occVal == 0:
         print("failed to add")
         return 0, 0
@@ -380,7 +381,7 @@ def jobResubmit_v2(
                 if (complete[num] < 2 and len(mexc_check_out) > 0
                         and len(mexc_check_out_complete) > 0):
                     """
-                    #occVal, virtVal = ES_extraction.ES_extraction('mexc/mexc.out')
+                    #occVal, virtVal = ES_extraction('mexc/mexc.out')
                     #if occVal == virtVal and occVal == 0:
                     #    print(j)
                     mol = Molecule()
@@ -569,7 +570,7 @@ def gather_excitation_data(path_results,
         else:
             mol = Molecule_exc()
             mol.setData("info.json")
-            occVal, virtVal = ES_extraction.ES_extraction("mexc/mexc.out")
+            occVal, virtVal = ES_extraction("mexc/mexc.out")
             if occVal == 0 and occVal == 0:
                 print(i, "no data found in mexc/mexc.out\n")
                 failed.append(i)
@@ -654,35 +655,101 @@ def cleanResultsExcEmpty(results_json, results_json_out="clean.json"):
     return
 
 
-def main():
-    three_types = ["eDonors", "backbones", "eAcceptors"]
-    #banned = ["42b", "26b", "27b"]
-    banned = []
-    three_types = [
-        "eDonors",
-        "backbones",
-        "eAcceptors",
-    ]
-    # cleanResultsExcEmpty(results_json="json_files/results_ds5.json",
-    #                      results_json_out='json_files/p1.json')
-    resubmit_delay_min = 0.001  # 60 * 12
-    resubmit_max_attempts = 1
+def write_pickle(data, fname='mol.pickle'):
+    with open(fname, 'wb') as handle:
+        pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    # geometry optimization options
-    method_opt = "B3LYP"
-    # method_opt = "HF"
-    basis_set_opt = "6-311G(d,p)"
-    # basis_set_opt = "6-31G"
-    mem_com_opt = "1600"  # mb
-    mem_pbs_opt = "10"  # gb
 
-    # TD-DFT options
+def read_pickle(fname='mol.pickle'):
+    with open(fname, 'rb') as handle:
+        return pickle.load(handle)
+
+
+def read_json(file):
+    with open(file, 'r') as f:
+        return json.load(f)
+
+
+def write_json(data, file):
+    with open(file, 'w') as f:
+        f.write(
+            json.dumps(data,
+                       default=lambda o: o.__dict__,
+                       sort_keys=True,
+                       indent=4))
+
+
+def gather_dye_data(
+    dyes,
+    path_results="results_cp/ds_all5",
+    path_pickle="pickles/ds_all5.pickle",
+    results_json="./json_files/ds_all5.json",
+    output_json="json_files/ds_all5_out.json",
+    add_methods={
+        "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
+        "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
+        "solvent": ["", "", ""],
+        "mem_com": ["1600", "1600", "1600"],
+        "mem_pbs": ["10", "10", "10"],
+    }):
     method_mexc = "CAM-B3LYP"
     basis_set_mexc = "6-311G(d,p)"
-    mem_com_mexc = "1600"  # mb
-    mem_pbs_mexc = "10"  # gb"
+    if not os.path.exists(output_json):
+        write_json({"molecules": []}, results_json)
+    # gather_excitation_data(path_results,
+    #                        dyes,
+    #                        add_methods,
+    #                        method_mexc,
+    #                        basis_set_mexc,
+    #                        exc_json=True,
+    #                        results_json=results_json)
+    # lsf_results.generate_lsf_exc(results_json, results_json)
+    # print("LSF results")
+    data = Molecule_exc_to_db(results_json, output_json)
+    print("Broken up excitations")
+    dyes_dict = {}
+    for i in data:
+        k = i["localName"]
+        i.pop("localName")
+        i["score"] = -1
+        dyes_dict[k] = i
+    print("Dye dict formed")
+    write_json(dyes_dict, output_json)
+    print("Last json output")
+    write_pickle(dyes_dict, path_pickle)
+    return
 
-    cluster = "map"
+
+def main():
+    gather_dye_data(dataset_names.ds.ds_all5())
+    #  three_types = ["eDonors", "backbones", "eAcceptors"]
+    #  #banned = ["42b", "26b", "27b"]
+    #  banned = []
+    #  three_types = [
+    #      "eDonors",
+    #      "backbones",
+    #      "eAcceptors",
+    #  ]
+    #  # cleanResultsExcEmpty(results_json="json_files/results_ds5.json",
+    #  #                      results_json_out='json_files/p1.json')
+    #  resubmit_delay_min = 0.001  # 60 * 12
+    #  resubmit_max_attempts = 1
+
+    #  # geometry optimization options
+    #  method_opt = "B3LYP"
+    #  # method_opt = "HF"
+    #  basis_set_opt = "6-311G(d,p)"
+    #  # basis_set_opt = "6-31G"
+    #  mem_com_opt = "1600"  # mb
+    #  mem_pbs_opt = "10"  # gb
+
+    #  # TD-DFT options
+    #  method_mexc = "CAM-B3LYP"
+    #  basis_set_mexc = "6-311G(d,p)"
+    #  mem_com_mexc = "1600"  # mb
+    #  mem_pbs_mexc = "10"  # gb"
+
+    #  cluster = "map"
     # cluster = "seq"
 
     # localStructuresDict = collectLocalStructures(three_types, banned)
@@ -707,6 +774,7 @@ def main():
         "mem_com": ["1600", "1600", "1600"],
         "mem_pbs": ["10", "10", "10"],
     }
+
     # ds3 = read_ds_from_file("ds3.txt")
     # ds4 = read_ds_from_file("ds4.txt")
 
@@ -786,13 +854,16 @@ def main():
     #                        basis_set_mexc,
     #                        results_json='json_files/benchmarks_exc.json',
     #                        exc_json=True)
-    gather_excitation_data('results_cp/ds5',
-                           ds.ds5(),
-                           add_methods,
-                           method_mexc,
-                           basis_set_mexc,
-                           results_json='json_files/results_ds5.json',
-                           exc_json=True)
+
+    # method_mexc = "CAM-B3LYP"
+    # basis_set_mexc = "6-311G(d,p)"
+    # gather_excitation_data('results_cp/ds_all5',
+    #                        ds.ds_all5(),
+    #                        add_methods,
+    #                        method_mexc,
+    #                        basis_set_mexc,
+    #                        results_json='json_files/ds_all5.json',
+    #                        exc_json=True)
     """
     method_mexc = 'CAM-B3LYP'
     basis_set_mexc = '6-311G(d,p)'
