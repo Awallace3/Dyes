@@ -68,3 +68,5 @@ dataset_names/__pycache__
 json_files/results.json
 json_files/p1.json
 json_files/ds1_results.json
+ds5batchMO_800_1000/
+src/out.dat
