@@ -251,6 +251,7 @@ def plot_absoprtion_lambda_max(pickle_path="./pickles/ds_all5.pickle",
 
     df[sort_by].dropna()
     xs = range(len(df[sort_by]))
+    print(len(xs))
     for k in plot_methods:
         label, color = method_name_converter(k)
         plt.plot(xs, df[k], color=color, label=label, linewidth=0.5)

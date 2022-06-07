@@ -45,7 +45,6 @@ def generate_gaussian(m,
     ys_2 = normalize(ys_2, max_y)
     ys = []
     for i in ys_2:
-        #print(i)
         ys.append(i)
     for i in ys_1:
         ys.append(i)
@@ -75,14 +74,14 @@ def score_dye_LUMO(LUMO_energy):
 
 
 def absorption_score(lambd):
-    score = ((lambd-600)/400)*100
+    score = ((lambd - 600) / 400) * 100
     return score
 
-def orbital_score(homodonor,lumoacceptor,lumoanchor):
-    a = (float(lumoacceptor)+float(lumoanchor))/2
-    b = (float(homodonor)+float(lumoacceptor))/2
-    s = (a+b)/2
 
+def orbital_score(homodonor, lumoacceptor, lumoanchor):
+    a = (float(lumoacceptor) + float(lumoanchor)) / 2
+    b = (float(homodonor) + float(lumoacceptor)) / 2
+    s = (a + b) / 2
     return s
 
 
@@ -100,26 +99,25 @@ def test_graph():
 
 def main():
     filename = '../data_analysis/fin.csv'
-#    filename = '../data_analysis/benchscore.csv'
+    #    filename = '../data_analysis/benchscore.csv'
     df = {
-        'Name':[],
-        'Absorption Score':[],
-        'LUMO Score':[],
-        'Charge Transfer Score':[],
-        'HOMO Donor':[],
-        'LUMO Acceptor':[],
-        'LUMO Anchor':[],
-        'HOMO Energy':[],
-        'LUMO energy':[],
-        'Wave':[],
-        'Total Score':[]
+        'Name': [],
+        'Absorption Score': [],
+        'LUMO Score': [],
+        'Charge Transfer Score': [],
+        'HOMO Donor': [],
+        'LUMO Acceptor': [],
+        'LUMO Anchor': [],
+        'HOMO Energy': [],
+        'LUMO energy': [],
+        'Wave': [],
+        'Total Score': []
     }
     #test_graph()
-    with open(filename,'r') as fp:
+    with open(filename, 'r') as fp:
         data = fp.readlines()
         for line in data[1:]:
             line = line.split(',')
-
             '''
             # Benchmark Dyes
             LUMO_energy = float(line[5])
@@ -131,19 +129,19 @@ def main():
             c = orbital_score(homodonor,lumoacceptor,lumoanchor)
             ###
             '''
-            
-            
+
             LUMO_energy = float(line[9])
             HOMO_energy = float(line[8])
             lambd = float(line[11])
-            homodonor=line[1]
-            lumoacceptor=line[6]
-            lumoanchor=line[8]
-            
-            if float(lambd) < 600 or float(LUMO_energy)<-3.75 or float(lumoanchor)<4.0:
+            homodonor = line[1]
+            lumoacceptor = line[6]
+            lumoanchor = line[8]
+
+            if float(lambd) < 600 or float(LUMO_energy) < -3.75 or float(
+                    lumoanchor) < 4.0:
                 v = score_dye_LUMO(LUMO_energy)
                 y = absorption_score(lambd)
-                c = orbital_score(homodonor,lumoacceptor,lumoanchor)
+                c = orbital_score(homodonor, lumoacceptor, lumoanchor)
                 df['Name'].append(line[0])
                 df['Absorption Score'].append(y)
                 df['LUMO Score'].append(v)
@@ -159,7 +157,7 @@ def main():
 
                 v = score_dye_LUMO(LUMO_energy)
                 y = absorption_score(lambd)
-                c = orbital_score(homodonor,lumoacceptor,lumoanchor)
+                c = orbital_score(homodonor, lumoacceptor, lumoanchor)
                 df['Name'].append(line[0])
                 df['Absorption Score'].append(y)
                 df['LUMO Score'].append(v)
@@ -170,21 +168,18 @@ def main():
                 df['HOMO Energy'].append(HOMO_energy)
                 df['LUMO energy'].append(LUMO_energy)
                 df['Wave'].append(lambd)
-                df['Total Score'].append(v+y+c)
+                df['Total Score'].append(v + y + c)
                 print('LUMO score:', v)
-                print('Absorption score:',y)
-                print('Charge transfer score:',int(c))
-    df=pd.DataFrame(df)
+                print('Absorption score:', y)
+                print('Charge transfer score:', int(c))
+    df = pd.DataFrame(df)
     print(df)
-    
-    df.to_csv('../data_analysis/scoring.csv',index=False)
 
+    df.to_csv('../data_analysis/scoring.csv', index=False)
 
-
-
-#    test_graph()
-#    LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
-#    for i in LUMO_ener:
+    #    test_graph()
+    #    LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
+    #    for i in LUMO_ener:
 
     return
 
