@@ -28,11 +28,12 @@ def generate_gaussian(m,
         if x < cut_off:
             y = 0
             zeros.append(0)
-        
+
+
 #        elif x >= -3.75 and x <= -3.59:
 #            y = 100
 #            ys_1.append(y)
-        
+
         elif x < m:
             s = ss[0]
             y = math.exp(-(x - m)**2 /
@@ -66,7 +67,7 @@ def score_dye_LUMO(LUMO_energy):
         s = 0.1
         y = math.exp(
             -(x - m)**2 /
-            (2 * s**2)) / (s * math.sqrt(2 * math.pi)) * 25.191928011443522
+            (2 * s**2)) / (s * math.sqrt(2 * math.pi)) * 37.68307130217745
     elif x >= m:
         s = 0.25
         y = math.exp(
@@ -100,6 +101,7 @@ def test_graph():
 
 
 def main():
+    # test_graph()
     filename = '../data_analysis/fin.csv'
     #    filename = '../data_analysis/benchscore.csv'
     df = {
@@ -115,7 +117,6 @@ def main():
         'Wave': [],
         'Total Score': []
     }
-    #test_graph()
     with open(filename, 'r') as fp:
         data = fp.readlines()
         for line in data[1:]:
@@ -179,9 +180,9 @@ def main():
 
     df.to_csv('../data_analysis/scoring.csv', index=False)
 
-    #    test_graph()
-    #    LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
-    #    for i in LUMO_ener:
+       test_graph()
+       LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
+       for i in LUMO_ener:
 
     return
 
