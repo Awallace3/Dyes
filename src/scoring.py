@@ -13,10 +13,10 @@ def normalize(ls, max_y):
 
 
 def generate_gaussian(m,
-                      ss=[0.1, 0.5],
+                      ss=[0.1, 0.25],
                       max_y=100,
                       x_range=[-2, -4],
-                      cut_off=-3.6):
+                      cut_off=-3.85):
     xs = range(int(x_range[0] * 100), int(x_range[1] * 100), -1)
     xs = [i / 100 for i in xs]
     ys_1 = []
@@ -28,9 +28,11 @@ def generate_gaussian(m,
         if x < cut_off:
             y = 0
             zeros.append(0)
-        elif x >= -3.75 and x <= -3.59:
-            y = 100
-            ys_1.append(y)
+        
+#        elif x >= -3.75 and x <= -3.59:
+#            y = 100
+#            ys_1.append(y)
+        
         elif x < m:
             s = ss[0]
             y = math.exp(-(x - m)**2 /
@@ -86,9 +88,9 @@ def orbital_score(homodonor, lumoacceptor, lumoanchor):
 
 
 def test_graph():
-    data = generate_gaussian(-3.6,
-                             ss=[0.1, 0.25],
-                             cut_off=-3.75,
+    data = generate_gaussian(-3.7,
+                             ss=[0.15, 0.25],
+                             cut_off=-3.85,
                              x_range=[-2.5, -4])
     plt.plot(data[:, 0], data[:, 1], label="MO Scoring")
     plt.xlabel("LUMO energy (eV)")
@@ -131,7 +133,7 @@ def main():
             '''
 
             LUMO_energy = float(line[9])
-            HOMO_energy = float(line[8])
+            HOMO_energy = float(line[10])
             lambd = float(line[11])
             homodonor = line[1]
             lumoacceptor = line[6]
