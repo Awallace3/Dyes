@@ -60,13 +60,8 @@ def generate_gaussian(m,
 
 def score_dye_LUMO(LUMO_energy):
     x = LUMO_energy
-<<<<<<< HEAD
     m = -3.75
     if x < -3.75:
-=======
-    m = -3.7
-    if x < -3.85:
->>>>>>> 9ca7e078935731a559d980453cf0ce1526acc291
         y = 0
     elif x < m:
         s = 0.15
@@ -107,7 +102,6 @@ def test_graph():
     plt.savefig("../data_analysis/scoring.png")
     plt.show()
 
-<<<<<<< HEAD
 
 def main():
     #test_graph()
@@ -117,11 +111,9 @@ def main():
  #   filename = '../data_analysis/benchscore.csv'
     output_file = '../data_analysis/scoring_600'
     
-=======
 def score_dyes():
     filename = '../data_analysis/fin.csv'
     #    filename = '../data_analysis/benchscore.csv'
->>>>>>> 9ca7e078935731a559d980453cf0ce1526acc291
     df = {
         'Name': [],
         'Absorption Score': [],
@@ -223,7 +215,6 @@ def score_dyes():
     df = pd.DataFrame(df)
     print(df)
 
-<<<<<<< HEAD
     df.to_csv('../data_analysis/%s.csv' % output_file, index=False)
     print('There has been a value error for these dyes')
     print(error)
@@ -237,18 +228,6 @@ def score_dyes():
     """
     
   
-=======
-    df.to_csv('../data_analysis/scoring.csv', index=False)
-
-    #   test_graph()
-    #   LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
-    #   for i in LUMO_ener:
-
-
-def main():
-    test_graph()
-    # score_dyes()
->>>>>>> 9ca7e078935731a559d980453cf0ce1526acc291
 
     return
 
