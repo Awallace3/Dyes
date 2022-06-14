@@ -29,8 +29,10 @@ def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json", output_js
     moleculeList = molecule_json.MoleculeList_exc()
     moleculeList.setData(results_json)
     homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
-    lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
-    nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
+    # lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
+    # nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
+    lumo_lsf = [0.76, 0.67]  # CAM - PBE
+    nm_lsf = [1.31, -0.47]  # CAM - PBE
 
     d = moleculeList.getMoleculeList()
     for n, mol in enumerate(d):
