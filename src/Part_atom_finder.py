@@ -9,6 +9,9 @@ import json
 #from gather_results import json_pandas_molecule
 
 
+
+
+
 def SMILES_FINDER(SMILES_csv):
     filename = open(SMILES_csv, 'r')
     data = filename.readlines()
@@ -317,33 +320,55 @@ def file_reader(path):
                         jobs.append(line.replace('\n',''))
         '''
         return jobs
+def json_reader(json_file,jobs):
+    smiles = {}
+    with open(json_file,'r') as fp:
+        data = json.load(fp)
+        for name in jobs:
+
+
+            smiles[name]=data[name]
+    '''
+    df = {'Name': name, 'SMILES': smiles}
+    df = pd.DataFrame(df)
+    print(df)
+    
+    #  df2 = {'Name':data['name'],"Exc":data['exc'],"method":data[]]}
+    df = pd.DataFrame(df)
+    print(df)
+    df.to_csv('../data_analysis/SMILES_DICT.csv', index=False)
+    SMILES_csv = '../data_analysis/SMILES_DICT.csv'
+    smile = SMILES_FINDER(SMILES_csv)
+    '''
+
+    return smiles
 
 
 def main():
 
   #  data = json_pandas_molecule('../json_files/test2.json',
-   #                             results_exc=True)
+  #                              results_exc=True)
+    json_file = '../json_files/smiles.json'
     #print(df['name'])
     #  print(df['SMILES']['1ed_1b_1ea'])
- #   df = {'Name': data['name'], 'SMILES': data['SMILES']}
-    #  df2 = {'Name':data['name'],"Exc":data['exc'],"method":data[]]}
- #   df = pd.DataFrame(df)
- #   df.to_csv('../data_analysis/SMILES_DICT.csv', index=False)
-    SMILES_csv = '../data_analysis/SMILES_DICT.csv'
-    smile = SMILES_FINDER(SMILES_csv)
+
     # print(smile)
 
     jobs = ['6ed_41b_12ea']
-    path_to_MO = '../ds5batchMO_800_1000/'  
+    path_to_MO = '../ds5batchMO_600_800/'  
     jobs = file_reader(path_to_MO)
-
+    jobs = ['9ed_28b_8ea']
+    smile = json_reader(json_file,jobs)
+    numbs = HOMO_LUMO_dict('../data_analysis/600_800.csv')
+    #numbs = HOMO_LUMO_dict('../data_analysis/800_1000.csv')
     print(smile)
     final = {}
     for x in jobs:
+       
         #filename = '../MO_start/' + str(x) + '/mo/'+ str(x)+'.out'
 
         try:
-            filename = '../ds5batchMO_800_1000/' + str(x) + '/mo/' + str(x) + '.out'
+            filename = '../ds5batchMO_600_800/' + str(x) + '/mo/' + str(x) + '.out'
             atom = xyzcoords(filename)
             aa = numericalize(jobs, smile)
             jobname = x
@@ -368,23 +393,13 @@ def main():
         'LUMO Acceptor': [],
         'HOMO Anchor': [],
         'LUMO Anchor': [],
-        'HOMO': [],
         'LUMO': [],
+        'HOMO': [],
         'Wave': [],
     }
     # numbs = HOMO_LUMO_dict('../data_analysis/600_800.csv')
     #numbs = HOMO_LUMO_dict('../data_analysis/800_1000.csv')
-    with open('../json_files/test2.json',"r") as read_file:
-            data = json.load(read_file)
-            for name in final.keys():
-                for mol in data["molecules"]:
-                    if mol['name']== name:
-                        for exc in mol["lsf"]:
-                            if exc['exc']==1:
-                                df['HOMO'].append(exc['HOMO'])
-                                df['LUMO'].append(exc['LUMO'])
-                                df['Wave'].append(exc['nm'])
-
+ 
     for name in final.keys():
         '''
 
@@ -411,9 +426,9 @@ def main():
 
  
         
-     #   df['HOMO'].append(round(float(numbs[name][1]),2))
-     #   df['LUMO'].append(round(float(numbs[name][0]),2))
-     #   df['Wave'].append(round(float(numbs[name][2]),2))
+        df['HOMO'].append(round(float(numbs[name][1]),2))
+        df['LUMO'].append(round(float(numbs[name][0]),2))
+        df['Wave'].append(round(float(numbs[name][2]),2))
         
 
     #  print(final[name]['donor']['HOMO'])
@@ -431,6 +446,7 @@ def main():
     # print(final)
 
     #  print('Next Molecule\n')
+    
 
     return
 if __name__ == '__main__':

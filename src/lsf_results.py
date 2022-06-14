@@ -104,8 +104,10 @@ def main():
     moleculeList = molecule_json.MoleculeList_exc()
     moleculeList.setData("../json_files/results_ds5.json")
     homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
-    lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
-    nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
+   # lumo_lsf = [-0.01785889, 1.22883249]  # CAM - PBE
+    lumo_lsf = [0.76, 0.67]
+  #  nm_lsf = [1.24306358, -0.38355558]  # CAM - PBE
+    nm_lsf = [1.31, -0.47]
 
     d = moleculeList.getMoleculeList()
     for n, mol in enumerate(d):

@@ -324,14 +324,14 @@ def main():
     jobs = ['6ed_16b_10ea']
     jobs = ['16ed_35b_8ea']
     jobs = ['13ed_18b_12ea', '6ed_41b_12ea','7ed_1b_13ea','7ed_3b_13ea','9ed_18b_12ea']
-    jobs = ['7ed_1b_13ea']
+    jobs = ['14ed_41b_8ea']
     json_file = '../json_files/test2.json'
 
 
 
     for name in jobs:
 
-        filename = '../MO_start/' + str(name) + '/mo/'+ str(name)+'.out'
+        filename = '../ds5batchMO_800_1000/' + str(name) + '/mo/'+ str(name)+'.out'
 
         num = amountofbasisfunctions(filename)
         atom_let = atom_num_let_dic(filename)
