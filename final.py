@@ -696,13 +696,13 @@ def gather_dye_data(
     basis_set_mexc = "6-311G(d,p)"
     if not os.path.exists(output_json):
         write_json({"molecules": []}, results_json)
-    # gather_excitation_data(path_results,
-    #                        dyes,
-    #                        add_methods,
-    #                        method_mexc,
-    #                        basis_set_mexc,
-    #                        exc_json=True,
-    #                        results_json=results_json)
+    gather_excitation_data(path_results,
+                           dyes,
+                           add_methods,
+                           method_mexc,
+                           basis_set_mexc,
+                           exc_json=True,
+                           results_json=results_json)
     lsf_results.generate_lsf_exc(results_json, results_json)
     print("LSF results")
     data = Molecule_exc_to_db(results_json, output_json)
