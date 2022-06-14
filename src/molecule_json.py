@@ -532,10 +532,6 @@ class MoleculeList_exc:
         return [Molecule_exc_dict_to_obj(i) for i in self.molecules]
 
 
-def exc_updated():
-    return {}
-
-
 def Molecule_exc_to_db(results_json, output="test.json"):
     with open(results_json, 'r') as f:
         data = json.load(f)
@@ -573,5 +569,3 @@ def Molecule_exc_to_db(results_json, output="test.json"):
     with open(output, 'w') as f:
         f.write(json.dumps(write, indent=4, separators=(',', ':')))
     return new
-
-
