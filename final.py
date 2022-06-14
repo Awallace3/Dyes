@@ -685,6 +685,7 @@ def gather_dye_data(
     path_pickle="pickles/ds_all5.pickle",
     results_json="./json_files/ds_all5.json",
     output_json="json_files/ds_all5_out.json",
+    output_dyes_dict=False,
     add_methods={
         "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
         "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
@@ -707,16 +708,25 @@ def gather_dye_data(
     print("LSF results")
     data = Molecule_exc_to_db(results_json, output_json)
     print("Broken up excitations")
-    dyes_dict = {}
-    for i in data:
-        k = i["localName"]
-        i.pop("localName")
-        i["score"] = -1
-        dyes_dict[k] = i
+    dye_output = []
+    if output_dyes_dict:
+        dyes_dict = {}
+        for i in data:
+            k = i["localName"]
+            i.pop("localName")
+            i["score"] = -1
+            dyes_dict[k] = i
+        dye_output = dyes_dict
+    else:
+        for i in data:
+            k = i["localName"]
+            i["score"] = -1
+            dye_output.append(i)
+
     print("Dye dict formed")
-    write_json(dyes_dict, output_json)
+    write_json(dye_output, output_json)
     print("Last json output")
-    write_pickle(dyes_dict, path_pickle)
+    write_pickle(dye_output, path_pickle)
     return
 
 
