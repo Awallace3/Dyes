@@ -60,11 +60,11 @@ def generate_gaussian(m,
 
 def score_dye_LUMO(LUMO_energy):
     x = LUMO_energy
-    m = -3.6
-    if x < -3.75:
+    m = -3.7
+    if x < -3.85:
         y = 0
     elif x < m:
-        s = 0.1
+        s = 0.15
         y = math.exp(
             -(x - m)**2 /
             (2 * s**2)) / (s * math.sqrt(2 * math.pi)) * 37.68307130217745
@@ -93,15 +93,14 @@ def test_graph():
                              ss=[0.15, 0.25],
                              cut_off=-3.85,
                              x_range=[-2.5, -4])
+    fig = plt.figure(dpi=1000)
     plt.plot(data[:, 0], data[:, 1], label="MO Scoring")
     plt.xlabel("LUMO energy (eV)")
     plt.ylabel("Score")
     plt.savefig("../data_analysis/scoring.png")
     plt.show()
 
-
-def main():
-    # test_graph()
+def score_dyes():
     filename = '../data_analysis/fin.csv'
     #    filename = '../data_analysis/benchscore.csv'
     df = {
@@ -180,9 +179,14 @@ def main():
 
     df.to_csv('../data_analysis/scoring.csv', index=False)
 
-       test_graph()
-       LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
-       for i in LUMO_ener:
+    #   test_graph()
+    #   LUMO_ener= [-3.41,-3.50,-3.35,-3.64,-3.34,-3.74]
+    #   for i in LUMO_ener:
+
+
+def main():
+    test_graph()
+    # score_dyes()
 
     return
 
