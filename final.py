@@ -687,11 +687,16 @@ def gather_dye_data(
     output_json="json_files/ds_all5_out.json",
     output_dyes_dict=False,
     add_methods={
-        "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
-        "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
-        "solvent": ["", "", ""],
-        "mem_com": ["1600", "1600", "1600"],
-        "mem_pbs": ["10", "10", "10"],
+        "methods": ["bhandhlyp", "PBE1PBE"],
+        "basis_set": ["6-311G(d,p)", "6-311G(d,p)"],
+        "solvent": ["", ""],
+        "mem_com": ["1600", "1600"],
+        "mem_pbs": ["10", "10"],
+        # "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
+        # "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
+        # "solvent": ["", "", ""],
+        # "mem_com": ["1600", "1600", "1600"],
+        # "mem_pbs": ["10", "10", "10"],
     }):
     method_mexc = "CAM-B3LYP"
     basis_set_mexc = "6-311G(d,p)"

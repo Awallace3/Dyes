@@ -25,7 +25,8 @@ def conv_energy(val, rounding=3):
     return round(h * c / (float(val) * J_over_eV), rounding)
 
 
-def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json", output_json="../json_files/test.json"):
+def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json",
+                     output_json="../json_files/test.json"):
     moleculeList = molecule_json.MoleculeList_exc()
     moleculeList.setData(results_json)
     homo_lsf = [1.0423105, -0.20338681]  # CAM - PBE
@@ -89,9 +90,9 @@ def generate_lsf_exc(results_json="../json_files/benchmarks_exc.json", output_js
                         nm_lsf
                     ],
                     "LUMO":
-                    homo,
-                    "HOMO":
                     lumo,
+                    "HOMO":
+                    homo,
                 }
                 new_exc = molecule_json.Excitation_exc()
                 new_exc.giveData(new_d)

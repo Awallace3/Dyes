@@ -27,7 +27,12 @@ def clean_solvent(solvent):
     return solvent.replace('-', '').replace(',', '')
 
 
-def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, states=3):
+def absorpt(path,
+            method_mexc,
+            basis_set_mexc,
+            solvent='',
+            exc_json=False,
+            states=3):
     filename = open(path, 'r')
 
     num = 0

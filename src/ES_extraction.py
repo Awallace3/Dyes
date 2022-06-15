@@ -3,6 +3,7 @@ import glob
 import subprocess
 import re
 
+
 def ES_extraction(path, unit_change=False):
     # print(path)
     occupied = 'Alpha  occ. eigenvalues --'
@@ -22,7 +23,7 @@ def ES_extraction(path, unit_change=False):
 
         return 0, 0
 
-    for i in range(2,10):
+    for i in range(2, 10):
         k = ' ' * i
         occLst[-1] = occLst[-1].replace(k, " ")
         virtLst[0] = virtLst[0].replace(k, ' ')
@@ -53,14 +54,16 @@ def ES_extraction(path, unit_change=False):
     #print('virtVal', type(virtVal), virtVal)
 
     # converted to eV and abs val
-    occVal = occVal*27.211385
-    virtVal = virtVal*27.211385
+    occVal = occVal * 27.211385
+    virtVal = virtVal * 27.211385
     if unit_change:
 
-        occVal = abs(occVal) -4.2
-        virtVal = abs(virtVal) -3.9
+        occVal = abs(occVal) - 4.2
+        virtVal = abs(virtVal) - 3.9
     #print('scaling:',occVal, virtVal)
     return occVal, virtVal
+
+
 #ES_extraction('../ES/ES.out')
 
 if __name__ == "__main__":
