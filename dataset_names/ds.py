@@ -6549,11 +6549,15 @@ def ds_all5_pickle():
         d = f.readlines()
     for n, i in enumerate(d):
         d[n] = i.rstrip()
-    write_pickle(d, 'ds_all5.pickle')
+    print(d)
+    print(len(d))
+    write_pickle(d, 'ds_all5_names.pickle')
 
 
-def ds_all5():
-    return read_pickle('dataset_names/ds_all5.pickle')
+def ds_all5(path='dataset_names/ds_all5.pickle'):
+    d = read_pickle(path)
+    print(len(d))
+    return d
 
 
 def ds5_err():
@@ -6564,3 +6568,4 @@ def ds5_err():
 
 if __name__ == "__main__":
     ds_all5_pickle()
+    ds_all5()

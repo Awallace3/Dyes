@@ -167,6 +167,7 @@ class Molecule:
 
 def Molecule_exc_excitation_to_obj(excs):
     for n, i in enumerate(excs):
+        print(i)
         e = Excitation_exc()
         e.giveData(i)
         excs[n] = e
@@ -193,7 +194,9 @@ class Molecule_exc:
 
     def getExcitations(self):
         return Molecule_exc_excitation_to_obj(self.excitations)
-        # return self.excitations
+
+    def resetExcitations(self):
+        self.excitations = []
 
     def appendExcitations(self, excitation_objs_lst):
         for i in excitation_objs_lst:
@@ -350,7 +353,6 @@ class MoleculeList:
         for n, i in enumerate(self.molecules):
             mol = Molecule()
             mol.giveData(i)
-            # print(mol.SMILES, smiles)
             if mol.SMILES == smiles:
                 found = True
         return found
@@ -374,8 +376,6 @@ class MoleculeList:
                 mol.giveData(self.molecules[i])
             if mol.name == molecule.name:
                 self.molecules[i] = molecule
-                # print('updating...')
-                # print(len(self.molecules))
                 found = True
                 break
 
@@ -388,15 +388,10 @@ class MoleculeList:
         """
         for n, i in enumerate(self.molecules):
             mol = Molecule()
-            #print(type(i))
-            #print(len(self.molecules))
-            #print(i.getName())
             mol.giveData(i)
             if mol.name == molecule.name:
-                print('updating existing Molecule information in results.json')
                 self.molecules[n] = molecule
             else:
-                print('Creating new Molecule in results.json')
                 self.addMolecule(mol)
                 #self.addMolecule(i)
         """
@@ -474,7 +469,6 @@ class MoleculeList_exc:
     """
 
     def updateMolecule(self, molecule, exc_json=False):
-        # print(molecule)
         size = len(self.molecules)
         found = False
         for i in range(size):
@@ -510,7 +504,6 @@ class MoleculeList_exc:
                 print('updating existing Molecule information in results.json')
                 self.molecules[n] = molecule
             else:
-                print('Creating new Molecule in results.json')
                 self.addMolecule(mol)
                 #self.addMolecule(i)
         """
