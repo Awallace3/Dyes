@@ -197,9 +197,8 @@ def failed_gathered_excitations(failed,
     for i in failed:
         os.chdir(i)
         # 0 if no dir, 1 if out file, 2 if cannot read out
-        local_lst = []
+        local = {}
         for j in dirs_to_check:
-            local = {}
             if not os.path.exists(j):
                 local[j] = 0
             else:
@@ -211,19 +210,25 @@ def failed_gathered_excitations(failed,
                 else:
                     out_files = len(glob.glob("%s/*.out*" % j))
                     out_completion = len(glob.glob("%s/*_o*" % j))
-                    # if out_files <= out_completion and out_files > 0:
                     if 0 < out_files <= out_completion:
                         local[j] = 3
                         path = "%s/%s" % (j, "mexc.out")
                         with open(path, "r") as fp:
                             if len(fp.readlines()) < 10:
                                 marked_for_death.append(i + "/" + j)
-                            if "memory" in fp.read().lower():
+                            if "error termination request processed by link" in fp.read(
+                            ).lower():
+                                memory_issues.append(path)
+                            if "error in internal coordinate system bad geom" in fp.read(
+                            ).lower():
                                 memory_issues.append(path)
                     else:
                         local[j] = 2
-            local_lst.append(local)
-        complete_dict[i] = local_lst
+        cnt = 0
+        for k, v in local.items():
+            cnt += v
+        if cnt != 9:
+            complete_dict[i] = local
         os.chdir("..")
     os.chdir(def_dir)
     print(complete_dict)
@@ -275,7 +280,7 @@ def qsub_dir_time(path_results, minutes=60, steps=10):
     def_d = os.getcwd()
     os.chdir(path_results)
     for i in range(steps):
-        qsub_to_max(def_dir="../..")
+        qsub_to_max(max_queue=500, def_dir="../..")
         os.sleep(60 * minutes)
     os.chdir(def_d)
     return
@@ -288,6 +293,7 @@ def resubmit_ds_all():
     """
     dirs_to_check = ['mexc', 'bhandhlyp', 'pbe1pbe']
     ls = ds.ds_all5('../pickles/fix.pickle')
+    # ls = ds.ds_all5('../pickles/ds_all5.pickle')
     cdict, marked, memory = failed_gathered_excitations(
         ls,
         dirs_to_check,

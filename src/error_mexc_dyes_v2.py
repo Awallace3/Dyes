@@ -5,10 +5,10 @@ import pandas as pd
 # import re
 import glob
 import subprocess
-from .molecule_json import Molecule_exc
-from .molecule_json import MoleculeList_exc
-# from molecule_json import Molecule_exc
-# from molecule_json import MoleculeList_exc
+# from .molecule_json import Molecule_exc
+# from .molecule_json import MoleculeList_exc
+from molecule_json import Molecule_exc
+from molecule_json import MoleculeList_exc
 
 
 def CFOUR_input_files(

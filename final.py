@@ -777,10 +777,10 @@ def gather_dye_data(
     }):
     if not os.path.exists(output_json):
         write_json({"molecules": []}, results_json)
-    # gather_dye_data_excitations(path_results,
-    #                             dyes,
-    #                             add_methods=add_methods,
-    #                             results_json=results_json)
+    gather_dye_data_excitations(path_results,
+                                dyes,
+                                add_methods=add_methods,
+                                results_json=results_json)
     lsf_results.generate_lsf_exc(results_json, results_json)
     print("LSF results")
     data = Molecule_exc_to_db(results_json, output_json)
@@ -819,22 +819,18 @@ def dyes_inspection(pickle_path="pickles/ds_all5.pickle",
     missing_exc = {CAM_KEY: 0, PBE_KEY: 0, BHA_KEY: 0}
     fix_jobs = []
     for i in data:
-        print(i)
         for k in missing_exc.keys():
-            # print(k, i[k])
             if len(i[k]) == 0:
-                # print(k, i["localName"])
                 missing_exc[k] += 1
                 if i not in fix_jobs:
                     fix_jobs.append(i["localName"])
-    # print(missing_exc)
     print(len(fix_jobs), '/', len(data))
     write_pickle(fix_jobs, pickle_out)
     return fix_jobs
 
 
 def main():
-    # gather_dye_data(dataset_names.ds.ds_all5())
+    gather_dye_data(dataset_names.ds.ds_all5())
     dyes_inspection()
 
     #  three_types = ["eDonors", "backbones", "eAcceptors"]
