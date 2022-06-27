@@ -1,7 +1,6 @@
 import os
 import glob
 
-
 differ = 460545 - 460474
 a = 460474
 out = []
@@ -10,23 +9,21 @@ for i in range(differ):
 	os.system('qstat ' + str(a)+ ' -H' )
 	a += 1
 '''
-	
+
 a = glob.glob('*')
 for i in a:
-	try:
-		os.chdir(str(i)+'/')
-		filename = open('mex.out','r')
-		for x in filename:
-			if 'Normal termination' in x:
-				print((str(i),'Done'))
-				os.chdir('..')
-			else:
-				print(str(i))
-				os.chdir('..')
-	except NotADirectoryError:
-		pass
-
-
+    try:
+        os.chdir(str(i) + '/')
+        filename = open('mex.out', 'r')
+        for x in filename:
+            if 'Normal termination' in x:
+                print((str(i), 'Done'))
+                os.chdir('..')
+            else:
+                print(str(i))
+                os.chdir('..')
+    except NotADirectoryError:
+        pass
 '''
 creates ES and MO input files and pbs script if jobs have normal termination
 a = glob.glob('*')
@@ -63,14 +60,14 @@ for i in a:
 					filename3.write(' \n')
 					filename3.write('Name' + '\n')
 					filename3.write(' \n')
-					filename3.write('0' + ' 1' + '\n') 
+					filename3.write('0' + ' 1' + '\n')
 		#			os.chdir('..')
 		#			os.chdir('MO/')
 		#			filename4 = open('MO.com','w+')
 		#			filename4.write('')
 		#			os.chdir('..')
-					
-						
+
+
 			#		print(editfile[i-5-int(num)])
 					for l in range(int(num)):
 		#				os.chdir('ES/')
@@ -79,7 +76,7 @@ for i in a:
 						filename3.write( str(atomnum) + ' ' + str(x) + ' ' + str(y) + ' '  + str(z) + '\n')
 					filename3.write('\n')
 					filename3.close()
-		try:		
+		try:
 			os.chdir('../ES/')
 			file = open("ES.pbs","w+")
 			file.write('#!/bin/sh' + '\n')
@@ -207,7 +204,7 @@ for i in a:
 			pass
 
 
-				
+
 	except NotADirectoryError:
 		pass
 
@@ -219,9 +216,9 @@ for i in a:
 
 
 
-		#	print(editfile[i-(int(num)+5)]	
+		#	print(editfile[i-(int(num)+5)]
 	#	editfile[i-6]
-#		print(editfile[i-6])  
+#		print(editfile[i-6])
 
 
 '''
