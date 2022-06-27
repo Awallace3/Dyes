@@ -918,6 +918,7 @@ def main():
     gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc, basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
     """
 
+
     # DS_ALL
     # ds2 = 727 dyes
     # ds1&2 = 1007
