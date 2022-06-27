@@ -269,20 +269,18 @@ def add_qsub_dir(qsub_dir, geom_dir, path_qsub_queue="../../qsub_queue"):
 
 
 def qsub_to_max(max_queue=100, user="", def_dir=".."):
-    qsub_queue_path = def_dir + '/qsub_queue'
-    qsub_len_path = def_dir + '/qsub_len'
+    if def_dir == "./":
+        qsub_queue_path = 'qsub_queue'
+        qsub_len_path = 'qsub_len'
+    else:
+        qsub_queue_path = def_dir + '/qsub_queue'
+        qsub_len_path = def_dir + '/qsub_len'
+    print(os.getcwd(), qsub_queue_path)
     with open(qsub_queue_path, "r") as fp:
         qsubs = fp.readlines()
 
-    # cmd = 'qstat -u %s > ../qsub_len' % user
-    # subprocess.call(cmd, shell=True)
-    # print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
-    # with open('../qsub_len', 'r') as fp:
-    #     current_queue = len(fp.readlines())-5
-    # os.remove('../qsub_len')
     cmd = "qstat -u %s | grep r410 |  wc -l > ../qsub_len" % user
     subprocess.call(cmd, shell=True)
-    # print("qsub_to_max", os.getcwd(), "../qsub_len", "../qsub_queue")
     with open(qsub_len_path, "r") as fp:
         current_queue = int(fp.read()) - 5
         print('\n', current_queue, "jobs in qsub_queue\n")

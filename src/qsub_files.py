@@ -4,7 +4,7 @@ import subprocess
 import json
 import shutil
 import sys
-from error_mexc_dyes_v2 import method_dir_generator
+# from error_mexc_dyes_v2 import method_dir_generator
 
 sys.path.append("/Users/austinwallace/research/Dyes")
 from dataset_names import ds
@@ -15,6 +15,22 @@ from final import add_qsub_dir
 class RMError(Exception):
     """could not remove directory"""
     pass
+
+
+def clean_dir_name(dir_name):
+    return dir_name.replace("-", "").replace(",", "")
+
+
+def method_dir_generator(method_mexc, solvent):
+    if method_mexc == "CAM-B3LYP":
+        qsub_dir = "mexc"
+    else:
+        qsub_dir = method_mexc
+    if solvent != "":
+        qsub_dir += "_%s" % solvent
+
+    qsub_dir = clean_dir_name(qsub_dir)
+    return qsub_dir
 
 
 def remove_folder(path):
@@ -73,7 +89,7 @@ def add_qsub_dir(qsub_dir, geom_dir, path_qsub_queue='../../qsub_queue'):
         qsub_path = geom_dir + '\n'
     else:
         qsub_path = "%s/%s\n" % (geom_dir, qsub_dir)
-    print(os.getcwd(), qsub_path, '../../qsub_queue')
+    print(os.getcwd(), qsub_path, path_qsub_queue)
     with open(path_qsub_queue, 'a') as fp:
         fp.write(qsub_path)
     return 1
@@ -190,6 +206,9 @@ def failed_gathered_excitations(failed,
                                 qsubFailed1=False,
                                 path_results="../results"):
     def_dir = os.getcwd()
+    qsub_queue_path = def_dir + '/qsub_queue'
+    print(qsub_queue_path)
+
     os.chdir(path_results)
     complete_dict = {}
     marked_for_death = []
@@ -206,6 +225,7 @@ def failed_gathered_excitations(failed,
                     local[j] = 1
                     if qsubFailed1:
                         qsub_dir = method_dir_generator(j, "")
+                        # add_qsub_dir(qsub_dir, i, qsub_queue_path)
                         add_qsub_dir(qsub_dir, i, '../qsub_queue')
                 else:
                     out_files = len(glob.glob("%s/*.out*" % j))
@@ -215,7 +235,10 @@ def failed_gathered_excitations(failed,
                         path = "%s/%s" % (j, "mexc.out")
                         with open(path, "r") as fp:
                             if len(fp.readlines()) < 10:
-                                marked_for_death.append(i + "/" + j)
+                                qsub_dir = method_dir_generator(j, "")
+                                marked_for_death.append(j)
+                                # add_qsub_dir(qsub_dir, i, qsub_queue_path)
+                                add_qsub_dir(qsub_dir, i, '../qsub_queue')
                             if "error termination request processed by link" in fp.read(
                             ).lower():
                                 memory_issues.append(path)
@@ -231,7 +254,7 @@ def failed_gathered_excitations(failed,
             complete_dict[i] = local
         os.chdir("..")
     os.chdir(def_dir)
-    print(complete_dict)
+    # print(complete_dict)
     data = json.dumps(complete_dict,
                       default=lambda o: o.__dict__,
                       sort_keys=True,
@@ -280,8 +303,29 @@ def qsub_dir_time(path_results, minutes=60, steps=10):
     def_d = os.getcwd()
     os.chdir(path_results)
     for i in range(steps):
-        qsub_to_max(max_queue=500, def_dir="../..")
+        qsub_to_max(max_queue=500, def_dir="./")
         os.sleep(60 * minutes)
+    os.chdir(def_d)
+    return
+
+
+def remove_marked(
+    marked,
+    path_results="../results_cp/ds_all5",
+):
+    def_d = os.getcwd()
+    os.chdir(path_results)
+    for i in marked:
+        path = '%s/mexc.o*' % (i)
+        files = glob.glob(path)
+        for f in files:
+            print('rm %s' % f)
+            os.remove(f)
+        path = '%s/*__o.o*' % (i)
+        files = glob.glob(path)
+        for f in files:
+            print('rm %s' % f)
+            os.remove(f)
     os.chdir(def_d)
     return
 
@@ -300,7 +344,8 @@ def resubmit_ds_all():
         path_results="../results_cp/ds_all5",
         qsubFailed1=False)
     print(len(marked), len(memory), len(cdict), len(ls))
-    # qsub_dir_time(path_results='results_cp/ds_all5', minutes=360)
+    remove_marked(marked)
+    qsub_dir_time(path_results='../results_cp/ds_all5', minutes=360)
     return
 
 
