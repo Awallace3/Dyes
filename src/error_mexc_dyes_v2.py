@@ -1,17 +1,14 @@
 import numpy as np
 import os
-import math
-import random
-from numpy import genfromtxt
-import numpy as npimport
 from numpy import genfromtxt
 import pandas as pd
-
 # import re
 import glob
 import subprocess
 from .molecule_json import Molecule_exc
 from .molecule_json import MoleculeList_exc
+# from molecule_json import Molecule_exc
+# from molecule_json import MoleculeList_exc
 
 
 def CFOUR_input_files(
@@ -29,25 +26,20 @@ def CFOUR_input_files(
             fp.write("%s\n" % (dir_name))
             fp.write(data)
             fp.write("\n\n")
-            fp.write(
-                "*CFOUR(CHARGE=0,REFERENCE=RHF,SPHERICAL=ON,BASIS=%s\n"
-                % basis_set
-            )
+            fp.write("*CFOUR(CHARGE=0,REFERENCE=RHF,SPHERICAL=ON,BASIS=%s\n" %
+                     basis_set)
             fp.write("LINDEP_TOL=7,LINEQ_CONV=7,SCF_CONV=6,SCF_MAXCYC=250\n")
             fp.write(
                 "CALC=%s,EXCITE=EOMEE,ESTATE_SYM=5\nESTATE_PROP=EXPECTATION\nCOORDS=CARTESIAN\n"
-                % method
-            )
+                % method)
             fp.write(
                 "FROZEN_CORE=ON,ABCDTYPE=AOBASIS\nCONVERGENCE=7,MEMORY_SIZE=%s,MEM_UNIT=GB)\n"
-                % mem_ZMAT
-            )
+                % mem_ZMAT)
         with open("%s/%s.pbs" % (dir_name, baseName), "w") as fp:
             fp.write("#!/bin/csh\n#\n#PBS -N %s\n" % baseName)
             fp.write(
                 "#PBS -S /bin/csh\n#PBS -j oe\n#PBS -W umask=022\n#PBS -l cput=2400:00:00\n#PBS -l mem=%sgb\n#PBS -l nodes=1:ppn=2\n#PBS -q gpu"
-                % mem_pbs
-            )
+                % mem_pbs)
             fp.write(
                 '\n\ncd $PBS_O_WORKDIR\nsetenv NUM $NCPUS\necho "$NUM cores requested in PBS file"\necho " "\nsource /ddn/home1/r1621/.tschrc\n/ddn/home1/r1621/maple/bin/tempQC/bin/c4ext_old.sh 20\n'
             )
@@ -95,14 +87,11 @@ def gaussianInputFiles(
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
             if solvent == "":
-                fp.write(
-                    "#N %s/%s %s" % (method_opt, basis_set_opt, procedure)
-                )
+                fp.write("#N %s/%s %s" %
+                         (method_opt, basis_set_opt, procedure))
             else:
-                fp.write(
-                    "#N %s/%s %s %s"
-                    % (method_opt, basis_set_opt, procedure, solvent_line)
-                )
+                fp.write("#N %s/%s %s %s" %
+                         (method_opt, basis_set_opt, procedure, solvent_line))
 
             fp.write("\n\n")
             fp.write(
@@ -117,8 +106,7 @@ def gaussianInputFiles(
             fp.write("#!/bin/sh\n")
             fp.write(
                 "#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -j oe\n#PBS -m abe\n#PBS -l "
-                % outName.replace("-", "").replace(",", "_")
-            )
+                % outName.replace("-", "").replace(",", "_"))
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             # r410 node
             fp.write("#PBS -q r410\n")
@@ -126,8 +114,7 @@ def gaussianInputFiles(
             fp.write("#PBS -W umask=022\n")
             # fp.write("#PBS -l nodes=1:ppn=1\n#PBS -q gpu\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(
-                "#PBS -l nodes=1:ppn=1\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n"
-            )
+                "#PBS -l nodes=1:ppn=1\n\nscrdir=/tmp/$USER.$PBS_JOBID\n\n")
             fp.write(
                 "mkdir -p $scrdir\nexport GAUSS_SCRDIR=$scrdir\nexport OMP_NUM_THREADS=1\n\n"
             )
@@ -152,24 +139,18 @@ def gaussianInputFiles(
             )
             fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
             fp.write(
-                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out".format(
-                    baseName, baseName
-                )
-                + str(output_num)
-                + "\n\nrm -r $scrdir\n"
-            )
+                "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 {0}.com {0}.out"
+                .format(baseName, baseName) + str(output_num) +
+                "\n\nrm -r $scrdir\n")
     elif cluster == "seq":
         with open("%s/%s.com" % (dir_name, baseName), "w") as fp:
             fp.write("%mem=8gb\n")
             if solvent == "":
-                fp.write(
-                    "#N %s/%s %s" % (method_opt, basis_set_opt, procedure)
-                )
+                fp.write("#N %s/%s %s" %
+                         (method_opt, basis_set_opt, procedure))
             else:
-                fp.write(
-                    "#N %s/%s %s %s"
-                    % (method_opt, basis_set_opt, procedure, solvent_line)
-                )
+                fp.write("#N %s/%s %s %s" %
+                         (method_opt, basis_set_opt, procedure, solvent_line))
 
             fp.write("\n\n")
             fp.write("Name \n")
@@ -182,8 +163,7 @@ def gaussianInputFiles(
             fp.write("#!/bin/sh\n")
             fp.write(
                 "#PBS -N %s_o\n#PBS -S /bin/bash\n#PBS -W umask=022\n#PBS -j oe\n#PBS -m abe\n#PBS -l cput=1000:00:00\n#PBS -l "
-                % outName.replace("-", "").replace(",", "_")
-            )
+                % outName.replace("-", "").replace(",", "_"))
             fp.write("mem={0}gb\n".format(mem_pbs_opt))
             fp.write("#PBS -l nodes=1:ppn=2\n#PBS -l file=100gb\n\n")
             fp.write(
@@ -195,10 +175,8 @@ def gaussianInputFiles(
             fp.write(
                 "printf 'exec_host = '\nhead -n 1 $PBS_NODEFILE\n\ncd $PBS_O_WORKDIR\n\n"
             )
-            fp.write(
-                "/usr/local/apps/bin/g09setup %s.com %s.out%s"
-                % (baseName, baseName, output_num)
-            )
+            fp.write("/usr/local/apps/bin/g09setup %s.com %s.out%s" %
+                     (baseName, baseName, output_num))
 
 
 # from ice_analogs, but modified input files
@@ -328,9 +306,8 @@ def i_freq_check(filename):
     return imaginary, freq_clean, freq_lst_len
 
 
-def add_imaginary(
-    freq_clean, freq_lst_len, filename, geomDirName, results_json
-):
+def add_imaginary(freq_clean, freq_lst_len, filename, geomDirName,
+                  results_json):
     cnt = 0
     for k in freq_clean:
         if k < 0:
@@ -341,13 +318,13 @@ def add_imaginary(
     f = open(filename)
     lines = f.readlines()
     f.close()
-    imag_values = lines[freq_lst_len[0] : freq_lst_len[1]]
+    imag_values = lines[freq_lst_len[0]:freq_lst_len[1]]
     for num, i in enumerate(imag_values):
         i = i.replace("  ", " ")
         i = i.replace("  ", " ")
         i = i.replace("  ", " ")
         i = i.replace("\n", "")
-        i = (i.split(" "))[3 : 3 + cnt * 3]
+        i = (i.split(" "))[3:3 + cnt * 3]
         for k in range(len(i)):
             i[k] = float(i[k])
         imag_values[num] = i
@@ -356,7 +333,7 @@ def add_imaginary(
     imag_values = np.array(imag_values)
 
     for i in range(len(imag_values[0, :]) // 3):
-        carts_no_atom = np.add(carts_no_atom, imag_values[:, i : i + 4])
+        carts_no_atom = np.add(carts_no_atom, imag_values[:, i:i + 4])
     carts[:, 1:4] = carts_no_atom
 
     carts = np.around(carts, 6)
@@ -490,7 +467,7 @@ def find_geom(
         stand = -1
     print(stand, length)
     del lines[standards[stand] - 1 + length:]
-    del lines[: standards[stand] - 1]
+    del lines[:standards[stand] - 1]
 
     cleaned_lines = []
     for i in range(len(lines)):
@@ -521,7 +498,6 @@ def xyzToSmiles(length, xyz, geomDirName, results_json):
                 fp.write(i[:-2])
             else:
                 fp.write(i)
-
     """
     cmd = 'python3 ../../src/xyz2mol.py ./molecule.xyz'
 
@@ -553,9 +529,8 @@ def xyzToSmiles(length, xyz, geomDirName, results_json):
         mol.sendToFile("info.json")
 
 
-def make_input_files_no_constraints(
-    output_num, method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt, cluster
-):
+def make_input_files_no_constraints(output_num, method_opt, basis_set_opt,
+                                    mem_com_opt, mem_pbs_opt, cluster):
     """Combines the geometry output and the constrained output. Then makes the .com and .pbs files in a subdirectory"""
     data = ""
     with open("tmp.txt") as fp:
@@ -566,10 +541,8 @@ def make_input_files_no_constraints(
         with open("mex.com", "w") as fp:
             fp.write("%mem={0}mb\n".format(mem_com_opt))
             fp.write("%nprocs=4\n")
-            fp.write(
-                "#N {0}".format(method_opt)
-                + "/{0} OPT\n".format(basis_set_opt)
-            )
+            fp.write("#N {0}".format(method_opt) +
+                     "/{0} OPT\n".format(basis_set_opt))
             fp.write("\n")
             fp.write(
                 "Name ModRedundant - Minimalist working constrained optimisation\n"
@@ -613,9 +586,7 @@ def make_input_files_no_constraints(
             fp.write("""  echo "Not on a compute node!"\n  exit 1;\nfi\n\n""")
             fp.write(
                 "cd $PBS_O_WORKDIR\n. $g16root/g16/bsd/g16.profile\ng16 mex.com mex.out"
-                + str(output_num)
-                + "\n\nrm -r $scrdir\n"
-            )
+                + str(output_num) + "\n\nrm -r $scrdir\n")
     elif cluster == "seq":
         gaussianInputFiles(
             output_num,
@@ -659,6 +630,18 @@ def qsub(path="."):
 
 def clean_dir_name(dir_name):
     return dir_name.replace("-", "").replace(",", "")
+
+
+def method_dir_generator(method_mexc, solvent):
+    if method_mexc == "CAM-B3LYP":
+        qsub_dir = "mexc"
+    else:
+        qsub_dir = method_mexc
+    if solvent != "":
+        qsub_dir += "_%s" % solvent
+
+    qsub_dir = clean_dir_name(qsub_dir)
+    return qsub_dir
 
 
 def make_exc(
@@ -766,8 +749,6 @@ def main(
         qsub_dir += "_%s" % solvent
 
     qsub_dir = clean_dir_name(qsub_dir)
-
-    print("v2 %s %s" % (solvent, qsub_dir))
 
     if len(out_files) > 0:
 

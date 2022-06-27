@@ -2,6 +2,7 @@ import os
 import glob
 # import molecule_json
 from .molecule_json import Excitation, Excitation_exc
+from . import molecule_json
 from .ES_extraction import ES_extraction
 # from .ES_extraction import ES_extraction
 # from .molecule_json import Excitation, Excitation_exc
@@ -27,7 +28,12 @@ def clean_solvent(solvent):
     return solvent.replace('-', '').replace(',', '')
 
 
-def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, states=3):
+def absorpt(path,
+            method_mexc,
+            basis_set_mexc,
+            solvent='',
+            exc_json=False,
+            states=3):
     filename = open(path, 'r')
 
     num = 0
@@ -41,8 +47,7 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, state
     for n, j in enumerate(filename):
         if 'Normal termination' in j:
             jobComplete = True
-    if jobComplete == False:
-
+    if not jobComplete:
         print("JOB INCOMPLETE", path)
         return []
     filename.close()
@@ -51,7 +56,6 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, state
     for n, i in enumerate(lines):
         if ' Excitation energies and oscillator strengths:' in i:
             nregion = True
-            num = n
         if nregion:
             if excitedState in i:
                 excitedStatenum += 1
@@ -61,28 +65,21 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, state
                 print('breaking')
                 break
             data.append(i)
-            # print(i)
 
     data = data[2:]
     data2 = []
     for n, i in enumerate(data):
-        # new line
         i = i.replace('->', ' ').replace('<-', ' ')
-        #
         x = cleanLine(i)
         if x == []:
             continue
         data2.append(x)
-
-    #print(data2)
     excitations = []
     occVal, virtVal = ES_extraction(path)
     if occVal == 0 and 0 == virtVal:
         print(path, occVal, virtVal)
     for n, x in enumerate(data2):
-        #print(x)
         if x[0] == 'Excited':
-            #print(x)
             if exc_json:
                 mol = Excitation_exc()
                 mol.setHOMO(occVal)
@@ -105,8 +102,6 @@ def absorpt(path, method_mexc, basis_set_mexc, solvent='', exc_json=False, state
         else:
             if x[0] != 'This' and x[0] != 'Total' and x[0] != 'Copying':
                 orbitalList.append(int(x[0]))
-                # line swapped after replacing -> with wb
-                #orbitalList.append(int(x[1][2:]))
                 orbitalList.append(int(x[1]))
                 orbitalList.append(float(x[2]))
         if n < len(data2):

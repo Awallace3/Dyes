@@ -19,8 +19,8 @@ from . import molecule_json
 # conda install -c openbabel openbabel
 
 
-def read_user():
-    with open("user", "r") as fp:
+def read_user(def_dir="user"):
+    with open(def_dir, "r") as fp:
         return fp.read().rstrip()
 
 
@@ -42,8 +42,7 @@ def collectLocalStructures(subdirectories, banned=[]):
                     smiles = smiles.split("\n")
                     smiles[0] = smiles[0].rstrip()
                     localStructuresDict["local{0}".format(num + 1)].append(
-                        (smiles[0], j[:-4], smiles[1])
-                    )
+                        (smiles[0], j[:-4], smiles[1]))
                     #  smiles[0]==smiles, j[:-4]==local_name, smiles[1]==name
             else:
                 print(j[:-4], "skipped due to banned")
@@ -107,9 +106,8 @@ def generateMolecules(
 
         if mol_lst.checkMolecule(line):
             print(
-                "\nMolecule already exists and the name smiles is... \n%s\n"
-                % line
-            )
+                "\nMolecule already exists and the name smiles is... \n%s\n" %
+                line)
             continue
         mol = Molecule()
         mol.setSMILES(line)
@@ -189,9 +187,7 @@ def add_excitation_data(
     method_mexc,
     basis_set_mexc,
 ):
-    occVal, virtVal = ES_extraction(
-        "%s/%s.out" % (dir_name, baseName)
-    )
+    occVal, virtVal = ES_extraction("%s/%s.out" % (dir_name, baseName))
     if occVal == virtVal and occVal == 0:
         print("failed to add")
         return 0, 0
@@ -199,9 +195,8 @@ def add_excitation_data(
     mol.setData("info.json")
     mol.setHOMO(occVal)
     mol.setLUMO(virtVal)
-    mol.appendExcitations(
-        absorpt("mexc/mexc.out", method_mexc, basis_set_mexc)
-    )
+    mol.appendExcitations(absorpt("mexc/mexc.out", method_mexc,
+                                  basis_set_mexc))
     mol.toJSON()
     mol.sendToFile("info.json")
     mol_lst = MoleculeList()
@@ -236,11 +231,9 @@ def jobResubmit(
     """
     add_methods_length = len(add_methods["methods"])
 
-    if (
-        add_methods_length != len(add_methods["basis_set"])
-        and add_methods_length != len(add_methods["mem_com"])
-        and add_methods_length != len(add_methods["mem_pbs"])
-    ):
+    if (add_methods_length != len(add_methods["basis_set"])
+            and add_methods_length != len(add_methods["mem_com"])
+            and add_methods_length != len(add_methods["mem_pbs"])):
         print(
             "add_methods must have values that have lists of the same length.\nTerminating jobResubmit before start"
         )
@@ -277,15 +270,10 @@ def jobResubmit(
                 mexc_check_out_complete = glob.glob("mexc/*_o*")
 
                 # if complete[num] != 2 and len(mexc_check_out) > 0 and len(mexc_check_out_complete) > 0:
-                if (
-                    complete[num] < 2
-                    and len(mexc_check_out) > 0
-                    and len(mexc_check_out_complete) > 0
-                ):
+                if (complete[num] < 2 and len(mexc_check_out) > 0
+                        and len(mexc_check_out_complete) > 0):
 
-                    occVal, virtVal = ES_extraction(
-                        "mexc/mexc.out"
-                    )
+                    occVal, virtVal = ES_extraction("mexc/mexc.out")
                     if occVal == virtVal and occVal == 0:
                         print(j)
                     mol = Molecule()
@@ -294,8 +282,7 @@ def jobResubmit(
                     mol.setLUMO(virtVal)
                     # Testing below
                     mol.setExictations(
-                        absorpt("mexc/mexc.out", method_mexc, basis_set_mexc)
-                    )
+                        absorpt("mexc/mexc.out", method_mexc, basis_set_mexc))
 
                     mol.toJSON()
                     mol.sendToFile("info.json")
@@ -352,11 +339,8 @@ def jobResubmit(
                 dir_name = add_methods["methods"][pos].lower()
                 mexc_check_out = glob.glob("%s/mexc.o*" % dir_name)
                 mexc_check_out_complete = glob.glob("%s/*_o*" % dir_name)
-                if (
-                    complete[num] < 3
-                    and len(mexc_check_out) > 0
-                    and len(mexc_check_out_complete) > 0
-                ):
+                if (complete[num] < 3 and len(mexc_check_out) > 0
+                        and len(mexc_check_out_complete) > 0):
                     add_excitation_data(
                         dir_name,
                         "mexc",
@@ -396,17 +380,14 @@ def jobResubmit(
 
 def check_add_methods(add_methods, funct_name):
     ln = len(add_methods["methods"])
-    if (
-        ln == len(add_methods["basis_set"])
-        and ln == len(add_methods["mem_com"])
-        and ln == len(add_methods["mem_pbs"])
-    ):
+    if (ln == len(add_methods["basis_set"])
+            and ln == len(add_methods["mem_com"])
+            and ln == len(add_methods["mem_pbs"])):
         return True
     else:
         print(
             "\nadd_methods must have values that have lists of the same length.\nTerminating %s before start\n"
-            % funct_name
-        )
+            % funct_name)
         return False
 
 
@@ -495,13 +476,15 @@ def jobResubmit_v2(
     },
     max_queue=200,
     results_json="results.json",
-    user=read_user(),
+    user="",
     identify_zeros=False,
     create_smiles=True,
 ):
     """
     Modified from jobResubmit above
     """
+    if user == "":
+        user = read_user()
     if identify_zeros:
         zeros_lst = []
     if not os.path.exists("qsub_queue"):
@@ -537,11 +520,8 @@ def jobResubmit_v2(
                 complete[num] = 1
                 mexc_check_out = glob.glob("mexc/mexc.o*")
                 mexc_check_out_complete = glob.glob("mexc/*_o*")
-                if (
-                    complete[num] < 2
-                    and len(mexc_check_out) > 0
-                    and len(mexc_check_out_complete) > 0
-                ):
+                if (complete[num] < 2 and len(mexc_check_out) > 0
+                        and len(mexc_check_out_complete) > 0):
                     """
                     #occVal, virtVal = ES_extraction('mexc/mexc.out')
                     #if occVal == virtVal and occVal == 0:
@@ -719,8 +699,7 @@ def qmgr(
                 "GuassianKeyWord": "",
             },
         ],
-    }
-):
+    }):
     """
     Use with main.py and input.json
     """
@@ -819,9 +798,10 @@ def gather_excitation_data(
             mol.setHOMO(occVal)
             mol.setLUMO(virtVal)
 
-        excitations = absorpt(
-            "mexc/mexc.out", method_mexc, basis_set_mexc, exc_json=True
-        )
+        excitations = absorpt("mexc/mexc.out",
+                              method_mexc,
+                              basis_set_mexc,
+                              exc_json=True)
         if i == "5ed_16b_8ea":
             print(i, excitations)
 
@@ -842,8 +822,7 @@ def gather_excitation_data(
             if os.path.exists(lPath):
 
                 mol.appendExcitations(
-                    absorpt(lPath, method, basis_set, exc_json=exc_json)
-                )
+                    absorpt(lPath, method, basis_set, exc_json=exc_json))
             else:
                 if i not in failed:
                     failed.append(i)
@@ -918,7 +897,6 @@ def main():
     }
     #    monitor_jobs = ['NL3','NL5','NL12','NL13','ND1','ND2','ND3','AP11','AP14','AP16','AP17','RR6','YZ7','YZ12','YZ15','JD21','C218']
     # monitor_jobs = ['RR6']
-
     """
     complete = jobResubmit_v2(monitor_jobs, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,

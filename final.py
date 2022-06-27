@@ -28,8 +28,8 @@ sys.path.insert(1,
 # conda install -c openbabel openbabel
 
 
-def read_user():
-    with open("user", "r") as fp:
+def read_user(def_dir="user"):
+    with open(def_dir, "r") as fp:
         return fp.read().rstrip()
 
 
@@ -268,22 +268,23 @@ def add_qsub_dir(qsub_dir, geom_dir, path_qsub_queue="../../qsub_queue"):
     return 1
 
 
-def qsub_to_max(max_queue=100, user=""):
-    with open("../qsub_queue", "r") as fp:
+def qsub_to_max(max_queue=100, user="", def_dir=".."):
+    if def_dir == "./":
+        qsub_queue_path = 'qsub_queue'
+        qsub_len_path = 'qsub_len'
+    else:
+        qsub_queue_path = def_dir + '/qsub_queue'
+        qsub_len_path = def_dir + '/qsub_len'
+    print(os.getcwd(), qsub_queue_path)
+    with open(qsub_queue_path, "r") as fp:
         qsubs = fp.readlines()
 
-    # cmd = 'qstat -u %s > ../qsub_len' % user
-    # subprocess.call(cmd, shell=True)
-    # print("qsub_to_max", os.getcwd(), '../qsub_len', '../qsub_queue')
-    # with open('../qsub_len', 'r') as fp:
-    #     current_queue = len(fp.readlines())-5
-    # os.remove('../qsub_len')
     cmd = "qstat -u %s | grep r410 |  wc -l > ../qsub_len" % user
     subprocess.call(cmd, shell=True)
-    # print("qsub_to_max", os.getcwd(), "../qsub_len", "../qsub_queue")
-    with open("../qsub_len", "r") as fp:
+    with open(qsub_len_path, "r") as fp:
         current_queue = int(fp.read()) - 5
-    os.remove("../qsub_len")
+        print('\n', current_queue, "jobs in qsub_queue\n")
+    os.remove(qsub_len_path)
     dif = max_queue - current_queue
     print("dif is", dif)
     if dif > 0:
@@ -294,7 +295,7 @@ def qsub_to_max(max_queue=100, user=""):
             print("\n", qsub_path, os.getcwd(), "\n")
             qsub(qsub_path)
             cnt += 1
-    with open("../qsub_queue", "w") as fp:
+    with open(qsub_queue_path, "w") as fp:
         for i in qsubs:
             fp.write(i)
     return 1
@@ -311,35 +312,37 @@ def r_qsub_dir(method_mexc, solvent):
 
 
 def jobResubmit_v2(
-        monitor_jobs,
-        min_delay,
-        number_delays,
-        method_opt,
-        basis_set_opt,
-        mem_com_opt,
-        mem_pbs_opt,
-        method_mexc,
-        basis_set_mexc,
-        mem_com_mexc,
-        mem_pbs_mexc,
-        cluster,
-        route="results",
-        add_methods={
-            "methods": [],
-            "basis_set": [],
-            "solvent": [],
-            "mem_com": [],
-            "mem_pbs": [],
-        },
-        max_queue=200,
-        results_json="results.json",
-        user=read_user(),
-        identify_zeros=False,
-        create_smiles=True,
+    monitor_jobs,
+    min_delay,
+    number_delays,
+    method_opt,
+    basis_set_opt,
+    mem_com_opt,
+    mem_pbs_opt,
+    method_mexc,
+    basis_set_mexc,
+    mem_com_mexc,
+    mem_pbs_mexc,
+    cluster,
+    route="results",
+    add_methods={
+        "methods": [],
+        "basis_set": [],
+        "solvent": [],
+        "mem_com": [],
+        "mem_pbs": [],
+    },
+    max_queue=200,
+    results_json="results.json",
+    user="",
+    identify_zeros=False,
+    create_smiles=True,
 ):
     """
     Modified from jobResubmit above
     """
+    if user == "":
+        user = read_user()
     results_json = os.getcwd() + "/" + results_json
 
     if identify_zeros:
@@ -381,26 +384,26 @@ def jobResubmit_v2(
                 if (complete[num] < 2 and len(mexc_check_out) > 0
                         and len(mexc_check_out_complete) > 0):
                     """
-                    #occVal, virtVal = ES_extraction('mexc/mexc.out')
-                    #if occVal == virtVal and occVal == 0:
+                    # occVal, virtVal = ES_extraction('mexc/mexc.out')
+                    # if occVal == virtVal and occVal == 0:
                     #    print(j)
                     mol = Molecule()
                     mol.setData('info.json')
-                    #mol.setHOMO(occVal)
-                    #mol.setLUMO(virtVal)
+                    # mol.setHOMO(occVal)
+                    # mol.setLUMO(virtVal)
                     # Testing below
-                    #mol.setExictations(absorpt('mexc/mexc.out', method_mexc, basis_set_mexc))
+                    # mol.setExictations(absorpt('mexc/mexc.out', method_mexc, basis_set_mexc))
 
                     mol.toJSON()
                     mol.sendToFile('info.json')
 
-                    #mol_lst.addMolecule(mol)
+                    # mol_lst.addMolecule(mol)
                     mol_lst = MoleculeList()
                     print(os.getcwd())
-                    #mol_lst.setData("../../results.json")
+                    # mol_lst.setData("../../results.json")
                     mol_lst.setData("../../%s" % results_json)
                     mol_lst.updateMolecule(mol)
-                    #mol_lst.sendToFile('../../results.json')
+                    # mol_lst.sendToFile('../../results.json')
                     mol_lst.sendToFile('../../%s' % results_json)
                     """
 
@@ -530,6 +533,78 @@ def gather_general_smiles(monitor_jobs, path_results="./results"):
         )
 
         os.chdir("..")
+
+
+def gather_dye_data_excitations(
+        path_results,
+        monitor_jobs,
+        add_methods={
+            "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
+            "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
+            "solvent": ["", "", ""],
+            "mem_com": ["1600", "1600", "1600"],
+            "mem_pbs": ["10", "10", "10"],
+        },
+        baseName="mexc",
+        results_json="results.json",
+        states=8):
+    def_dir = os.getcwd()
+    if not check_add_methods(add_methods, "gather_excitation_data"):
+        return
+    pops = ""
+    for i in path_results:
+        if i == "/":
+            pops += "../"
+
+    mol_lst = MoleculeList_exc()
+    # mol_lst.setData("%s" % results_json)
+    os.chdir(path_results)
+    # print(mol_lst)
+    failed = []
+    progress = "0.00"
+    for n, i in enumerate(monitor_jobs):
+        os.chdir(i)
+        if not os.path.exists("mexc/mexc.out"):
+            print(i, "does not have mexc/mexc.out")
+            # failed.append(i)
+            os.chdir("..")
+            continue
+        mol = Molecule_exc()
+        mol.setData("info.json")
+        mol.resetExcitations()
+
+        methods_len = len(add_methods["methods"])
+        for j in range(methods_len):
+            method = add_methods["methods"][j]
+            m_path = method.lower()
+            if method == "CAM-B3LYP":
+                m_path = 'mexc'
+            basis_set = add_methods["basis_set"][j]
+            lPath = "%s/%s.out" % (m_path, baseName)
+            if os.path.exists(lPath):
+                excs = absorpt(lPath,
+                               method,
+                               basis_set,
+                               exc_json=True,
+                               states=states)
+                if len(excs) == 0:
+                    print(i, 'is WRONG')
+                mol.appendExcitations(excs)
+            else:
+                if i not in failed:
+                    failed.append(i)
+                    print("%s Failed at %s\n" % (i, method))
+        mol_lst.updateMolecule(mol, exc_json=True)
+        os.chdir("..")
+        up = "%.2f" % (n / len(monitor_jobs))
+        if up != progress:
+            progress = up
+            print(progress)
+    os.chdir(def_dir)
+    mol_lst.sendToFile(results_json)
+    print("FAILED:", failed, len(failed))
+    print(os.getcwd(), results_json)
+    return True
 
 
 def gather_excitation_data(path_results,
@@ -685,43 +760,77 @@ def gather_dye_data(
     path_pickle="pickles/ds_all5.pickle",
     results_json="./json_files/ds_all5.json",
     output_json="json_files/ds_all5_out.json",
+    output_dyes_dict=False,
     add_methods={
+        # "methods": ["bhandhlyp", "PBE1PBE"],
+        # "basis_set": ["6-311G(d,p)", "6-311G(d,p)"],
+        # "solvent": ["", ""],
+        # "mem_com": ["1600", "1600"],
+        # "mem_pbs": ["10", "10"],
         "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
         "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
         "solvent": ["", "", ""],
         "mem_com": ["1600", "1600", "1600"],
         "mem_pbs": ["10", "10", "10"],
     }):
-    method_mexc = "CAM-B3LYP"
-    basis_set_mexc = "6-311G(d,p)"
     if not os.path.exists(output_json):
         write_json({"molecules": []}, results_json)
-    gather_excitation_data(path_results,
-                           dyes,
-                           add_methods,
-                           method_mexc,
-                           basis_set_mexc,
-                           exc_json=True,
-                           results_json=results_json)
+    gather_dye_data_excitations(path_results,
+                                dyes,
+                                add_methods=add_methods,
+                                results_json=results_json)
     lsf_results.generate_lsf_exc(results_json, results_json)
     print("LSF results")
     data = Molecule_exc_to_db(results_json, output_json)
     print("Broken up excitations")
-    dyes_dict = {}
-    for i in data:
-        k = i["localName"]
-        i.pop("localName")
-        i["score"] = -1
-        dyes_dict[k] = i
+    dye_output = []
+    if output_dyes_dict:
+        dyes_dict = {}
+        for i in data:
+            k = i["localName"]
+            i.pop("localName")
+            i["score"] = -1
+            dyes_dict[k] = i
+        dye_output = dyes_dict
+    else:
+        for i in data:
+            k = i["localName"]
+            i["score"] = -1
+            dye_output.append(i)
+
+    print(len(dye_output))
     print("Dye dict formed")
-    write_json(dyes_dict, output_json)
+    write_json(dye_output, output_json)
     print("Last json output")
-    write_pickle(dyes_dict, path_pickle)
+    write_pickle(dye_output, path_pickle)
     return
+
+
+CAM_KEY = 'CAM_B3LYP_6_311G_d_p'
+PBE_KEY = "PBE1PBE_6_311G_d_p"
+BHA_KEY = "bhandhlyp_6_311G_d_p"
+
+
+def dyes_inspection(pickle_path="pickles/ds_all5.pickle",
+                    pickle_out="pickles/fix.pickle"):
+    data = read_pickle(pickle_path)
+    missing_exc = {CAM_KEY: 0, PBE_KEY: 0, BHA_KEY: 0}
+    fix_jobs = []
+    for i in data:
+        for k in missing_exc.keys():
+            if len(i[k]) == 0:
+                missing_exc[k] += 1
+                if i not in fix_jobs:
+                    fix_jobs.append(i["localName"])
+    print(len(fix_jobs), '/', len(data))
+    write_pickle(fix_jobs, pickle_out)
+    return fix_jobs
 
 
 def main():
     gather_dye_data(dataset_names.ds.ds_all5())
+    dyes_inspection()
+
     #  three_types = ["eDonors", "backbones", "eAcceptors"]
     #  #banned = ["42b", "26b", "27b"]
     #  banned = []
@@ -837,7 +946,7 @@ def main():
     complete = jobResubmit_v2(dyes_gather, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
-                           #cluster, route='Benchmark/results', add_methods=add_methods,
+                           # cluster, route='Benchmark/results', add_methods=add_methods,
                            cluster, route='results', add_methods=add_methods,
                            max_queue=200, results_json='results.json',
                            identify_zeros=True, create_smiles=True
@@ -867,7 +976,8 @@ def main():
     """
     method_mexc = 'CAM-B3LYP'
     basis_set_mexc = '6-311G(d,p)'
-    gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc, basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
+    gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc,
+                           basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
     """
 
     # DS_ALL
