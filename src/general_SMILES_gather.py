@@ -204,12 +204,12 @@ def main():
 
     total_SMILES_dict = '../data_analysis/Total_SMILES_str.csv'
    # conv_dot_to_gen_smiles(file_csv)
-    '''
+    
     name_list = list_to_name(file_name)
     spec = smile_json(smiles_json,name_list)
     conv_dot_to_gen_smiles_dict(spec)
-    '''
-    helper('../data_analysis/gensmiles.csv')
+    
+    #helper('../data_analysis/gensmiles.csv')
 
    # specific_SMILES_to_df(total_SMILES_dict,name_list)
    # dataset_json(data_json,name_list)

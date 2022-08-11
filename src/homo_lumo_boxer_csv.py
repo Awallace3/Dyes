@@ -178,7 +178,7 @@ def main():
     #    print(numbs)
 
     for name in numbs.keys():
-        print(name)
+        #print(numbs[name])
         #optimal_list.append(name)
         
         #print(numbs[name][2])

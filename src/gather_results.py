@@ -20,7 +20,10 @@ def json_pandas_molecule(path_results, results_exc=False):
 
     FIELDS = ["name", "localName", "generalSMILES"]
     df = pd.json_normalize(dat["molecules"])
+    #df = pd.json_normalize(dat)
+   # print(df['excitations'])
     df[FIELDS]
+    
     # ['A', 'B', 'C'] <-this is your columns order
     if results_exc:
         df = df[[
@@ -1278,6 +1281,7 @@ def theoretical_dyes_basis_set_out(
     df_molecules = json_pandas_molecule(path_results_json, results_exc)
 
     df = df_molecules_to_df_method_basisset(df_molecules, methods_basissets)
+    print(df)
     #print('Print Statement')
     #print(df_molecules['name','generalSMILES'])
     #print(df_molecules['generalSMILES'])
@@ -1781,10 +1785,13 @@ def main():
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', )
     # theoretical_dyes_basis_set_out('results.json', output_csv='theoretical', output_latex='theoretical', output_graph='theoretical', plot_js=plot_js, methods_basissets=methods_basissets)
     # Below is one you want to us
+    
+    
     theoretical_dyes_basis_set_out(
-        # "./json_files/results_exc.json",
-        "./json_files/results_ds5.json",
-        output_csv="data_analysis/ds5",
+        #"./json_files/results_exc.json",
+        #"./json_files/ds_all5_out.json",
+        "./json_files/single.json",
+        output_csv="data_analysis/12ed",
         #   output_latex="data_analysis/Absorption_nm",
         output_graph="data_analysis/ds5",
         units="eV",
@@ -1794,6 +1801,8 @@ def main():
         homo_lumo=False,
         LSF_csv=True,
     )
+    
+    
 
     # theoretical_dyes_basis_set_out('results_exc.json', output_csv='theoretical_e3',
     #     output_latex='theoretical_e3', output_graph='theoreticale3',
@@ -1804,7 +1813,8 @@ def main():
     """"""
     """"""
     # Benchmark data
-    #benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
+
+#    benchmarks_dyes_basis_set_out('Benchmark/benchmarks.json', output_csv='bm', output_latex='bm', output_graph='bm', exc_json=False)
     return
 
     benchmarks_dyes_basis_set_out(

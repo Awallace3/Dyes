@@ -325,13 +325,14 @@ def main():
     jobs = ['16ed_35b_8ea']
     jobs = ['13ed_18b_12ea', '6ed_41b_12ea','7ed_1b_13ea','7ed_3b_13ea','9ed_18b_12ea']
     jobs = ['14ed_41b_8ea']
-    json_file = '../json_files/test2.json'
+    jobs = ['Wills_Jule']
+   # json_file = '../json_files/test2.json'
 
 
 
     for name in jobs:
 
-        filename = '../ds5batchMO_800_1000/' + str(name) + '/mo/'+ str(name)+'.out'
+        filename = '../MO_start_B/' + str(name) + '/'+ str(name)+'.out'
 
         num = amountofbasisfunctions(filename)
         atom_let = atom_num_let_dic(filename)
@@ -380,8 +381,8 @@ def main():
                                         tot,
                                         atom,
                                         ang,
-                                        Carboxy = True,
-                                        Amide = True,
+                                        Carboxy = False,
+                                        Amide = False,
                                         cyanoacrylic=True,
                                         SI=False)
        # print(atom_num_list)
@@ -389,7 +390,8 @@ def main():
           
 
         kkk = {}
-       
+        atom_num_list = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+        atom_num_list = [25,26,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44]
         for i in atom_num_list:
             for x in atom['atom_num']:
     #for i in range(1,50):

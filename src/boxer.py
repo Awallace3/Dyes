@@ -8,7 +8,7 @@ def box0(x):
     name = []
     with open(x,"r") as read_file:
         data = json.load(read_file)
-        for mol in data["molecules"]:
+        for mol in data:
             for exc in mol["lsf"]:
                 if exc['exc']==1:
                     if exc['nm']>=800:
@@ -29,7 +29,7 @@ def box1(x):
     name = []
     with open(x,"r") as read_file:
         data = json.load(read_file)
-        for mol in data["molecules"]:
+        for mol in data:
             for exc in mol["lsf"]:
                 if exc['exc']==1:
                     if exc['nm']>=600 and exc['nm']<800:
@@ -49,7 +49,7 @@ def box2(x):
     name = []
     with open(x,"r") as read_file:
         data = json.load(read_file)
-        for mol in data["molecules"]:
+        for mol in data:
             for exc in mol["lsf"]:
                 if exc['exc']==1:
                     if exc['nm']>=400 and exc['nm']<600:
@@ -104,6 +104,7 @@ def main():
     os.chdir('../')
     filename = 'json_files/results_exc.json'
     filename = 'json_files/test2.json'
+    filename = 'json_files/ds_all5_out.json'
     #filename = '/Users/tsantaloci/Desktop/python_projects/austin/Dyes/json_files/benchmarks_exc.json'
     print('Start')
     print(' ')
@@ -119,6 +120,8 @@ def main():
     
     if wavelength_range == '800-1000':
         red = box0(filename)
+        for i in red:
+            print(red[i])
     #    print(names[0])
     #print(red)
         for name in red.keys():
@@ -127,8 +130,8 @@ def main():
             else:
                 names.append(name)
                 wavelength[name]=red[name][0]
-                lumo[name]=red[name][1]
-                homo[name]=red[name][2]
+                lumo[name]=red[name][2]
+                homo[name]=red[name][1]
     #    ranker(homo,lumo,wavelength,names)
     if wavelength_range == '600-800':
         red = box1(filename)
@@ -140,8 +143,8 @@ def main():
             else:
                 names.append(name)
                 wavelength[name]=red[name][0]
-                lumo[name]=red[name][1]
-                homo[name]=red[name][2]
+                lumo[name]=red[name][2]
+                homo[name]=red[name][1]
     #    ranker(homo,lumo,wavelength,names)
     
 
@@ -226,7 +229,7 @@ def main():
    
 
 
-    '''
+    
     if wavelength_range == '400-600':
         df = ranker(homo,lumo,wavelength,names)
         df.to_csv("data_analysis/400_600.csv",index=False)
@@ -244,7 +247,7 @@ def main():
         print(optimal_list)
         filename.close()
         scatter_plot('data_analysis/g_400_600.csv')
-    '''
+    
 
     
 

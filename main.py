@@ -270,7 +270,9 @@ def plot_absoprtion_lambda_max(pickle_path="./pickles/ds_all5.pickle",
 
 
 def main():
-    plot_absoprtion_lambda_max()
+    #plot_absoprtion_lambda_max()
+    data = read_pickle("pickles/fix.pickle")
+    print(data)
     return
 
 
