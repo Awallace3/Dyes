@@ -30,4 +30,17 @@ The user can use `pip install package_name` to create correct depencencies.
 * OpenBabel- Creates the SMILE strings and converts them to Cartesian Coordinates
 
 
+## Future Ideas
+
+# These are future ideas for the project. If anyone would like to do them feel free to contact us and we are willing to help. Everyone in this project has split up but I think someday atleast one of us will come back to it.
+
+*Update scoring for high voltage dye sensitized solar cells
+*Setting up code for porphyrin solar cell molecules
+*Benchmark study on porphyrin solar cells to create a scoring methodology
+*Setting up code for perovskite solar cell molecules
+*Benchmark study on perovskite solar cell molecules to create a scoring methodology 
+*Explore the possibility of finding new catalysts 
+*Setting up code for the ruthenium dye database that already exists
+
+
 
