@@ -5,7 +5,8 @@
 We are computational chemists that created this program at the University of Mississippi. The goal of our project is to create and predict the properties of exotic molecular dyes for dye sensitized solar cells. The Benchmark folder contains our training set and the JSON folder has the all of our data. If you would like to use this program for your research please email `tsantaloci@gmail.com`. 
 
 
-## The Goal of Project 
+## How The Code Works
+
 
 ## Dependencies
 
