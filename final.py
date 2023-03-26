@@ -1,4 +1,4 @@
-# from SMILES_COMB import SMILES_COMB
+from src.SMILES_COMB import SMILES_COMB
 from src.molecule_json import Molecule_exc
 from src.molecule_json import MoleculeList_exc
 from src.absorpt import absorpt
