@@ -6,9 +6,7 @@ We are computational chemists that created this program at the University of Mis
 
 
 ## How The Code Works
-<p align="center">
-  <img src=./Example_image.png" width="350" title="Example image" >
-</p>
+
 
 
 ### Selecting the Specific Type
