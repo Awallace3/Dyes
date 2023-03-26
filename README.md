@@ -10,6 +10,15 @@ We are computational chemists that created this program at the University of Mis
   <img src="https://github.com/Awallace3/Dyes/tree/main/src/Example_image.png" width="350" title="Example image" \>
 </p>
 
+![image description or alt text](https://github.com/Awallace3/Dyes/tree/main/src/Example_image.png)
+
+### Selecting the Specific Type
+-- This code is limited to four types of Dye Sensitized Solar Cells:
+* Single Donor 𝝅-conjugated dye sensitized solar cell (D-𝝅-A)
+* Double Donor 𝝅-conjugated dye sensitized solar cell (D-D-𝝅-A)
+* Triple Donor 𝝅-conjugated dye sensitized solar cell (D-D-D-𝝅-A)
+* Donor Acceptor Donor dye sensitized solar cell (D-A-D)
+
 
 ## Dependencies
 
