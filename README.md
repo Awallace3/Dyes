@@ -7,10 +7,9 @@ We are computational chemists that created this program at the University of Mis
 
 ## How The Code Works
 <p align="center">
-  <img src="https://github.com/Awallace3/Dyes/tree/main/src/Example_image.png" width="350" title="Example image" \>
+  <img src=/src/Example_image.png" width="350" title="Example image" \>
 </p>
 
-![image description or alt text](https://github.com/Awallace3/Dyes/tree/main/src/Example_image.png)
 
 ### Selecting the Specific Type
 -- This code is limited to four types of Dye Sensitized Solar Cells:
@@ -37,7 +36,7 @@ The user can use `pip install package_name` to create correct depencencies.
 ## External Dependencies 
 
 * OpenBabel- Creates the SMILE strings and converts them to Cartesian Coordinates
-
+* ChemDraw - The user inputs chemdraw generated SMILE strings
 
 ## Future Ideas
 
