@@ -6,7 +6,9 @@ We are computational chemists that created this program at the University of Mis
 
 
 ## How The Code Works
-
+<picture>
+  <img alt="Example of Three parts" src="Example_image.png">
+</picture>
 
 ## Dependencies
 
