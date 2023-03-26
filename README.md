@@ -7,7 +7,11 @@ We are computational chemists that created this program at the University of Mis
 
 ## How The Code Works
 
+### Combinatorial Approach
 ![Example](https://github.com/Awallace3/Dyes/blob/main/Example_image.png)
+
+### Examples
+![Example Structures](https://github.com/Awallace3/Dyes/blob/main/Example_Structs.png)
 
 ### Selecting the Specific Type
 -- This code is limited to four types of Dye Sensitized Solar Cells:
