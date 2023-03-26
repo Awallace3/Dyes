@@ -1,5 +1,7 @@
 # Dyes
 
+**Dependencies**
+
 * matplotlib==3.3.3
 * networkx==3.0
 * numba==0.55.1
@@ -9,3 +11,5 @@
 * requests==2.28.2
 * scikit_learn==1.2.2
 * scipy==1.6.1
+
+The user can use `pip install package_name` to create correct depencencies.
