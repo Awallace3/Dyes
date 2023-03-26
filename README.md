@@ -1,6 +1,13 @@
 # Dyes
 
-**Dependencies**
+## About us 
+
+We are computational chemists that created this program at the University of Mississippi. The goal of our project is to create and predict the properties of exotic molecular dyes for dye sensitized solar cells. The Benchmark folder contains our training set and the JSON folder has the all of our data. If you would like to use this program for your research please email `tsantaloci@gmail.com`. 
+
+
+## The Goal of Project 
+
+## Dependencies
 
 * matplotlib==3.3.3
 * networkx==3.0
@@ -13,3 +20,10 @@
 * scipy==1.6.1
 
 The user can use `pip install package_name` to create correct depencencies.
+
+## External Dependencies 
+
+* OpenBabel- Creates the SMILE strings and converts them to Cartesian Coordinates
+
+
+
