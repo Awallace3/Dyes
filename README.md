@@ -7,7 +7,7 @@ We are computational chemists that created this program at the University of Mis
 
 ## How The Code Works
 <p align="center">
-  <img src="Dyes/Example_image.png" width="350" title="hover text">
+  <img src="srcExample_image.png" width="350" title="hover text">
 </p>
 
 ## Dependencies
