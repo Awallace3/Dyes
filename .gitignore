@@ -1,7 +1,6 @@
 inputs/
 results/
 src/ice_manager.py
-*.png
 src/__pycache__/*
 backbones_all
 eAcceptors_all
@@ -22,7 +21,6 @@ results_1st.json
 results_1st/
 og_results.json
 output.log
-*.png
 *.tex
 og_results.json
 *.txt
