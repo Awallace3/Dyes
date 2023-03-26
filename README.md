@@ -6,10 +6,7 @@ We are computational chemists that created this program at the University of Mis
 
 
 ## How The Code Works
-<picture>
-  <img alt="Example of Three parts" src="Example_image.png">
-</picture>
-
+![Screenshot](Example_image.png)
 ## Dependencies
 
 * matplotlib==3.3.3
