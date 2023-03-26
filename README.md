@@ -7,9 +7,10 @@ We are computational chemists that created this program at the University of Mis
 
 ## How The Code Works
 <p align="center">
-  <img src="https://github.com/Awallace3/Dyes/tree/main/src/Example_image.png" width="350" title="hover text">
+  <img src="https://github.com/Awallace3/Dyes/tree/main/src/Example_image.png" width="350" title="Example image">
 </p>
-git@github.com:Awallace3/Dyes
+
+
 ## Dependencies
 
 * matplotlib==3.3.3
