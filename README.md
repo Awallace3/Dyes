@@ -7,6 +7,12 @@ We are computational chemists that created this program at the University of Mis
 
 ## How The Code Works
 
+This program performs three tasks:
+
+* Combines SMILES strings and creates gaussian input files with there corresponding coordinates.
+* Submits Jobs and resubmits jobs on the Mississippi Center Supercomputer account which runs on an PBS workload manager
+* A script that gathers data into JSON files and creates plots with matmolplt that determines the best candidates.
+
 ### Combinatorial Approach
 ![Example](https://github.com/Awallace3/Dyes/blob/main/Example_image.png)
 
