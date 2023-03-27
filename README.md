@@ -9,9 +9,24 @@ We are computational chemists that created this program at the University of Mis
 
 This program performs three tasks:
 
-* Combines SMILES strings and creates gaussian input files with there corresponding coordinates.
-* Submits Jobs and resubmits jobs on the Mississippi Center Supercomputer account which runs on an PBS workload manager
-* Gathers data from Gaussian output files and places them into JSON files to determine the best candidates.
+* (Build) Combines SMILES strings and creates gaussian input files with there corresponding coordinates.
+* (Manage) Submits Jobs and resubmits jobs on the Mississippi Center Supercomputer account which runs on an PBS workload manager
+* (Gather) Gathers data from Gaussian output files and places them into JSON files to determine the best candidates.
+### Steps
+1. Select what task you would like to perform `Build`, `Manage`, `Gather` (We need to figure out where to put these options)
+#### Build
+Step 1: input SMILES strings (copied from ChemDraw) 
+2. `python3 inputs_v2.py` 
+--- Follow inputs_v2.py instructions and SMILE strings will go in either the eAcceptor, backbone or eDonor directory
+Step 2: submit final.py script! SMILES strings will be combined and input files will be placed in the results directory.
+3. `python3 final.py` 
+#### Manage
+ -- `qsub_queue` keeps track of what dyes need to be submitted to the cluster next
+1. `python3 final.py`
+
+#### Gather
+-- Turns JSON file into pickles and produces a finalized JSON file for data analysis and the websites database
+1. `python3 final.py`
 
 ### Combinatorial Approach
 ![Example](https://github.com/Awallace3/Dyes/blob/main/Example_image.png)
