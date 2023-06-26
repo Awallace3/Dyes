@@ -827,93 +827,101 @@ def dyes_inspection(pickle_path="pickles/ds_all5.pickle",
     return fix_jobs
 
 
-def main():
-    gather_dye_data(dataset_names.ds.ds_all5())
-    dyes_inspection()
+def main(args):
+    #gather_dye_data(dataset_names.ds.ds_all5())
+    #dyes_inspection()
+    #smiles_tuple_list = generateMolecule()
+    if args.Build == 'True':
+        banned = []
+        three_types = [
+          "eDonors",
+          "backbones",
+          "eAcceptors",
+        ]
+
+        localStructuresDict = collectLocalStructures(three_types, banned)
+        smiles_tuple_list = permutationDict(localStructuresDict)
+        smiles_dict = generateSMILESinputs(smiles_tuple_list)
+        print('smiles_dict:\n', smiles_dict)
+    #  # geometry optimization options
+        method_opt = "B3LYP"
+    #  # method_opt = "HF"
+        basis_set_opt = "6-311G(d,p)"
+      # basis_set_opt = "6-31G"
+        mem_com_opt = "1600"  # mb
+        mem_pbs_opt = "10"  # gb
+
+    #  # TD-DFT options
+        method_mexc = "CAM-B3LYP"
+        basis_set_mexc = "6-311G(d,p)"
+        mem_com_mexc = "1600"  # mb
+        mem_pbs_mexc = "10"  # gb"
+
+        cluster = "map"
+        monitor_jobs = generateMolecules(
+             smiles_tuple_list,
+             method_opt,
+             basis_set_opt,
+             mem_com_opt,
+             mem_pbs_opt,
+             cluster,
+             results_json="json_files/results_ds5.json",
+         )
+    
+    # cluster = "seq"
 
     #  three_types = ["eDonors", "backbones", "eAcceptors"]
     #  #banned = ["42b", "26b", "27b"]
-    #  banned = []
-    #  three_types = [
-    #      "eDonors",
-    #      "backbones",
-    #      "eAcceptors",
-    #  ]
     #  # cleanResultsExcEmpty(results_json="json_files/results_ds5.json",
     #  #                      results_json_out='json_files/p1.json')
     #  resubmit_delay_min = 0.001  # 60 * 12
     #  resubmit_max_attempts = 1
 
+    if args.Manage=='True':
+
+        add_methods = {
+             "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
+             "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
+             "solvent": ["", "", ""],
+             "mem_com": ["1600", "1600", "1600"],
+             "mem_pbs": ["10", "10", "10"],
+         }
     #  # geometry optimization options
-    #  method_opt = "B3LYP"
+        method_opt = "B3LYP"
     #  # method_opt = "HF"
-    #  basis_set_opt = "6-311G(d,p)"
-    #  # basis_set_opt = "6-31G"
-    #  mem_com_opt = "1600"  # mb
-    #  mem_pbs_opt = "10"  # gb
+        basis_set_opt = "6-311G(d,p)"
+      # basis_set_opt = "6-31G"
+        mem_com_opt = "1600"  # mb
+        mem_pbs_opt = "10"  # gb
 
     #  # TD-DFT options
-    #  method_mexc = "CAM-B3LYP"
-    #  basis_set_mexc = "6-311G(d,p)"
-    #  mem_com_mexc = "1600"  # mb
-    #  mem_pbs_mexc = "10"  # gb"
+        method_mexc = "CAM-B3LYP"
+        basis_set_mexc = "6-311G(d,p)"
+        mem_com_mexc = "1600"  # mb
+        mem_pbs_mexc = "10"  # gb"
 
-    #  cluster = "map"
-    # cluster = "seq"
-
-    # localStructuresDict = collectLocalStructures(three_types, banned)
-    # smiles_tuple_list = permutationDict(localStructuresDict)
-    # smiles_dict = generateSMILESinputs(smiles_tuple_list)
-    # print('smiles_dict:\n', smiles_dict)
-
-    # monitor_jobs = generateMolecules(
-    #     smiles_tuple_list,
-    #     method_opt,
-    #     basis_set_opt,
-    #     mem_com_opt,
-    #     mem_pbs_opt,
-    #     cluster,
-    #     results_json="json_files/results_ds5.json",
-    # )
-
-    add_methods = {
-        "methods": ["CAM-B3LYP", "bhandhlyp", "PBE1PBE"],
-        "basis_set": ["6-311G(d,p)", "6-311G(d,p)", "6-311G(d,p)"],
-        "solvent": ["", "", ""],
-        "mem_com": ["1600", "1600", "1600"],
-        "mem_pbs": ["10", "10", "10"],
-    }
+        cluster = "map"
+        monitor_jobs = generateMolecules(
+             smiles_tuple_list,
+             method_opt,
+             basis_set_opt,
+             mem_com_opt,
+             mem_pbs_opt,
+             cluster,
+             results_json="json_files/results_ds5.json",)
+        complete = jobResubmit_v2(dyes_gather, resubmit_delay_min, resubmit_max_attempts,
+                           method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
+                           method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
+                           # cluster, route='Benchmark/results', add_methods=add_methods,
+                           cluster, route='results', add_methods=add_methods,
+                           max_queue=200, results_json='results.json',
+                           identify_zeros=True, create_smiles=True
+        )
 
     # ds3 = read_ds_from_file("ds3.txt")
     # ds4 = read_ds_from_file("ds4.txt")
 
-    # monitor_jobs = ds.ds5()
-    #
-    # complete = jobResubmit_v2(
-    #     monitor_jobs,
-    #     resubmit_delay_min,
-    #     resubmit_max_attempts,
-    #     method_opt,
-    #     basis_set_opt,
-    #     mem_com_opt,
-    #     mem_pbs_opt,
-    #     method_mexc,
-    #     basis_set_mexc,
-    #     mem_com_mexc,
-    #     mem_pbs_mexc,
-    #     # cluster, route='Benchmark/results', add_methods=add_methods,
-    #     cluster,
-    #     route="results",
-    #     add_methods=add_methods,
-    #     max_queue=500,
-    #     results_json="json_files/results_ds5.json",
-    #     identify_zeros=True,
-    #     create_smiles=True,
-    # )
-    #
-    # print("Complete", complete)
 
-    # gather_general_smiles(monitor_jobs)
 
     # DS1 update results.json before data analysis in src/gather_results.py
     # gather_excitation_data('./results_cp/ds1_results', ds1, add_methods, method_mexc, basis_set_mexc, results_json='../ds1_results.json')
@@ -927,22 +935,29 @@ def main():
     #     for i in range(len(ds_all)):
     #         ds_all[i] = ds_all[i].rstrip()
     # print(ds_all)
-    """
-    gather_excitation_data(
-        "./results_cp/ds_all3",
-        # "./results",
-        # ds3,
-        ds4,
-        add_methods,
-        method_mexc,
-        basis_set_mexc,
-        results_json="json_files/results_exc.json",
-        exc_json=True,
-    )
-    """
+    if args.Gather == 'True':
+
+        gather_excitation_data(
+            "./results_cp/ds_all3",
+            # "./results",
+            # ds3,
+            ds4,
+            add_methods,
+            method_mexc,
+            basis_set_mexc,
+            results_json="json_files/results_exc.json",
+            exc_json=True,
+        )
+        """
+        method_mexc = 'CAM-B3LYP'
+        basis_set_mexc = '6-311G(d,p)'
+        gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc,
+                           basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
+        """
+
+        
     # dyes_gather = ["10ed_11b_8ea", "9ed_33b_4ea", "11ed_9b_11ea"]
     """
-
     complete = jobResubmit_v2(dyes_gather, resubmit_delay_min, resubmit_max_attempts,
                            method_opt, basis_set_opt, mem_com_opt, mem_pbs_opt,
                            method_mexc, basis_set_mexc, mem_com_mexc, mem_pbs_mexc,
@@ -973,12 +988,6 @@ def main():
     #                        basis_set_mexc,
     #                        results_json='json_files/ds_all5.json',
     #                        exc_json=True)
-    """
-    method_mexc = 'CAM-B3LYP'
-    basis_set_mexc = '6-311G(d,p)'
-    gather_excitation_data('/Users/tsantaloci/Desktop/python_projects/austin/Dyes/results', dyes_gather, add_methods, method_mexc,
-                           basis_set_mexc, results_json='/Users/tsantaloci/Desktop/python_projects/austin/Dyes/test.json', exc_json=True)
-    """
 
     # DS_ALL
     # ds2 = 727 dyes
@@ -987,4 +996,29 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(
+        prog = 'Dyes DB',
+        description='The program creates new molecular dyes for dye sensitized solar cells by combining dye sensitized solar cells'
+    )
+    
+    parser.add_argument('-B',
+                        dest ='Build',
+                        default=False,
+                        help='Combines SMILES strings and creates gaussian input files with there corresponding coordinates.')
+    parser.add_argument('-M',
+                        dest ='Manage',
+                        default=False,
+                        help='Submits Jobs and resubmits jobs on the Mississippi Center Supercomputer account which runs on an PBS workload manager probably would not use if not on Mississippi Center Supercomputer')
+    parser.add_argument('-G',
+                        dest ='Gather',
+                        default=False,
+                        help='Gathers data from Gaussian output files and places them into JSON files to determine the best candidates')
+    parser.add_argument('-A',
+                        dest ='Analysis',
+                        default=False,
+                        help='Create figures and score computed structures: Use src/gather_results.py for this feature')
+    
+    args = parser.parse_args()
+    main(args)
+
+
