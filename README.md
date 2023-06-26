@@ -35,19 +35,19 @@ Select what task you would like to perform `Build`, `Manage`, `Gather`, or `Anal
 
 2. submit final.py script!
    - SMILES strings will be combined and input files will be placed in the results directory.
-3. `python3 final.py`
+3. `python3 final.py -B True`
 
 #### Manage
 
 `qsub_queue` will keep track of what jobs need to be submitted to the cluster next
 
-1. `python3 final.py`
+1. `python3 final.py -M True`
 
 #### Gather
 
 Parses output files to generate JSON and .pkl files
 
-1. `python3 final.py`
+1. `python3 final.py -G True`
 
 #### Analysis
 
